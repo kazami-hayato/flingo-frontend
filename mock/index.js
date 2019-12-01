@@ -4,16 +4,22 @@ import { param2Obj } from '../src/utils'
 import user from './user'
 import role from './role'
 import article from './article'
-import student_api from "./student_api";
-import group from "./group";
+import notice from './notice_api'
+import student_api from './student_api'
+import scourse from './school-course_api'
+import group from './group'
 import search from './remote-search'
+import school from './school_api'
 
 const mocks = [
   ...group,
   ...student_api,
   ...user,
+  ...scourse,
   ...role,
+  ...notice,
   ...article,
+  ...school,
   ...search
 ]
 

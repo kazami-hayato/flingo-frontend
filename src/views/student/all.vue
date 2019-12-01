@@ -211,7 +211,7 @@
 <script>
     import {fetchList, fetchPv, createArticle, updateArticle,} from '@/api/article'
     import {fetchAllStudents, createStudent, updateStudent, deleteStudent, setStudentCourse} from '@/api/student'
-    import {fetchAllCourses, createCourse, updateCourse, deleteCourse} from '@/api/course'
+    import {fetchAllCourses, createCourse, updateCourse, deleteCourse} from '@/api/school-course'
 
     import waves from '@/directive/waves' // waves directive
     import {parseTime} from '@/utils'

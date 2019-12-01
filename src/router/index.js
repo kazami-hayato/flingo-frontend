@@ -136,6 +136,17 @@ export const asyncRoutes = [
           // if do not set roles, means: this page does not require permission
         }
       },
+      {
+        path: 'notice/:id(\\d+)',
+        component: () => import('@/views/school/npost'),
+        name: 'Npost',
+        hidden:true,
+        meta: {
+          title: '推送文章',
+          roles: ['main_school', 'sub_school']
+          // if do not set roles, means: this page does not require permission
+        }
+      },
     ]
   },
   {
@@ -221,15 +232,6 @@ export const asyncRoutes = [
         name: 'Info',
         meta: {
           title: '课程信息',
-          roles: ['main_school', 'sub_school'] // or you can only set roles in sub nav
-        }
-      },
-      {
-        path: 'arrange',
-        component: () => import('@/views/course/arrange'),
-        name: 'Arrange',
-        meta: {
-          title: '课程安排',
           roles: ['main_school', 'sub_school'] // or you can only set roles in sub nav
         }
       },

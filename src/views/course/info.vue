@@ -10,19 +10,19 @@
         </el-col>
         <el-col :span="16" align="right">
           <el-button class="filter-item" type="success" icon="el-icon-plus"
-                     @click="onSectionCourses">
+                     @click="shiftSelected">
             上架已选
           </el-button>
-          <el-button class="filter-item" type="warning" icon="el-icon-minus"
-                     @click="offSectionCourses">
+          <el-button class="filter-item" type="danger" icon="el-icon-minus"
+                     @click="unshiftSelected">
             下架已选
           </el-button>
           <el-button class="filter-item" type="success" icon="el-icon-plus"
-                     @click="onAllCourses">
+                     @click="shiftAll">
             全部上架
           </el-button>
-          <el-button class="filter-item" type="warning" icon="el-icon-minus"
-                     @click="offAllCourses">
+          <el-button class="filter-item" type="danger" icon="el-icon-minus"
+                     @click="unshiftAll">
             全部下架
           </el-button>
         </el-col>
@@ -30,56 +30,66 @@
     </div>
 
     <el-table
-      :data="courseList"
+      :data="list"
       fit
       highlight-current-row
       style="width: 100%;"
-      @selection-change="onSelection"
+      @selection-change="handleSelectionChange"
     >
       <el-table-column width="55" type="selection" align="center"></el-table-column>
-      <el-table-column label="课程号" prop="id" align="center" width="140">
+      <el-table-column label="课程号" prop="id" align="center" width="100">
         <template slot-scope="{row}">
           <span>{{ row.course_id }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="课程名" prop="id" align="center" width="180">
+      <el-table-column label="课程名" prop="id" align="center" width="200">
         <template slot-scope="{row}">
           <span>{{ row.course_name }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="考期设置" prop="id" align="center" width="180">
+      <el-table-column label="课程简介" width="250px" align="center">
         <template slot-scope="{row}">
-          <span>{{ row.exam_date }}</span>
+          <span>{{ row.course_brief}}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="更新时间" width="200px" align="center">
+        <template slot-scope="{row}">
+          <span>{{ row.update_time | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="教材名称" width="200px" align="center">
+        <template slot-scope="{row}">
+          <span>{{ row.material_name}}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="精讲时间" width="100px" align="center">
+        <template slot-scope="{row}">
+          <span>{{ row.norm_duration}}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="精讲课程数" width="100px" align="center">
+        <template slot-scope="{row}">
+          <span>{{ row.norm_num}}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="课程状态" width="150px" align="center">
+        <template slot-scope="{row}">
+          <el-tag v-if="row.course_state==='已上架'" type="success">{{ row.course_state}}</el-tag>
+          <el-tag v-if="row.course_state==='未上架'" type="info">{{ row.course_state}}</el-tag>
         </template>
       </el-table-column>
 
-      <el-table-column label="全程班零售价" prop="sub_school" align="center" width="200">
+      <el-table-column label="操作" align="center" minWidth="200" class-name="small-padding fixed-width">
         <template slot-scope="{row}">
-          <span>{{ row.total_price }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="全程班折扣价" prop="gender" align="center" width="200">
-        <template slot-scope="{row}">
-          <span>{{ row.total_discount }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="精讲合作价" prop="student_name" align="center" width="150">
-        <template slot-scope="{row}">
-          <span>{{ row.special_price}}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="串讲合作价" prop="phone" align="center" minWidth="200">
-        <template slot-scope="{row}">
-          <span>{{ row.string_price }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="操作" align="center" minWidth="300" class-name="small-padding fixed-width">
-        <template slot-scope="{row}">
-          <el-button type="primary" size="medium" @click="onCourse(row)">
+
+          <el-button v-if="row.course_state!='已上架'"  type="primary" size="medium" @click="shiftCourse(row)">
             上架课程
           </el-button>
-          <el-button size="medium" type="success" @click="offCourse(row)">
-            新增课程
+          <el-button v-if="row.course_state!='未上架'" size="medium" type="success" @click="modifyCourse(row)">
+            修改课程
+          </el-button>
+          <el-button v-if="row.course_state!='未上架'" size="medium" type="danger" @click="modifyCourse(row)">
+            下架课程
           </el-button>
         </template>
       </el-table-column>
@@ -93,14 +103,8 @@
 </template>
 
 <script>
-    import {fetchList, fetchPv, createArticle, updateArticle,} from '@/api/article'
-    import {fetchAllStudents, createStudent, updateStudent, deleteStudent, setStudentCourse} from '@/api/student'
-    import {fetchAllCourses, createCourse, updateCourse, deleteCourse} from '@/api/course'
-
-    import waves from '@/directive/waves' // waves directive
-    import {parseTime} from '@/utils'
+    import {getCoursesByQuery,deleteCourseById} from '@/api/school-course'
     import Pagination from '@/components/Pagination' // secondary package based on el-pagination
-    import XLSX from 'xlsx'
 
     export default {
         name: 'info',
@@ -108,10 +112,25 @@
         data() {
             return {
                 searchText: '',
-                listQuery: {},
+                listQuery: {
+                    page: 1,
+                    limit: 20,
+                },
                 total:5,
-                courseList: [
+                chosenList:[],
+                list: [
                     {
+                        course_id:1,
+                        course_name:'高等数学',
+                        course_brief:'',
+                        update_time:'',
+                        material_name:'',
+                        norm_duration:22,
+                        norm_num:12,
+                        course_state:'未上架',
+                    },
+                    {
+                        course_state:'已上架',
                         course_name:'高等数学'
                     }
                 ]
@@ -122,28 +141,41 @@
         },
         methods: {
             getList() {
+                getCoursesByQuery(this.listQuery).then(response=>{
+                    this.list = response.data
+                    this.total = response.total
+                    // 设置延时以便于优化
+                    setTimeout(() => {
+                        this.listLoading = false
+                    }, 1.5 * 100)
+                })
             },
-            onSelection() {
-
+            handleSelectionChange(val) {
+                let temp = []
+                val.forEach(item => {
+                    temp.push(item.course_id)
+                });
+                this.chosenList = temp
+                console.log(this.chosenList)
             },
             searchCourses() {
             },
-            onAllCourses() {
+            shiftAll() {
 
             },
-            offAllCourses() {
+            unshiftAll() {
 
             },
-            onSectionCourses() {
+            shiftSelected() {
 
             },
-            offSectionCourses() {
+            unshiftSelected() {
 
             },
-            onCourse(row) {
+            shiftCourse(row) {
 
             },
-            offCourse(row) {
+            modifyCourse(row) {
 
             }
 
