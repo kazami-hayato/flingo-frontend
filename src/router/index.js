@@ -244,8 +244,24 @@ export const asyncRoutes = [
           // if do not set roles, means: this page does not require permission
           roles: ['main_school', 'sub_school'] // or you can only set roles in sub nav
         }
+      },{
+        path:'courseset',
+        component: ()=>import('@/views/course/catalog'),
+        name:'Catalog',
+        meta:{
+          title:'课程管理',
+          roles:['main_school']
+        }
+      },{
+        path:'setCatalog',
+        component: () => import('@/views/course/courseCatalog'),
+        hidden:true,
+        name:'SetCatalog',
+        meta:{
+          title:'设置目录',
+          roles:['main_school']
+        }
       }
-      ,
     ]
   },
   {
