@@ -30,3 +30,17 @@ export function updateCourse(data) {
     data
   })
 }
+export function uploadCourseCatalog(data) {
+  return request({
+    url: '/api/v1/shift/courses/catalog',
+    method:'post',
+    data
+  })
+}
+export function getCourseCatalog(data) {
+  return request({
+    url: '/api/v1/shift/courses/catalog',
+    method:'get',
+    data
+  })
+}
