@@ -138,15 +138,26 @@ export const asyncRoutes = [
       },
       {
         path: 'notice/:id(\\d+)',
-        component: () => import('@/views/school/npost'),
-        name: 'Npost',
+        component: () => import('@/views/school/edit'),
+        name: 'edit',
         hidden:true,
         meta: {
-          title: '推送文章',
+          title: '编辑推送',
           roles: ['main_school', 'sub_school']
           // if do not set roles, means: this page does not require permission
         }
       },
+      {
+        path: 'notice/create',
+        component: () => import('@/views/school/create'),
+        name: 'create',
+        hidden:true,
+        meta: {
+          title: '新建通知',
+          roles: ['main_school', 'sub_school']
+          // if do not set roles, means: this page does not require permission
+        }
+      }
     ]
   },
   {
@@ -244,23 +255,6 @@ export const asyncRoutes = [
           // if do not set roles, means: this page does not require permission
           roles: ['main_school', 'sub_school'] // or you can only set roles in sub nav
         }
-      },{
-        path:'courseset',
-        component: ()=>import('@/views/course/catalog'),
-        name:'Catalog',
-        meta:{
-          title:'课程管理',
-          roles:['main_school']
-        }
-      },{
-        path:'setCatalog',
-        component: () => import('@/views/course/courseCatalog'),
-        hidden:true,
-        name:'SetCatalog',
-        meta:{
-          title:'设置目录',
-          roles:['main_school']
-        }
       }
     ]
   },
@@ -284,7 +278,24 @@ export const asyncRoutes = [
           title: '课程信息',
           roles: ['system'] // or you can only set roles in sub nav
         }
-      },
+      },,{
+        path:'courseset',
+        component: ()=>import('@/views/courseManage/catalog'),
+        name:'Catalog',
+        meta:{
+          title:'课程管理',
+          roles:['system']
+        }
+      },{
+        path:'setCatalog',
+        component: () => import('@/views/courseManage/courseCatalog'),
+        hidden:true,
+        name:'SetCatalog',
+        meta:{
+          title:'设置目录',
+          roles:['system']
+        }
+      }
     ]
   },
   {

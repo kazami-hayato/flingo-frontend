@@ -2,9 +2,11 @@
   <div class="app-container">
     <div class="filter-container">
       <el-row type="flex" class="row-bg" justify="space-between">
+        <router-link :to="'/school/notice/create'">
         <el-button style="margin-left: 10px;" type="primary" icon="el-icon-edit"
                    @click="">新建通知
         </el-button>
+        </router-link>
         <el-button style="margin-left: 10px;" type="danger" icon="el-icon-remove"
                    @click="deleteChosen">删除所选
         </el-button>

@@ -6,13 +6,13 @@
 
         <el-col>
           <el-button style="margin-left: 10px;" type="primary" icon="el-icon-edit"
-                     @click="dialogVisible = true">新增IP
+                     @click="dialogVisible = true">新增管理员
           </el-button>
-          <el-button style="margin-left: 10px;" type="primary" icon="el-icon-edit"
-                     @click="dialogVisible = true">批量导入
-          </el-button>
+          <!--          <el-button style="margin-left: 10px;" type="primary" icon="el-icon-edit"-->
+          <!--                     @click="dialogVisible = true">批量导入-->
+          <!--          </el-button>-->
           <el-button style="margin-left: 10px;" type="danger" icon="el-icon-remove"
-                     @click="deleteChosen">删除IP
+                     @click="deleteChosen">删除管理员
           </el-button>
         </el-col>
       </el-row>
@@ -57,6 +57,15 @@
         prop="register_date"
         label="注册日期"
         show-overflow-tooltip>
+      </el-table-column>
+      <el-table-column label="操作" align="center" width="230" class-name="small-padding fixed-width">
+        <template slot-scope="{row}">
+          <router-link :to="'/setting/'+row.id">
+            <el-button type="primary" size="medium">
+              详细信息
+            </el-button>
+          </router-link>
+        </template>
       </el-table-column>
     </el-table>
     <el-dialog
