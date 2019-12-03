@@ -20,7 +20,7 @@ export default {
     },
     height: {
       type: String,
-      default: '350px'
+      default: '600px'
     },
     autoResize: {
       type: Boolean,
@@ -64,7 +64,7 @@ export default {
     setOptions({ expectedData, actualData } = {}) {
       this.chart.setOption({
         xAxis: {
-          data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+          data: ['星期一', '星期二', '星期三', '星期四', '星期五', '星期六', '星期天'],
           boundaryGap: false,
           axisTick: {
             show: false
@@ -90,10 +90,10 @@ export default {
           }
         },
         legend: {
-          data: ['last', 'actual']
+          data: ['expected', 'actual']
         },
         series: [{
-          name: 'last', itemStyle: {
+          name: 'expected', itemStyle: {
             normal: {
               color: '#FF005A',
               lineStyle: {

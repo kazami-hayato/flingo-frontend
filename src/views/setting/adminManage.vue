@@ -34,18 +34,28 @@
         min-width="120">
       </el-table-column>
       <el-table-column
-        prop="ip"
-        label="IP地址"
+        prop="admin_name"
+        label="用户名"
+        min-width="120">
+      </el-table-column>
+      <el-table-column
+        prop="admin_type"
+        label="类别"
+        min-width="120">
+      </el-table-column>
+      <el-table-column
+        prop="main_name"
+        label="主校名"
+        min-width="120">
+      </el-table-column>
+      <el-table-column
+        prop="sub_name"
+        label="分校名"
         min-width="120">
       </el-table-column>
       <el-table-column
         prop="register_date"
-        label="添加日期"
-        min-width="120">
-      </el-table-column>
-      <el-table-column
-        prop="register_admin"
-        label="操作人"
+        label="注册日期"
         show-overflow-tooltip>
       </el-table-column>
     </el-table>
@@ -69,7 +79,7 @@
 
 <script>
     export default {
-        name: "index",
+        name: "admin",
         data() {
             return {
                 dialogVisible: false,
@@ -77,24 +87,11 @@
                 tempIP: '',
                 listData: [{
                     id: 121,
-                    ip: '172.1.6.8',
+                    admin_name: 'xxs',
+                    admin_type: '主校',
+                    main_name: 'whu',
+                    sub_name: 'whue',
                     register_date: '2019-12-1 14:22:11',
-                    register_admin: 'main_school'
-                }, {
-                    id: 121,
-                    ip: '172.1.6.8',
-                    register_date: '2019-12-1 14:22:11',
-                    register_admin: 'main_school'
-                }, {
-                    id: 121,
-                    ip: '172.1.6.8',
-                    register_date: '2019-12-1 14:22:11',
-                    register_admin: 'main_school'
-                }, {
-                    id: 121,
-                    ip: '172.1.6.8',
-                    register_date: '2019-12-1 14:22:11',
-                    register_admin: 'main_school'
                 }]
             }
         },

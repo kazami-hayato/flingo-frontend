@@ -292,11 +292,12 @@ export const asyncRoutes = [
     }]
   },
   {
-    path: '/score',
+    path: '/score/:exam_id(\\d+)',
     component: Layout,
     children: [{
       path: 'index',
       component: () => import('@/views/score'),
+      hidden:true,
       name: 'Score',
       meta: {title: '成绩管理', icon: 'z_score', roles: ['system', 'main_school', 'sub_school']}
     }]
@@ -326,7 +327,7 @@ export const asyncRoutes = [
     children: [
       {
         path: 'detail',
-        component: () => import('@/views/setting/detail'),
+        component: () => import('@/views/setting/adminManage'),
         name: 'Detail',
         meta: {
           title: '管理员管理',

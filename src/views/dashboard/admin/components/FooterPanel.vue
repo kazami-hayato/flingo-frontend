@@ -3,52 +3,58 @@
     <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
       <div class="card-panel" @click="handleClick('students')">
         <div class="card-panel-icon-wrapper icon-people">
-          <svg-icon icon-class="peoples" class-name="card-panel-icon"/>
+          <svg-icon icon-class="z_ipc" class-name="card-panel-icon"/>
         </div>
         <div class="card-panel-description">
           <div class="card-panel-text">
-            学员数
+            当前IP
           </div>
-          <count-to :start-val="0" :end-val=panelParams.students :duration="2600" class="card-panel-num"/>
+          <div class="card-panel-text">{{footParams.cur_ip}}</div>
         </div>
       </div>
     </el-col>
     <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
       <div class="card-panel" @click="handleClick('courses')">
         <div class="card-panel-icon-wrapper icon-message">
-          <svg-icon icon-class="education" class-name="card-panel-icon"/>
+          <svg-icon icon-class="z_ipc" class-name="card-panel-icon"/>
         </div>
         <div class="card-panel-description">
           <div class="card-panel-text">
-            已开课程数
+            上次登录IP
           </div>
-          <count-to :start-val="0" :end-val=panelParams.courses :duration="3000" class="card-panel-num"/>
+          <div class="card-panel-text">
+            {{footParams.prev_ip}}
+          </div>
         </div>
       </div>
     </el-col>
     <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
       <div class="card-panel" @click="handleClick('school_nums')">
         <div class="card-panel-icon-wrapper icon-money">
-          <svg-icon icon-class="star" class-name="card-panel-icon"/>
+          <svg-icon icon-class="z_time" class-name="card-panel-icon"/>
         </div>
         <div class="card-panel-description">
           <div class="card-panel-text">
-            分校数量
+            上次登录时间
           </div>
-          <count-to :start-val="0" :end-val=panelParams.school_nums :duration="3200" class="card-panel-num"/>
+          <div class="card-panel-text">
+            {{footParams.prev_time}}
+          </div>
         </div>
       </div>
     </el-col>
     <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
       <div class="card-panel" @click="handleClick('sales')">
         <div class="card-panel-icon-wrapper icon-shopping">
-          <svg-icon icon-class="shopping" class-name="card-panel-icon"/>
+          <svg-icon icon-class="z_admin" class-name="card-panel-icon"/>
         </div>
         <div class="card-panel-description">
           <div class="card-panel-text">
-            课程销量
+            当前用户类型
           </div>
-          <count-to :start-val="0" :end-val=panelParams.sales :duration="3600" class="card-panel-num"/>
+          <div class="card-panel-text">
+            {{footParams.admin_type}}
+          </div>
         </div>
       </div>
     </el-col>
@@ -62,7 +68,7 @@
         components: {
             CountTo
         },
-        props: ['panelParams'],
+        props: ['footParams'],
         methods: {
             handleClick(choice) {
                 console.log(choice)

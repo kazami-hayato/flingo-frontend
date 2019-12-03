@@ -74,21 +74,21 @@
       </el-table-column>
       <el-table-column label="课程状态" width="150px" align="center">
         <template slot-scope="{row}">
-          <el-tag v-if="row.course_state==='已上架'" type="success">{{ row.course_state}}</el-tag>
-          <el-tag v-if="row.course_state==='未上架'" type="info">{{ row.course_state}}</el-tag>
+          <el-tag v-if="row.course_state===1" type="success">已上架</el-tag>
+          <el-tag v-if="row.course_state===0" type="info">未上架</el-tag>
         </template>
       </el-table-column>
 
       <el-table-column label="操作" align="center" minWidth="200" class-name="small-padding fixed-width">
         <template slot-scope="{row}">
 
-          <el-button v-if="row.course_state!='已上架'"  type="primary" size="medium" @click="shiftCourse(row)">
+          <el-button v-if="row.course_state!=1"  type="primary" size="medium" @click="shiftCourse(row)">
             上架课程
           </el-button>
-          <el-button v-if="row.course_state!='未上架'" size="medium" type="success" @click="modifyCourse(row)">
+          <el-button v-if="row.course_state!=0" size="medium" type="success" @click="modifyCourse(row)">
             修改课程
           </el-button>
-          <el-button v-if="row.course_state!='未上架'" size="medium" type="danger" @click="modifyCourse(row)">
+          <el-button v-if="row.course_state!=0" size="medium" type="danger" @click="modifyCourse(row)">
             下架课程
           </el-button>
         </template>

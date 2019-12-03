@@ -4,7 +4,7 @@
       <el-row type="flex" justify="space-between">
         <el-col :span="12">
           <el-input v-model="searchText" placeholder="可输入 课程名/课程代码" style="width: 200px;" class="filter-item"/>
-          <el-button  class="filter-item" type="primary" icon="el-icon-search" @click="searchCourses">
+          <el-button class="filter-item" type="primary" icon="el-icon-search" @click="searchCourses">
             查找
           </el-button>
         </el-col>
@@ -57,12 +57,12 @@
           <span>{{ row.norm_num}}</span>
         </template>
       </el-table-column>
-      <el-table-column label="精讲价格" width="150px" align="center">
+      <el-table-column label="精讲价格（元）" width="120px" align="center">
         <template slot-scope="{row}">
           <span>{{ row.norm_price}}</span>
         </template>
       </el-table-column>
-      <el-table-column label="串讲价格" width="100px" align="center">
+      <el-table-column label="串讲价格（元）" width="120px" align="center">
         <template slot-scope="{row}">
           <span>{{ row.cross_price}}</span>
         </template>
@@ -75,23 +75,23 @@
 
       <el-table-column label="课程状态" width="150px" align="center">
         <template slot-scope="{row}">
-          <el-tag v-if="row.course_state==='分校可见'" type="success">{{ row.course_state}}</el-tag>
-          <el-tag v-if="row.course_state==='分校不可见'" type="info">{{ row.course_state}}</el-tag>
+          <el-tag v-if="row.course_state===1" type="success">分校可见</el-tag>
+          <el-tag v-if="row.course_state===0" type="info">分校不可见</el-tag>
         </template>
       </el-table-column>
 
       <el-table-column label="操作" align="center" minWidth="200" class-name="small-padding fixed-width">
         <template slot-scope="{row}">
-          <el-button   type="primary" size="medium" @click="shiftCourse(row)">
+          <el-button type="primary" size="medium" @click="shiftCourse(row)">
             查看目录
           </el-button>
-          <el-button v-if="row.course_state!='分校可见'"  type="primary" size="medium" @click="shiftCourse(row)">
+          <el-button v-if="row.course_state!=1" type="primary" size="medium" @click="shiftCourse(row)">
             可见
           </el-button>
-          <el-button v-if="row.course_state!='分校不可见'" size="medium" type="success" @click="modifyCourse(row)">
+          <el-button v-if="row.course_state!=0" size="medium" type="success" @click="modifyCourse(row)">
             修改课程
           </el-button>
-          <el-button v-if="row.course_state!='分校不可见'" size="medium" type="danger" @click="modifyCourse(row)">
+          <el-button v-if="row.course_state!=0" size="medium" type="danger" @click="modifyCourse(row)">
             不可见
           </el-button>
         </template>
@@ -106,7 +106,7 @@
 </template>
 
 <script>
-    import {getCoursesByQuery,deleteCourseById} from '@/api/school-course'
+    import {getCoursesByQuery, deleteCourseById} from '@/api/school-course'
     import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
     export default {
@@ -118,23 +118,24 @@
                 listQuery: {
                     page: 1,
                     limit: 20,
+                    req_table: 'main_course_table'
                 },
-                total:5,
-                chosenList:[],
+                total: 5,
+                chosenList: [],
                 list: [
                     {
-                        course_id:1,
-                        course_name:'高等数学',
-                        course_brief:'',
-                        update_time:'',
-                        material_name:'',
-                        norm_duration:22,
-                        norm_num:12,
-                        course_state:'未上架',
+                        course_id: 1,
+                        course_name: '高等数学',
+                        course_brief: '',
+                        update_time: '',
+                        material_name: '',
+                        norm_duration: 22,
+                        norm_num: 12,
+                        course_state: '未上架',
                     },
                     {
-                        course_state:'已上架',
-                        course_name:'高等数学'
+                        course_state: '已上架',
+                        course_name: '高等数学'
                     }
                 ]
             }
@@ -144,7 +145,7 @@
         },
         methods: {
             getList() {
-                getCoursesByQuery(this.listQuery).then(response=>{
+                getCoursesByQuery(this.listQuery).then(response => {
                     this.list = response.data
                     this.total = response.total
                     // 设置延时以便于优化
