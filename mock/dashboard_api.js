@@ -5,9 +5,9 @@ export default [
     response: config => {
       const cookies = config.headers.cookie.split(';')
       const token_cookie = cookies.find(item => {
-        return item.startsWith(' Admin-Token=')
+        return item.trim().startsWith('Admin-Token=')
       })
-      const token = token_cookie.replace('Admin-Token=', '').trim()
+      const token = token_cookie.trim().replace('Admin-Token=', '').trim()
       console.log(token)
       return {
         code: 20000,

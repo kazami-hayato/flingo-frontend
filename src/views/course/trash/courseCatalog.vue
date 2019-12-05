@@ -61,7 +61,7 @@
   </div>
 </template>
 <script>
-  import {uploadCourseCatalog,getCourseCatalog} from '../../api/school-course'
+  import {uploadCourseCatalog,getCourseCatalog} from '../../../api/school-course'
   let id = 8;
   export default {
     data(){

@@ -37,7 +37,7 @@
       </el-table-column>
       <el-table-column label="标题" min-width="150px">
         <template slot-scope="{row}">
-          <router-link :to="'/school/notice/'+row.id">
+          <router-link :to="'/school/notice/'+row.notice_id">
             <span class="link-type">{{ row.notice_title }}</span>
 
           </router-link>
@@ -51,7 +51,7 @@
       </el-table-column>
       <el-table-column label="操作" align="center" width="230" class-name="small-padding fixed-width">
         <template slot-scope="{row}">
-          <router-link :to="'/school/notice/'+row.id">
+          <router-link :to="'/school/notice/'+row.notice_id">
             <el-button type="primary" size="mini" >
               修改
             </el-button>
@@ -113,15 +113,15 @@
             handleSelectionChange(val) {
                 let temp = []
                 val.forEach(item => {
-                    temp.push(item.id)
+                    temp.push(item.notice_id)
                 });
                 this.chosenList = temp
                 console.log(this.chosenList)
             },
             deleteChosen() {
-                for (const id of this.chosenList) {
+                for (const notice_id of this.chosenList) {
                     const query = {
-                        id: id
+                        notice_id: notice_id
                     }
                     removeNoticeById(query).then(() => {
                     })
@@ -136,7 +136,7 @@
             },
             handleDelete(row) {
                 const query = {
-                    id: row.id
+                    notice_id: row.notice_id
                 }
                 removeNoticeById(query).then(() => {
                     this.$notify({
@@ -148,10 +148,6 @@
                     this.getList()
                 })
             },
-            readMore(row) {
-                console.log(row)
-                //重定向
-            }
         }
     }
 </script>

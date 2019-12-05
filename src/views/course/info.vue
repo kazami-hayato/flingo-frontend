@@ -85,9 +85,9 @@
           <el-button v-if="row.course_state!=1"  type="primary" size="medium" @click="shiftCourse(row)">
             上架课程
           </el-button>
-          <el-button v-if="row.course_state!=0" size="medium" type="success" @click="modifyCourse(row)">
-            修改课程
-          </el-button>
+<!--          <el-button v-if="row.course_state!=0" size="medium" type="success" @click="modifyCourse(row)">-->
+<!--            修改课程-->
+<!--          </el-button>-->
           <el-button v-if="row.course_state!=0" size="medium" type="danger" @click="modifyCourse(row)">
             下架课程
           </el-button>

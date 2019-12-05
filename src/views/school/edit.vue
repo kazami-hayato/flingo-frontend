@@ -32,14 +32,16 @@
 
     import Tinymce from '@/components/Tinymce'
     import MDinput from '@/components/MDinput'
+    import {getNoticeById,pubNoticeById} from "@/api/notice"
 
     export default {
         name: 'edit',
         components: {Tinymce, MDinput},
+        mounted(){
+            this.getNotice()
+        },
         created() {
-            this.notice.notice_type='新闻'
-            this.notice.notice_title = 'qwe'
-            this.notice.notice_content = '<h1>qwe</h1>'
+            // this.getNotice()
         },
         data() {
             return {
@@ -55,8 +57,23 @@
             }
         },
         methods: {
+            getNotice(){
+                const query={
+                    notice_id:this.$route.params.id
+                }
+                console.log(query)
+                getNoticeById(query).then(response=>{
+                    console.log(response.data)
+                    Object.assign(this.notice,response.data)
+                })
+                // this.notice.notice_type='新闻'
+                // this.notice.notice_title = 'qwe'
+                // this.notice.notice_content = '<h1>qwe</h1>'
+            },
             handlePub() {
-                console.log(this.notice)
+                const query=Object.assign({notice_id:this.$route.params.id},this.notice)
+                pubNoticeById(query).then(response=>{
+                })
             }
         }
     }

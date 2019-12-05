@@ -1,10 +1,11 @@
 import request from '@/utils/request'
 
-export function fetchAllStudents(query) {
+export function fetchAllStudents(data) {
+  console.log(data)
   return request({
     url: '/apis/v1/students',
-    method: 'get',
-    params: query
+    method: 'post',
+    data: data
   })
 }
 

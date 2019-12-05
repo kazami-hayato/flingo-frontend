@@ -1,41 +1,46 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-      <el-row type="flex" justify="space-between">
-        <el-col :span="12">
-          <el-input v-model="searchFilterText" placeholder="可输入 姓名/手机号/准考证号" style="width: 200px;" class="filter-item"
-                    @keyup.enter.native="filterText"/>
-          <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="filterText">
-            查找
-          </el-button>
+      <el-row>
+        <el-col :span="6">
+          <el-row type="flex" justify="start">
+            <el-input v-model="searchFilterText" placeholder="可输入 姓名/手机号/准考证号" style="width: 200px;" class="filter-item"
+                      @keyup.enter.native="handleSearch"/>
+            <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleSearch" style="margin-left: 5px">
+              查找
+            </el-button>
+          </el-row>
         </el-col>
-        <el-col :span="16" align="right">
-          <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit"
-                     @click="handleCreate">
-            增加学员
-          </el-button>
-          <el-button class="filter-item" style="margin-left: 10px;" type="danger" icon="el-icon-edit"
-                     @click="handleDelete">
-            删除学员
-          </el-button>
-          <el-button class="filter-item" type="success" icon="el-icon-upload"
-                     @click="handleImportStu">
-            导入学员
-          </el-button>
-          <el-button class="filter-item" type="warning" icon="el-icon-download"
-                     @click="handleExport">
-            导出学员
-          </el-button>
-          <el-button class="filter-item" type="success" icon="el-icon-plus"
-                     @click="handleSubscribe">
-            批量开课
-          </el-button>
-          <el-button class="filter-item" type="warning" icon="el-icon-plus"
-                     @click="handleImportCourse">
-            批量导入课程
-          </el-button>
+        <el-col :span="18">
+          <el-row type="flex" justify="end">
+            <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit"
+                       @click="handleCreate">
+              增加学员
+            </el-button>
+            <el-button class="filter-item" style="margin-left: 10px;" type="danger" icon="el-icon-edit"
+                       @click="handleDelete">
+              删除学员
+            </el-button>
+            <el-button class="filter-item" type="success" icon="el-icon-upload"
+                       @click="handleImportStu">
+              导入学员
+            </el-button>
+            <el-button class="filter-item" type="warning" icon="el-icon-download"
+                       @click="handleExport">
+              导出学员
+            </el-button>
+            <el-button class="filter-item" type="success" icon="el-icon-plus"
+                       @click="handleSubscribe">
+              批量开课
+            </el-button>
+            <el-button class="filter-item" type="warning" icon="el-icon-plus"
+                       @click="handleImportCourse">
+              批量导入课程
+            </el-button>
+          </el-row>
         </el-col>
       </el-row>
+
     </div>
 
     <el-table
@@ -119,15 +124,15 @@
           <span>{{ row.exam_id }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="学校" prop="sub_school" align="center" width="300"
-                       :filters="stFilterOptions" :filter-method="filterTag" filter-placement="bottom-end">
+      <el-table-column label="所属分校" prop="sub_school" align="center" width="300"
+                       :filters="semesterOptions" :filter-method="filterTag" filter-placement="bottom-end">
         <template slot-scope="{row}">
           <span>{{ row.sub_school }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="考期" prop="gender" align="center" width="80">
+      <el-table-column label="考期" prop="semester" align="center" width="80">
         <template slot-scope="{row}">
-          <span>{{ row.gender }}</span>
+          <span>{{ row.semester }}</span>
         </template>
       </el-table-column>
       <el-table-column label="姓名" prop="student_name" align="center" width="150">
@@ -150,17 +155,6 @@
           <el-button type="primary" size="medium" @click="handleUpdate(row)">
             修改个人信息
           </el-button>
-<!--          <router-link :to="'/student/'+row.exam_id">-->
-<!--            <el-button type="success" size="medium" icon="el-icon-edit">-->
-<!--              查看课程-->
-<!--            </el-button>-->
-<!--          </router-link>-->
-          <!--          <el-button size="medium" type="danger" @click="handleCourseReview(row)">-->
-          <!--            查看课程-->
-          <!--          </el-button>-->
-<!--          <el-button size="medium" type="danger" @click="handleCourseAdd(row)">-->
-<!--            新增课程-->
-<!--          </el-button>-->
         </template>
       </el-table-column>
     </el-table>
@@ -180,7 +174,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="性别">
-          <el-select v-model="temp.gender" class="filter-item" placeholder="请选择">
+          <el-select v-model="temp.semester" class="filter-item" placeholder="请选择">
             <el-option v-for="item in genderOptions" :key="item" :label="item" :value="item"/>
           </el-select>
         </el-form-item>
@@ -298,21 +292,15 @@
                 //分页请求
                 listQuery: {
                     page: 1,
-                    searchOn: false,
                     limit: 20,
-                    sub_school: undefined,
-                    title: undefined,
-                    phone: undefined,
-                    student_name: undefined,
-                    exam_id: undefined,
-                    searchText: ""
+                    searchText:''
                 },
                 //选中
                 multipleSelection: [],
                 //搜索
                 searchFilterText: "",
                 //分组过滤
-                stFilterOptions: [],
+                semesterOptions: [],
                 //对话框分组选项
                 schoolOptions: ['a', 'b', 'c'],
                 //对话框性别
@@ -354,7 +342,7 @@
                 rules: {
                     exam_id: [{type: 'number', required: true, message: '不为空且必须是数字', trigger: 'change'}],
                     sub_school: [{required: true, message: '不能为空', trigger: 'change'}],
-                    gender: [{required: true, message: '不能为空', trigger: 'blur'}],
+                    semester: [{required: true, message: '不能为空', trigger: 'blur'}],
                     student_name: [{required: true, message: '不能为空', trigger: 'change'}],
                     phone: [{type: 'number', required: true, message: '不为空且必须是数字', trigger: 'change'}],
                 },
@@ -476,11 +464,11 @@
                 fetchAllStudents(this.listQuery).then(response => {
                     this.list = response.data.items
                     this.total = response.data.total
-                    this.stFilterOptions = []
-                    response.data.stFilterOptions.forEach(chs => {
-                        this.stFilterOptions.push({"text": chs, value: chs})
+                    this.semesterOptions = []
+                    response.data.semesterOptions.forEach(chs => {
+                        this.semesterOptions.push({"text": chs, value: chs})
                     })
-                    // this.stFilterOptions=data.stFilterOptions
+                    // this.semesterOptions=data.semesterOptions
                     // Just to simulate the time of the request
                     setTimeout(() => {
                         this.listLoading = false
@@ -652,7 +640,7 @@
             handleExport() {
                 import('@/vendor/Export2Excel').then(excel => {
                     const tHeader = ['ID', '准考证号', '学员分组', '性别', '姓名', '手机', '身份证号', '注册日期']
-                    const filterVal = ['id', 'exam_id', 'sub_school', 'gender', 'student_name', 'phone', 'id_card', 'register_date']
+                    const filterVal = ['id', 'exam_id', 'sub_school', 'semester', 'student_name', 'phone', 'id_card', 'register_date']
                     const data = this.formatJson(filterVal, this.list)
                     excel.export_json_to_excel({
                         header: tHeader,
@@ -676,9 +664,8 @@
                 return row.sub_school === value;
             }
             ,
-            filterText() {
+            handleSearch() {
                 this.listQuery.page = 1
-                this.listQuery.searchOn = true
                 this.listQuery.searchText = this.searchFilterText
                 this.getList()
             }

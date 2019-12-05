@@ -69,7 +69,7 @@ export default [
       })
       let info = ''
       if (token_cookie) {
-        const token = token_cookie.replace('Admin-Token=', '').trim()
+        const token = token_cookie.trim().replace('Admin-Token=', '').trim()
         // console.log(token)
         // const {token} = config.query
         info = users[token]

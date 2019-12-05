@@ -32,6 +32,8 @@
 
     import Tinymce from '@/components/Tinymce'
     import MDinput from '@/components/MDinput'
+    import {createNotice} from "@/api/notice"
+
 
     export default {
         name:'create',
@@ -41,8 +43,8 @@
                 options: ['新闻', '通知', '法律法规'],
                 notice: {
                     notice_type: '',
-                    notice_title: undefined,
-                    notice_content: undefined,
+                    notice_title: '',
+                    notice_content: '',
                 },
                 name: '',
                 content: undefined,
@@ -51,7 +53,9 @@
         },
         methods: {
             handlePub() {
-                console.log(this.notice)
+                const query=Object.assign({},this.notice)
+                createNotice(query).then(response=>{
+                })
             }
         }
     }
