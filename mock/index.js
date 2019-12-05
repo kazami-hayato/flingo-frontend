@@ -10,8 +10,10 @@ import scourse from './school-course_api'
 import group from './group'
 import search from './remote-search'
 import school from './school_api'
+import dashboard_api from './dashboard_api'
 
 const mocks = [
+  ...dashboard_api,
   ...group,
   ...student_api,
   ...user,

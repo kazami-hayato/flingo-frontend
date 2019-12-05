@@ -62,9 +62,18 @@ export default [
     url: '/apis/v1/auth/info\.*',
     type: 'get',
     response: config => {
-      const {token} = config.query
-      const info = users[token]
-
+      const cookies = config.headers.cookie.split(';')
+      console.log(cookies)
+      const token_cookie = cookies.find(item => {
+        return item.trim().startsWith('Admin-Token=')
+      })
+      let info = ''
+      if (token_cookie) {
+        const token = token_cookie.replace('Admin-Token=', '').trim()
+        // console.log(token)
+        // const {token} = config.query
+        info = users[token]
+      }
       // mock error
       if (!info) {
         return {

@@ -46,13 +46,74 @@
       highlight-current-row
       style="width: 100%;"
       @selection-change="handleSelectionChange"
+      @expand-change="getRowDetail"
     >
-      <el-table-column width="55" type="selection" align="center"></el-table-column>
+      <el-table-column type="expand">
+        <!--        <template slot-scope="props">-->
+        <template>
+          <el-table
+            :data="detail"
+            style="width: 100%"
+            :row-class-name="tableRowClassName">
+            <el-table-column
+              prop="course_id"
+              label="课程号"
+              width="180">
+            </el-table-column>
+            <el-table-column
+              prop="course_name"
+              label="课程名"
+              width="180">
+            </el-table-column>
+            <el-table-column
+              prop="watch_time"
+              label="观看时间"
+              width="180">
+            </el-table-column>
+
+            <el-table-column
+              prop="test1"
+              label="阶段测评一"
+              width="180">
+            </el-table-column>
+            <el-table-column
+              prop="test2"
+              label="阶段测评二"
+              width="180">
+            </el-table-column>
+            <el-table-column
+              prop="test3"
+              label="阶段测评三"
+              width="180">
+            </el-table-column>
+            <el-table-column
+              prop="test4"
+              label="阶段测评四"
+              width="180">
+            </el-table-column>
+            <el-table-column
+              prop="main_test "
+              label="综合测验"
+              width="180">
+            </el-table-column>
+            <el-table-column
+              label="查看抓拍详情"
+              width="180">
+              <el-button type="success" size="medium" icon="el-icon-eye">
+                查看
+              </el-button>
+            </el-table-column>
+          </el-table>
+        </template>
+      </el-table-column>
+      <el-table-column width="55" type="selection" align="center">
+      </el-table-column>
       <el-table-column label="序号" prop="id" align="center" width="140">
         <template slot-scope="{row}">
           <span>{{ row.id }}</span>
         </template>
       </el-table-column>
+
       <el-table-column label="准考证号" prop="id" align="center" width="180">
         <template slot-scope="{row}">
           <span>{{ row.exam_id }}</span>
@@ -64,7 +125,7 @@
           <span>{{ row.sub_school }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="性别" prop="gender" align="center" width="80">
+      <el-table-column label="考期" prop="gender" align="center" width="80">
         <template slot-scope="{row}">
           <span>{{ row.gender }}</span>
         </template>
@@ -84,22 +145,22 @@
           <span>{{ row.register_date | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" minWidth="370" class-name="small-padding fixed-width">
+      <el-table-column label="操作" align="center" minWidth="200" class-name="small-padding fixed-width">
         <template slot-scope="{row}">
           <el-button type="primary" size="medium" @click="handleUpdate(row)">
             修改个人信息
           </el-button>
-          <router-link :to="'/student/'+row.exam_id">
-            <el-button type="success" size="medium" icon="el-icon-edit">
-              查看课程
-            </el-button>
-          </router-link>
-<!--          <el-button size="medium" type="danger" @click="handleCourseReview(row)">-->
-<!--            查看课程-->
+<!--          <router-link :to="'/student/'+row.exam_id">-->
+<!--            <el-button type="success" size="medium" icon="el-icon-edit">-->
+<!--              查看课程-->
+<!--            </el-button>-->
+<!--          </router-link>-->
+          <!--          <el-button size="medium" type="danger" @click="handleCourseReview(row)">-->
+          <!--            查看课程-->
+          <!--          </el-button>-->
+<!--          <el-button size="medium" type="danger" @click="handleCourseAdd(row)">-->
+<!--            新增课程-->
 <!--          </el-button>-->
-          <el-button size="medium" type="danger" @click="handleCourseAdd(row)">
-            新增课程
-          </el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -225,6 +286,8 @@
         data() {
             return {
                 //
+                detail: [],
+                //
                 tableKey: 0,
                 //学生表
                 list: null,
@@ -305,6 +368,21 @@
             console.log(this.tableKey)
         },
         methods: {
+            //获取课程学习子表
+            getRowDetail(row) {
+                const courses = [row.student_name, '语文', '数学']
+                this.detail = courses
+                console.log(row)
+            },
+            //子表ui
+            tableRowClassName({row, rowIndex}) {
+                if (rowIndex === 1) {
+                    return 'warning-row';
+                } else if (rowIndex === 3) {
+                    return 'success-row';
+                }
+                return '';
+            },
             //文件上传相关
             handleRemove(file, fileList) {
                 console.log(file, fileList);
@@ -604,6 +682,16 @@
                 this.listQuery.searchText = this.searchFilterText
                 this.getList()
             }
-        }
+        },
+
     }
 </script>
+<style>
+  .el-table .warning-row {
+    background: oldlace;
+  }
+
+  .el-table .success-row {
+    background: #f0f9eb;
+  }
+</style>

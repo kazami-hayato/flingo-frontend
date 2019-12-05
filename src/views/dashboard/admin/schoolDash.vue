@@ -8,46 +8,16 @@
       <v-line-chart :chart-data="chartData"></v-line-chart>
     </el-row>
     <footer-panel @handleSetLineChartData="handleSetLineChartData" :foot-params="footParams"></footer-panel>
-<!--    <el-row :gutter="12">-->
-<!--      <div class="foot-wrapper">-->
-<!--      <el-row :gutter="32">-->
-<!--        <el-col :xs="12" :sm="24" :lg="4" >当前登录ip<span>{{info.cur_ip}}</span></el-col>-->
-<!--        <el-col :xs="12" :sm="24" :lg="4">上次登录ip<span>{{info.prev_ip}}</span></el-col>-->
-<!--        <el-col :xs="12" :sm="24" :lg="4">上次登录时间<span>{{info.prev_time}}</span></el-col>-->
-<!--      </el-row>-->
-<!--      <el-row :gutter="32">-->
-<!--        <el-col :xs="24" :sm="24" :lg="4">当前用户<span>{{info.cur_user}}</span></el-col>-->
-<!--        <el-col :xs="24" :sm="24" :lg="4">用户类型<span>{{info.user_type}}</span></el-col>-->
-<!--        <el-col :xs="24" :sm="24" :lg="4">用户注册时间<span>{{info.register_date}}</span></el-col>-->
-<!--      </el-row>-->
-<!--      </div>-->
-<!--    </el-row>-->
-
-    <!--    <el-row :gutter="8">-->
-    <!--      <el-col :xs="{span: 24}" :sm="{span: 24}" :md="{span: 24}" :lg="{span: 12}" :xl="{span: 12}" style="padding-right:8px;margin-bottom:30px;">-->
-    <!--        <transaction-table />-->
-    <!--      </el-col>-->
-    <!--      <el-col :xs="{span: 24}" :sm="{span: 12}" :md="{span: 12}" :lg="{span: 6}" :xl="{span: 6}" style="margin-bottom:30px;">-->
-    <!--        <todo-list />-->
-    <!--      </el-col>-->
-    <!--      <el-col :xs="{span: 24}" :sm="{span: 12}" :md="{span: 12}" :lg="{span: 6}" :xl="{span: 6}" style="margin-bottom:30px;">-->
-    <!--        <box-card />-->
-    <!--      </el-col>-->
-    <!--    </el-row>-->
   </div>
 </template>
 
 <script>
     import Divider from 'element-ui'
     import PanelGroup from './components/PanelGroup'
-    import RaddarChart from './components/RaddarChart'
-    import PieChart from './components/PieChart'
-    import BarChart from './components/BarChart'
-    import TransactionTable from './components/TransactionTable'
-    import TodoList from './components/TodoList'
     import BoxCard from './components/BoxCard'
     import VLineChart from "./components/VLineChart";
     import FooterPanel from "./components/FooterPanel";
+    import {getSchoolDash} from "@/api/dashboard"
 
     export default {
         name: 'schoolDash',
@@ -55,11 +25,6 @@
             Divider,
             VLineChart,
             PanelGroup,
-            RaddarChart,
-            PieChart,
-            BarChart,
-            TransactionTable,
-            TodoList,
             BoxCard,
             FooterPanel
         },
@@ -71,7 +36,7 @@
                     school_nums: 12,
                     sales: 4300,
                 },
-                footParams:{
+                footParams: {
                     cur_ip: '172.168.1.2',
                     prev_ip: '172.168.2.3',
                     prev_time: '2019-12-2 16:44:22',
@@ -94,9 +59,31 @@
         },
 
         created() {
+            this.getDashBoard()
+
             //get panelParams
         },
         methods: {
+            getDashBoard() {
+                console.log('ok')
+                getSchoolDash().then(response => {
+                    const data = response.data
+                    this.panelParams.students = data.students
+                    this.panelParams.courses = data.courses
+                    this.panelParams.school_nums = data.school_nums
+                    this.panelParams.sales = data.sales
+                    this.footParams.cur_ip = data.cur_ip
+                    this.footParams.prev_ip = data.prev_ip
+                    this.footParams.admin_type = data.admin_type
+                    this.footParams.prev_time = data.prev_time
+                    for (let i = 0; i < 7; ++i) {
+                        this.chartData.rows[i].上周售课数 = data.prev_sale[i]
+                        this.chartData.rows[i].本周售课数 = data.cur_sale[i]
+
+                    }
+                    console.log(response.data)
+                })
+            },
             handleSetLineChartData(type) {
                 this.lineChartData = lineChartData[type]
             }

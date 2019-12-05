@@ -31,7 +31,7 @@
             <el-input v-model="form.school_name"></el-input>
           </el-form-item>
           <el-form-item label="H5域名">
-            <el-input v-model="form.H5domain"></el-input>
+            <el-input v-model="form.h5_domain"></el-input>
           </el-form-item>
           <el-form-item label="咨询热线">
             <el-input v-model="form.hotline"></el-input>
@@ -63,7 +63,7 @@
 
 <script>
 
-    import {fetchSchoolById, changeSchoolById} from '@/api/school'
+    import {fetchSchool, uploadLogo, changeSchoolById} from '@/api/school'
 
     export default {
         name: "config",
@@ -71,17 +71,16 @@
             return {
                 logofile: {},
                 first_query: {
-                    token: 'admin-token',
-                    school_id: 123456
+                    school_id: undefined
                 },
-                change_query:{
-
+                change_query: {
+                    school_id: undefined
                 },
                 imgList: [],
                 form: {
                     logo: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
                     school_name: '',
-                    H5domain: '',
+                    h5_domain: '',
                     hotline: '',
                     qq: '',
                     email: '',
@@ -93,10 +92,14 @@
             }
         },
         created() {
-            fetchSchoolById(this.first_query).then(response => {
-                console.log(response.data)
+            fetchSchool().then(response => {
                 this.form = response.data
+                this.change_query.school_id = response.data.school_id
             })
+            // fetchSchoolById(this.first_query).then(response => {
+            //     console.log(response.data)
+            //     // this.form = response.data
+            // })
         },
         methods: {
             handleRemove(file, fileList) {
@@ -112,16 +115,21 @@
                 return this.$confirm(`确定移除 ${file.name}？`);
             },
             onUploadChange(file) {
-                this.logofile = file
-                console.log(this.logofile)
+                this.logofile = file.raw
+                console.log(file.raw)
             },
             parseLogo() {
 
             },
             onSubmit() {
-                console.log(this.form);
+                // console.log(this.logofile)
+                uploadLogo(this.logofile).then(response => {
+                    this.form.logo = response.data
+                })
+                console.log(this.form)
+                console.log(typeof this.logofile)
                 changeSchoolById(this.change_query).then(() => {
-                    this.location.reload();
+                    // window.location.reload();
                 })
             },
             onCancel() {

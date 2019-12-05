@@ -10,11 +10,11 @@ export function login(data) {
   })
 }
 
-export function getInfo(token) {
+export function getInfo() {
   return request({
     url: '/apis/v1/auth/info',
     method: 'get',
-    params: { token },
+    // params: { token },
     response:{code:50008,data:string(message)}|{ code: 20000,data:{user_id,user_name,user_password}}
   })
 }
@@ -35,13 +35,12 @@ export function logout() {
 export function getSchoolDash(data) {
   return request({
     url: '/apis/v1/dash',
-    method: 'post',
-    data:{dash_type:string('system','main_school','sub_school'),token:string},
+    method: 'get',
     response:{code:40008,data:string(message)}|{code:20000,data:struct(
    {students_num:int,
     active_courses:int,
     subschool_num:int,
-    sale:int,
+    sales:int,
     prev_sale:int[7],
     cur_sale:int[7],
     cur_ip:string,
@@ -65,8 +64,9 @@ export function fetchSchoolById(data) {
     response:{code:40008,data:string(message)}|{code:20000,data:struct(
    {
      logo: string,
+     school_id:int,
      school_name: string,
-     H5domain: string,
+     h5_domain: string,
      hotline: string,
      qq: string,
      email: string,
@@ -77,6 +77,28 @@ export function fetchSchoolById(data) {
    )}
   })
 }
+export function fetchSchool(data) {
+   return request({
+    url:'/apis/v1/schools/'+data.school_id,
+    method:'get',
+   //如果是system 返回schools 如果是其他的 返回单个学校信息
+    response:{code:40008,data:string(message)}|{code:20000,data:array(struct(
+   {
+     logo: string,
+     school_id:int,
+     school_name: string,
+     h5_domain: string,
+     hotline: string,
+     qq: string,
+     email: string,
+     icp: string,
+     description: string,
+     address: string
+   } 
+   ))}
+  })
+}
+
 export function changeSchoolById(data) {
   return request({
     url:'/apis/v1/schools/'+query.school_id,
@@ -94,10 +116,9 @@ export function getAllNotices(data) {
 
   return request({
     url:'/apis/v1/notices/',
-    method:'get',
+    method:'post',
     data: {page:int,limit:int},
     response:{code:20000,data:struct({total:int,list:array(notice)})}
-    
   })
 }
 
@@ -300,5 +321,16 @@ export function getShiftCourseCatalog() {
   })
 }
 ```
+### 静态资源相关
 
-
+```javascript
+export function uploadFile() {
+  return request({
+    url: '/api/v1/static',
+    method:'post',
+    content_type:'multipart/form',
+    data:file,
+    response:{code:20000,data:string(资源id)}
+  })
+}
+```
