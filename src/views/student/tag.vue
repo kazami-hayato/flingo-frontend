@@ -4,7 +4,7 @@
 
 <script>
     export default {
-        name: "semester"
+        name: "tag"
     }
 </script>
 

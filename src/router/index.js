@@ -182,9 +182,9 @@ export const asyncRoutes = [
         }
       },
       {
-        path: 'semester',
-        component: () => import('@/views/student/semester'),
-        name: 'semester',
+        path: 'tag',
+        component: () => import('@/views/student/tag'),
+        name: 'tag',
         meta: {
           title: '考期设置',
           roles: ['main_school', 'sub_school'] // or you can only set roles in sub nav

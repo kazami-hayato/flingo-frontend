@@ -6,7 +6,8 @@
           <el-row type="flex" justify="start">
             <el-input v-model="searchFilterText" placeholder="可输入 姓名/手机号/准考证号" style="width: 200px;" class="filter-item"
                       @keyup.enter.native="handleSearch"/>
-            <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleSearch" style="margin-left: 5px">
+            <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleSearch"
+                       style="margin-left: 5px">
               查找
             </el-button>
           </el-row>
@@ -55,51 +56,50 @@
     >
       <el-table-column type="expand">
         <!--        <template slot-scope="props">-->
-        <template>
+        <template slot-scope="{row}">
           <el-table
-            :data="detail"
-            style="width: 100%"
+            :data="row.details"
             :row-class-name="tableRowClassName">
             <el-table-column
               prop="course_id"
               label="课程号"
-              width="180">
+              width="100">
             </el-table-column>
             <el-table-column
               prop="course_name"
               label="课程名"
-              width="180">
+              width="200">
             </el-table-column>
             <el-table-column
               prop="watch_time"
-              label="观看时间"
-              width="180">
+              label="观看时间(分)"
+              width="100">
             </el-table-column>
 
             <el-table-column
               prop="test1"
               label="阶段测评一"
-              width="180">
+              width="100">
             </el-table-column>
             <el-table-column
               prop="test2"
               label="阶段测评二"
-              width="180">
+              width="100">
             </el-table-column>
             <el-table-column
               prop="test3"
               label="阶段测评三"
-              width="180">
+              width="100">
             </el-table-column>
             <el-table-column
               prop="test4"
               label="阶段测评四"
-              width="180">
+              width="100">
             </el-table-column>
             <el-table-column
-              prop="main_test "
+              prop="main_test"
               label="综合测验"
-              width="180">
+              width="100">
             </el-table-column>
             <el-table-column
               label="查看抓拍详情"
@@ -125,14 +125,14 @@
         </template>
       </el-table-column>
       <el-table-column label="所属分校" prop="sub_school" align="center" width="300"
-                       :filters="semesterOptions" :filter-method="filterTag" filter-placement="bottom-end">
+                       :filters="schoolOptions" :filter-method="filterTag" filter-placement="bottom-end">
         <template slot-scope="{row}">
           <span>{{ row.sub_school }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="考期" prop="semester" align="center" width="80">
+      <el-table-column label="考期" prop="tag" align="center" width="80">
         <template slot-scope="{row}">
-          <span>{{ row.semester }}</span>
+          <span>{{ row.tag }}</span>
         </template>
       </el-table-column>
       <el-table-column label="姓名" prop="student_name" align="center" width="150">
@@ -168,14 +168,9 @@
         <el-form-item label="准考证号" prop="exam_id">
           <el-input v-model.number="temp.exam_id" placeholder="请输入准考证号"/>
         </el-form-item>
-        <el-form-item label="学员分组" prop="sub_school">
+        <el-form-item label="学校名" prop="sub_school">
           <el-select v-model="temp.sub_school" class="filter-item" placeholder="请选择">
-            <el-option v-for="item in schoolOptions" :key="item" :label="item" :value="item"/>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="性别">
-          <el-select v-model="temp.semester" class="filter-item" placeholder="请选择">
-            <el-option v-for="item in genderOptions" :key="item" :label="item" :value="item"/>
+            <el-option v-for="item in schoolOptions" :key="item.value" :label="item.value" :value="item.value"/>
           </el-select>
         </el-form-item>
         <el-form-item label="姓名" prop="student_name">
@@ -212,6 +207,8 @@
           :auto-upload="false">
           <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
           <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button>
+          <el-button type="info" align="right" size="small">下载模板</el-button>
+
           <div slot="tip" class="el-upload__tip">只能上传xls/xlsx文件</div>
         </el-upload>
       </el-form>
@@ -234,21 +231,20 @@
             width="55">
           </el-table-column>
           <el-table-column
+            prop="course_id"
             label="课程号"
             width="120">
-            <template slot-scope="scope">{{ scope.row.course_id }}</template>
+            <!--            <template slot-scope="scope">{{ scope.row.course_id }}</template>-->
           </el-table-column>
           <el-table-column
             prop="course_name"
             label="课程名"
             width="120">
           </el-table-column>
-          <el-table-column
-            prop="course_type"
-            label="课程类别"
-            show-overflow-tooltip>
-          </el-table-column>
         </el-table>
+        <pagination v-show="course_total>0" :total="course_total" :page.sync="courseQuery.page"
+                    :limit.sync="courseQuery.limit"
+                    @pagination="getCourses"/>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="subscribeFormVisible = false">
@@ -264,14 +260,22 @@
 </template>
 
 <script>
-    import {fetchList, fetchPv, createArticle, updateArticle,} from '@/api/article'
-    import {fetchAllStudents, createStudent, updateStudent, deleteStudent, setStudentCourse} from '@/api/student'
-    import {fetchAllCourses, createCourse, updateCourse, deleteCourse} from '@/api/school-course'
-
+    // import {getStudents, createStudent, updateStudent, deleteStudent, setStudentCourse} from '@/api/student'
+    // import {fetchAllCourses, getStudentDetail, createCourse, updateCourse, deleteCourse} from '@/api/school-course'
+    import {
+        getStudents,
+        createStudent,
+        updateStudent,
+        deleteStudent,
+        setStudentCourse,
+        getShiftCourses,
+        getStudentDetail
+    } from "@/api/apis";
     import waves from '@/directive/waves' // waves directive
     import {parseTime} from '@/utils'
     import Pagination from '@/components/Pagination' // secondary package based on el-pagination
     import XLSX from 'xlsx'
+    // import {getShiftCourses} from "../../api/apis";
 
     export default {
         name: 'all',
@@ -284,7 +288,7 @@
                 //
                 tableKey: 0,
                 //学生表
-                list: null,
+                list: [],
                 //总数
                 total: 0,
                 //缓冲状态
@@ -293,22 +297,22 @@
                 listQuery: {
                     page: 1,
                     limit: 20,
-                    searchText:''
+                    searchText: ''
+                },
+                courseQuery: {
+                    page: 1,
+                    limit: 10,
                 },
                 //选中
                 multipleSelection: [],
                 //搜索
                 searchFilterText: "",
-                //分组过滤
-                semesterOptions: [],
-                //对话框分组选项
-                schoolOptions: ['a', 'b', 'c'],
+                //分校过滤
+                schoolOptions: [],
                 //对话框性别
                 genderOptions: ['男', '女'],
                 //新建学生数据模板
-                temp: {
-                    register_date: new Date(),
-                },
+                temp: {},
                 //学生对话框信息
                 StuFormVisible: false,
                 StuFormStatus: '',
@@ -332,23 +336,19 @@
                     add: '新增课程'
                 },
                 subscribeTemp: {},
-                courseInfo: [{
-                    course_id: '101',
-                    course_name: '高等数学',
-                    course_type: '基础课程'
-                },],
+                courseInfo: [],
+                course_total: 1,
+
                 //文件上传 [{name,url}]
                 fileList: [],
                 rules: {
                     exam_id: [{type: 'number', required: true, message: '不为空且必须是数字', trigger: 'change'}],
                     sub_school: [{required: true, message: '不能为空', trigger: 'change'}],
-                    semester: [{required: true, message: '不能为空', trigger: 'blur'}],
+                    tag: [{required: true, message: '不能为空', trigger: 'blur'}],
                     student_name: [{required: true, message: '不能为空', trigger: 'change'}],
                     phone: [{type: 'number', required: true, message: '不为空且必须是数字', trigger: 'change'}],
                 },
                 //状态
-
-
             }
         },
         created() {
@@ -358,9 +358,10 @@
         methods: {
             //获取课程学习子表
             getRowDetail(row) {
-                const courses = [row.student_name, '语文', '数学']
-                this.detail = courses
-                console.log(row)
+                getStudentDetail({exam_id: row.exam_id}).then(response => {
+                    console.log(response.data)
+                    row.details = response.data
+                })
             },
             //子表ui
             tableRowClassName({row, rowIndex}) {
@@ -461,14 +462,14 @@
             getList() {
                 this.listLoading = true
 
-                fetchAllStudents(this.listQuery).then(response => {
-                    this.list = response.data.items
-                    this.total = response.data.total
-                    this.semesterOptions = []
-                    response.data.semesterOptions.forEach(chs => {
-                        this.semesterOptions.push({"text": chs, value: chs})
+                getStudents(this.listQuery).then(response => {
+                    this.list = response.data
+                    this.total = response.total
+                    this.schoolOptions = []
+                    response.schoolOptions.forEach(chs => {
+                        this.schoolOptions.push({"text": chs, value: chs})
                     })
-                    // this.semesterOptions=data.semesterOptions
+                    // this.schoolOptions=data.schoolOptions
                     // Just to simulate the time of the request
                     setTimeout(() => {
                         this.listLoading = false
@@ -523,7 +524,6 @@
                         console.log(this.temp)
                         // 发送到后端 并返回完整数据
                         createStudent(this.temp).then(() => {
-                            this.list.unshift(this.temp)
                             this.StuFormVisible = false
                             this.$notify({
                                 title: '成功',
@@ -531,6 +531,7 @@
                                 type: 'success',
                                 duration: 2000
                             })
+                            this.getList()
                         })
                     }
                 })
@@ -538,7 +539,7 @@
             ,
             handleDelete() {
                 this.multipleSelection.forEach(exam_id => {
-                    deleteStudent(exam_id).then(() => {
+                    deleteStudent({exam_id: exam_id}).then(() => {
                         const index = this.multipleSelection.indexOf(exam_id)
                         if (index !== -1) this.multipleSelection.splice(index, 1)
                     })
@@ -551,13 +552,6 @@
                     duration: 2000
                 })
                 this.getList()
-
-                // let id_array = []
-                // this.list.forEach(item => {
-                //     if(item.status==true)console.log(item.id)
-                // })
-                // const index = this.list.indexOf(row)
-                // this.list.splice(index, 1)
             }
             ,
             //操作 更新 查看课程 开课
@@ -585,19 +579,19 @@
                 this.$refs['dataForm'].validate((valid) => {
                     if (valid) {
                         const tempData = Object.assign({}, this.temp)
-                        tempData.register_date = +new Date(tempData.register_date) // change Thu Nov 30 2017 16:41:05 GMT+0800 (CST) to 1512031311464
+                        // tempData.register_date = +new Date(tempData.register_date) // change Thu Nov 30 2017 16:41:05 GMT+0800 (CST) to 1512031311464
                         updateStudent(tempData).then(() => {
-                            for (const v of this.list) {
-                                if (v.id === this.temp.id) {
-                                    const index = this.list.indexOf(v)
-                                    this.list.splice(index, 1, this.temp)
-                                    break
-                                }
-                            }
+                            // for (const v of this.list) {
+                            //     if (v.id === this.temp.id) {
+                            //         const index = this.list.indexOf(v)
+                            //         this.list.splice(index, 1, this.temp)
+                            //         break
+                            //     }
+                            // }
                             this.StuFormVisible = false
                             this.$notify({
-                                title: 'Success',
-                                message: 'Update Successfully',
+                                title: '成功',
+                                message: '更新成功',
                                 type: 'success',
                                 duration: 2000
                             })
@@ -618,7 +612,13 @@
             handleSubscribe() {
                 this.subscribeFormStatus = 'default'
                 this.subscribeFormVisible = true
-
+                this.getCourses()
+            },
+            getCourses() {
+                console.log(this.$store.state.user)
+                getShiftCourses(this.courseQuery).then(response => {
+                    this.courseInfo = response.data
+                })
             },
             postSubscribe() {
                 this.multipleSelection.forEach(stuEId => {
@@ -629,18 +629,26 @@
                     // tempStudent.courses = tempStudent.courses.concat(this.courseSelection)
 
                     this.courseSelection.forEach(cid => {
-                        let temp = {'exam_id': stuEId, 'course_id': cid}
+                        let temp = {'exam_id': stuEId, 'course_id': cid, status: 1}
                         setStudentCourse(temp).then(response => {
+                            console.log(temp)
                         })
                     })
 
                 })
+                this.$notify({
+                    title: '成功',
+                    message: '选课成功',
+                    type: 'success',
+                    duration: 2000
+                })
+
                 this.subscribeFormVisible = false
             },
             handleExport() {
                 import('@/vendor/Export2Excel').then(excel => {
-                    const tHeader = ['ID', '准考证号', '学员分组', '性别', '姓名', '手机', '身份证号', '注册日期']
-                    const filterVal = ['id', 'exam_id', 'sub_school', 'semester', 'student_name', 'phone', 'id_card', 'register_date']
+                    const tHeader = ['ID', '准考证号', '分校名', '性别', '姓名', '手机', '身份证号', '注册日期']
+                    const filterVal = ['id', 'exam_id', 'sub_school', 'tag', 'student_name', 'phone', 'id_card', 'register_date']
                     const data = this.formatJson(filterVal, this.list)
                     excel.export_json_to_excel({
                         header: tHeader,

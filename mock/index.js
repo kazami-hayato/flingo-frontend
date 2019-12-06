@@ -1,7 +1,7 @@
 import Mock from 'mockjs'
 import { param2Obj } from '../src/utils'
 
-import user from './user'
+// import user from './user'
 import role from './role'
 import article from './article'
 import notice from './notice_api'
@@ -10,18 +10,20 @@ import scourse from './school-course_api'
 import group from './group'
 import search from './remote-search'
 import school from './school_api'
-import dashboard_api from './dashboard_api'
+import server_apis from './server_api'
+// import dashboard_api from './dashboard_api'
 
 const mocks = [
-  ...dashboard_api,
+  // ...dashboard_api,
+  ...server_apis,
   ...group,
-  ...student_api,
-  ...user,
-  ...scourse,
+  // ...student_api,
+  // ...user,
+  // ...scourse,
   ...role,
-  ...notice,
-  ...article,
-  ...school,
+  // ...notice,
+  // ...article,
+  // ...school,
   ...search
 ]
 

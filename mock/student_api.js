@@ -13,7 +13,7 @@ for (let i = 0; i < count; i++) {
     student_name: 'any' + '@integer(100,200)',
     'sub_school|1': ['鄂州职业学院', '黄石职业学院', '孝感职业学院'],
     'main_school|1': ['鄂州职业学院', '黄石职业学院', '孝感职业学院'],
-    semester: '190906',
+    tag: '190906',
     phone: '@integer(13765717681,15671640897)',
     register_date: +Mock.Random.date('T'),
     // courses: [10, 12]
@@ -34,7 +34,7 @@ export default [
       return {
         code: 20000,
         data: {
-          semesterOptions: ['鄂州职业学院', '黄石职业学院', '孝感职业学院'],
+          tagOptions: ['鄂州职业学院', '黄石职业学院', '孝感职业学院'],
           total: mockList.length,
           items: pageList
         }

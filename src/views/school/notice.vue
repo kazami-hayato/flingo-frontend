@@ -72,7 +72,8 @@
 
 <script>
     // import {fetchList, fetchPv, createArticle, updateArticle} from '@/api/article'
-    import {getAllNotices, removeNoticeById} from "@/api/notice"
+    // import {getAllNotices, removeNoticeById} from "@/api/notice"
+    import {getNotices,removeNoticeById} from "@/api/apis";
     import waves from '@/directive/waves' // waves directive
     import {parseTime} from '@/utils'
     import Pagination from '@/components/Pagination' // secondary package based on el-pagination
@@ -101,7 +102,7 @@
         methods: {
             getList() {
                 this.listLoading = true
-                getAllNotices(this.listQuery).then(response => {
+                getNotices(this.listQuery).then(response => {
                     this.list = response.data
                     this.total = response.total
                     // 设置延时以便于优化

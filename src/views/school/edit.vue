@@ -32,7 +32,7 @@
 
     import Tinymce from '@/components/Tinymce'
     import MDinput from '@/components/MDinput'
-    import {getNoticeById,pubNoticeById} from "@/api/notice"
+    import {getNoticeById,modifyNoticeById} from "@/api/apis"
 
     export default {
         name: 'edit',
@@ -72,7 +72,7 @@
             },
             handlePub() {
                 const query=Object.assign({notice_id:this.$route.params.id},this.notice)
-                pubNoticeById(query).then(response=>{
+                modifyNoticeById(query).then(response=>{
                 })
             }
         }

@@ -11,19 +11,11 @@
         <el-col :span="16" align="right">
           <el-button class="filter-item" type="success" icon="el-icon-plus"
                      @click="shiftSelected">
-            上架已选
+            选中可见
           </el-button>
           <el-button class="filter-item" type="danger" icon="el-icon-minus"
                      @click="unshiftSelected">
-            下架已选
-          </el-button>
-          <el-button class="filter-item" type="success" icon="el-icon-plus"
-                     @click="shiftAll">
-            全部上架
-          </el-button>
-          <el-button class="filter-item" type="danger" icon="el-icon-minus"
-                     @click="unshiftAll">
-            全部下架
+            选中不可见
           </el-button>
         </el-col>
       </el-row>
@@ -75,23 +67,23 @@
 
       <el-table-column label="课程状态" width="150px" align="center">
         <template slot-scope="{row}">
-          <el-tag v-if="row.course_state===1" type="success">分校可见</el-tag>
-          <el-tag v-if="row.course_state===0" type="info">分校不可见</el-tag>
+          <el-tag v-if="row.is_valid===1" type="success">分校可见</el-tag>
+          <el-tag v-if="row.is_valid===0" type="info">分校不可见</el-tag>
         </template>
       </el-table-column>
 
       <el-table-column label="操作" align="center" minWidth="200" class-name="small-padding fixed-width">
         <template slot-scope="{row}">
-          <el-button type="primary" size="medium" @click="shiftCourse(row)">
+          <el-button type="info" size="medium" @click="shiftCourse(row)">
             查看目录
           </el-button>
-          <el-button v-if="row.course_state!=1" type="primary" size="medium" @click="shiftCourse(row)">
+          <el-button v-if="row.is_valid!=1" type="success" size="medium" @click="shiftCourse(row)">
             可见
           </el-button>
-          <el-button v-if="row.course_state!=0" size="medium" type="success" @click="modifyCourse(row)">
+          <el-button v-if="row.is_valid!=0" size="medium" type="warning" @click="modifyCourse(row)">
             修改课程
           </el-button>
-          <el-button v-if="row.course_state!=0" size="medium" type="danger" @click="modifyCourse(row)">
+          <el-button v-if="row.is_valid!=0" size="medium" type="danger" @click="deleteCourse(row)">
             不可见
           </el-button>
         </template>
@@ -100,13 +92,26 @@
 
     <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit"
                 @pagination="getList"/>
-
+    <el-dialog title="修改课程" :visible.sync="courseInfoVisible">
+      <el-form :model="courseInfo">
+        <el-form-item label="精讲价格" :label-width="'120px'">
+          <el-input v-model="courseInfo.norm_price" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="串讲价格" :label-width="'120px'">
+          <el-input v-model="courseInfo.cross_price" autocomplete="off"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="courseInfoVisible = false">取 消</el-button>
+        <el-button type="primary" @click="postModify">确 定</el-button>
+      </div>
+    </el-dialog>
 
   </div>
 </template>
 
 <script>
-    import {getCoursesByQuery, deleteCourseById} from '@/api/school-course'
+    import {getShiftCourses, updateShiftCourse,unshiftCourse,shiftCourse} from '@/api/apis'
     import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
     export default {
@@ -114,6 +119,8 @@
         components: {Pagination},
         data() {
             return {
+                courseInfoVisible: false,
+                courseInfo: {},
                 searchText: '',
                 listQuery: {
                     page: 1,
@@ -131,10 +138,10 @@
                         material_name: '',
                         norm_duration: 22,
                         norm_num: 12,
-                        course_state: '未上架',
+                        is_valid: '未上架',
                     },
                     {
-                        course_state: '已上架',
+                        is_valid: '已上架',
                         course_name: '高等数学'
                     }
                 ]
@@ -145,7 +152,7 @@
         },
         methods: {
             getList() {
-                getCoursesByQuery(this.listQuery).then(response => {
+                getShiftCourses(this.listQuery).then(response => {
                     this.list = response.data
                     this.total = response.total
                     // 设置延时以便于优化
@@ -171,16 +178,35 @@
 
             },
             shiftSelected() {
-
+                this.chosenList.forEach(ele=>{
+                    shiftCourse({course_id:ele}).then(()=>{})
+                })
             },
             unshiftSelected() {
-
+                this.chosenList.forEach(ele=>{
+                    unshiftCourse({course_id:ele}).then(()=>{})
+                })
             },
             shiftCourse(row) {
-
+                shiftCourse(row).then(()=>{})
+                this.getList()
             },
             modifyCourse(row) {
+                this.courseInfoVisible = true
+                this.courseInfo = row
+            },
+            postModify(){
+                this.courseInfoVisible = false
+                updateShiftCourse(this.courseInfo).then(()=>{
 
+                })
+                this.getList()
+            },
+            deleteCourse(row){
+                unshiftCourse(row).then(()=>{
+
+                })
+                this.getList()
             }
 
         }

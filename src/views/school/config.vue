@@ -64,6 +64,7 @@
 <script>
 
     import {fetchSchool, uploadLogo, changeSchoolById} from '@/api/school'
+    import {getSchool,modifySchool,uploadFile} from "@/api/apis";
 
     export default {
         name: "config",
@@ -73,11 +74,12 @@
                 first_query: {
                     school_id: undefined
                 },
-                change_query: {
-                    school_id: undefined
-                },
+                // change_query: {
+                //     school_id: undefined
+                // },
                 imgList: [],
                 form: {
+                    school_id:undefined,
                     logo: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
                     school_name: '',
                     h5_domain: '',
@@ -92,14 +94,10 @@
             }
         },
         created() {
-            fetchSchool().then(response => {
+            getSchool().then(response => {
                 this.form = response.data
-                this.change_query.school_id = response.data.school_id
+                // this.form.school_id = response.data.school_id
             })
-            // fetchSchoolById(this.first_query).then(response => {
-            //     console.log(response.data)
-            //     // this.form = response.data
-            // })
         },
         methods: {
             handleRemove(file, fileList) {
@@ -123,12 +121,12 @@
             },
             onSubmit() {
                 // console.log(this.logofile)
-                uploadLogo(this.logofile).then(response => {
+                uploadFile(this.logofile).then(response => {
                     this.form.logo = response.data
                 })
                 console.log(this.form)
                 console.log(typeof this.logofile)
-                changeSchoolById(this.change_query).then(() => {
+                modifySchool(this.form).then(() => {
                     // window.location.reload();
                 })
             },

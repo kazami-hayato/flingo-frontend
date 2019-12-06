@@ -32,7 +32,7 @@
 
     import Tinymce from '@/components/Tinymce'
     import MDinput from '@/components/MDinput'
-    import {createNotice} from "@/api/notice"
+    import {createNotice} from "@/api/apis"
 
 
     export default {

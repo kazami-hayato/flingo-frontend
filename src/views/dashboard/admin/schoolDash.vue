@@ -1,13 +1,13 @@
 <template>
   <div class="dashboard-editor-container">
 
-    <panel-group @handleSetLineChartData="handleSetLineChartData" :panel-params="panelParams"/>
+    <panel-group  :panel-params="panelParams"/>
 
     <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
       <!--      <line-chart :chart-data="lineChartData"/>-->
       <v-line-chart :chart-data="chartData"></v-line-chart>
     </el-row>
-    <footer-panel @handleSetLineChartData="handleSetLineChartData" :foot-params="footParams"></footer-panel>
+    <footer-panel :foot-params="footParams"></footer-panel>
   </div>
 </template>
 
@@ -17,7 +17,8 @@
     import BoxCard from './components/BoxCard'
     import VLineChart from "./components/VLineChart";
     import FooterPanel from "./components/FooterPanel";
-    import {getSchoolDash} from "@/api/dashboard"
+    // import {getSchoolDash} from "@/api/dashboard"
+    import {getDashData} from "@/api/apis";
 
     export default {
         name: 'schoolDash',
@@ -66,7 +67,7 @@
         methods: {
             getDashBoard() {
                 console.log('ok')
-                getSchoolDash().then(response => {
+                getDashData().then(response => {
                     const data = response.data
                     this.panelParams.students = data.students
                     this.panelParams.courses = data.courses
@@ -84,9 +85,9 @@
                     console.log(response.data)
                 })
             },
-            handleSetLineChartData(type) {
-                this.lineChartData = lineChartData[type]
-            }
+            // handleSetLineChartData(type) {
+            //     this.lineChartData = lineChartData[type]
+            // }
         }
     }
 </script>

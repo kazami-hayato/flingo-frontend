@@ -6,8 +6,10 @@ const state = {
   token: getToken(),
   name: '',
   avatar: '',
-
   introduction: '',
+  /*
+  * 鉴权相关
+  * */
   roles: []
 }
 
