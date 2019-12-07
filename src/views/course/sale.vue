@@ -44,17 +44,17 @@
           <span>{{ row.norm_duration}}</span>
         </template>
       </el-table-column>
-      <el-table-column label="精讲课程数" width="100px" align="center">
+      <el-table-column label="精讲课程数" width="150px" align="center">
         <template slot-scope="{row}">
           <span>{{ row.norm_num}}</span>
         </template>
       </el-table-column>
-      <el-table-column label="精讲价格（元）" width="120px" align="center">
+      <el-table-column label="精讲价格（元）" width="150px" align="center">
         <template slot-scope="{row}">
           <span>{{ row.norm_price}}</span>
         </template>
       </el-table-column>
-      <el-table-column label="串讲价格（元）" width="120px" align="center">
+      <el-table-column label="串讲价格（元）" width="150px" align="center">
         <template slot-scope="{row}">
           <span>{{ row.cross_price}}</span>
         </template>
@@ -74,16 +74,16 @@
 
       <el-table-column label="操作" align="center" minWidth="200" class-name="small-padding fixed-width">
         <template slot-scope="{row}">
-          <el-button type="info" size="medium" @click="shiftCourse(row)">
-            查看目录
-          </el-button>
-          <el-button v-if="row.is_valid!=1" type="success" size="medium" @click="shiftCourse(row)">
+<!--          <el-button type="info" size="medium" @click="makeValid(row)">-->
+<!--            查看目录-->
+<!--          </el-button>-->
+          <el-button v-if="row.is_valid!=1" type="success" size="medium" @click="makeValid(row)">
             可见
           </el-button>
           <el-button v-if="row.is_valid!=0" size="medium" type="warning" @click="modifyCourse(row)">
             修改课程
           </el-button>
-          <el-button v-if="row.is_valid!=0" size="medium" type="danger" @click="deleteCourse(row)">
+          <el-button v-if="row.is_valid!=0" size="medium" type="danger" @click="makeUnvalid(row)">
             不可见
           </el-button>
         </template>
@@ -111,7 +111,7 @@
 </template>
 
 <script>
-    import {getShiftCourses, updateShiftCourse,unshiftCourse,shiftCourse} from '@/api/apis'
+    import {getShiftCourses, updateShiftCourse,unshiftCourse,makeValid} from '@/api/apis'
     import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
     export default {
@@ -164,7 +164,7 @@
             handleSelectionChange(val) {
                 let temp = []
                 val.forEach(item => {
-                    temp.push(item.course_id)
+                    temp.push(item)
                 });
                 this.chosenList = temp
                 console.log(this.chosenList)
@@ -179,16 +179,19 @@
             },
             shiftSelected() {
                 this.chosenList.forEach(ele=>{
-                    shiftCourse({course_id:ele}).then(()=>{})
+                    ele.is_valid=1
+                    updateShiftCourse(ele).then(()=>{})
                 })
             },
             unshiftSelected() {
                 this.chosenList.forEach(ele=>{
-                    unshiftCourse({course_id:ele}).then(()=>{})
+                    ele.is_valid=0
+                    updateShiftCourse(ele).then(()=>{})
                 })
             },
-            shiftCourse(row) {
-                shiftCourse(row).then(()=>{})
+            makeValid(row) {
+                row.is_valid=1
+                updateShiftCourse(row).then(()=>{})
                 this.getList()
             },
             modifyCourse(row) {
@@ -202,8 +205,9 @@
                 })
                 this.getList()
             },
-            deleteCourse(row){
-                unshiftCourse(row).then(()=>{
+            makeUnvalid(row){
+                row.is_valid=0
+                updateShiftCourse(row).then(()=>{
 
                 })
                 this.getList()

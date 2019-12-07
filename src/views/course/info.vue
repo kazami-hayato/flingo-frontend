@@ -3,28 +3,29 @@
     <div class="filter-container">
       <el-row type="flex" justify="space-between">
         <el-col :span="12">
-          <el-input v-model="searchText" placeholder="可输入 课程名/课程代码" style="width: 200px;" class="filter-item"/>
+          <el-input v-model="listQuery.searchText" placeholder="可输入 课程名/课程代码" style="width: 200px;"
+                    class="filter-item"/>
           <el-button class="filter-item" type="primary" icon="el-icon-search" @click="searchCourses">
             查找
           </el-button>
         </el-col>
         <el-col :span="16" align="right">
-          <el-button class="filter-item" type="success" icon="el-icon-plus"
-                     @click="shiftSelected">
-            上架已选
-          </el-button>
+          <!--          <el-button class="filter-item" type="success" icon="el-icon-plus"-->
+          <!--                     @click="shiftSelected">-->
+          <!--            上架已选-->
+          <!--          </el-button>-->
           <el-button class="filter-item" type="danger" icon="el-icon-minus"
                      @click="unshiftSelected">
             下架已选
           </el-button>
-<!--          <el-button class="filter-item" type="success" icon="el-icon-plus"-->
-<!--                     @click="shiftAll">-->
-<!--            全部上架-->
-<!--          </el-button>-->
-<!--          <el-button class="filter-item" type="danger" icon="el-icon-minus"-->
-<!--                     @click="unshiftAll">-->
-<!--            全部下架-->
-<!--          </el-button>-->
+          <!--          <el-button class="filter-item" type="success" icon="el-icon-plus"-->
+          <!--                     @click="shiftAll">-->
+          <!--            全部上架-->
+          <!--          </el-button>-->
+          <!--          <el-button class="filter-item" type="danger" icon="el-icon-minus"-->
+          <!--                     @click="unshiftAll">-->
+          <!--            全部下架-->
+          <!--          </el-button>-->
         </el-col>
       </el-row>
     </div>
@@ -32,6 +33,7 @@
     <el-table
       :data="list"
       fit
+      v-loading="listLoading"
       highlight-current-row
       style="width: 100%;"
       @selection-change="handleSelectionChange"
@@ -79,16 +81,16 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="操作" align="center" minWidth="200" class-name="small-padding fixed-width">
+      <el-table-column label="操作" align="center" minWidth="300" class-name="small-padding fixed-width">
         <template slot-scope="{row}">
-
-          <el-button v-if="row.course_state!=1" type="primary" size="medium" @click="shiftCourse(row)">
+          <el-button  size="medium" type="info" @click="lookDetail(row)">
+            查看详情
+          </el-button>
+          <el-button v-if="row.course_state!=1" type="primary" size="medium" @click="shiftTheCourse(row)">
             上架课程
           </el-button>
-          <!--          <el-button v-if="row.course_state!=0" size="medium" type="success" @click="modifyCourse(row)">-->
-          <!--            修改课程-->
-          <!--          </el-button>-->
-          <el-button v-if="row.course_state!=0" size="medium" type="danger" @click="modifyCourse(row)">
+
+          <el-button v-if="row.course_state!=0" size="medium" type="danger" @click="unshiftTheCourse(row)">
             下架课程
           </el-button>
         </template>
@@ -97,13 +99,26 @@
 
     <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit"
                 @pagination="getList"/>
-
+    <el-dialog title="修改课程" :visible.sync="courseInfoVisible">
+      <el-form :model="courseInfo">
+        <el-form-item label="精讲价格" :label-width="'120px'">
+          <el-input v-model="courseInfo.norm_price" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="串讲价格" :label-width="'120px'">
+          <el-input v-model="courseInfo.cross_price" autocomplete="off"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="courseInfoVisible = false">取 消</el-button>
+        <el-button type="primary" @click="postShiftCourse">确 定</el-button>
+      </div>
+    </el-dialog>
 
   </div>
 </template>
 
 <script>
-    import {getCourses,getShiftCourseById,deleteCourseById, getShiftCourses} from '@/api/apis'
+    import {getCourses, getShiftCourseById, unshiftCourse, shiftCourse} from '@/api/apis'
     import Pagination from '@/components/Pagination'
 
     export default {
@@ -111,8 +126,11 @@
         components: {Pagination},
         data() {
             return {
-                searchText: '',
+                courseInfoVisible: false,
+                courseInfo: {},
+                listLoading: true,
                 listQuery: {
+                    searchText: '',
                     page: 1,
                     limit: 20,
                 },
@@ -126,16 +144,23 @@
         },
         methods: {
             getList() {
+                this.listLoading = true
                 getCourses(this.listQuery).then(response => {
                     this.list = response.data
                     this.total = response.total
                     this.list.forEach(function (ele) {
-                        let status=false
-                        getShiftCourseById({course_id:ele.course_id}).then(response=>{
-                            ele.course_state=(response.data==='')?0:1
+                        let status = false
+                        getShiftCourseById({course_id: ele.course_id}).then(response => {
+                            ele.course_state = (response.data === '') ? 0 : 1
                         })
                     })
+                    setTimeout(() => {
+                        this.listLoading = false
+                    }, 1000)
+
                 })
+                // this.listLoading=false
+
             },
             handleSelectionChange(val) {
                 let temp = []
@@ -146,6 +171,8 @@
                 console.log(this.chosenList)
             },
             searchCourses() {
+                this.getList()
+                // this.listQuery.searchText=''
             },
             shiftAll() {
 
@@ -154,17 +181,37 @@
 
             },
             shiftSelected() {
+                this.chosenList.forEach(item => {
+                    shiftCourse(row).then(() => {
+                    })
+                })
+                this.getList()
 
             },
             unshiftSelected() {
+                this.chosenList.forEach(item => {
+                    unshiftCourse({course_id:item}).then(() => {
+                    })
+                })
+                this.getList()
+            },
+            shiftTheCourse(row) {
+                this.courseInfoVisible = true
+                this.courseInfo = row
+            },
+            postShiftCourse() {
+                shiftCourse(this.courseInfo).then(() => {
+                })
+                this.courseInfoVisible = false
+                this.getList()
 
             },
-            shiftCourse(row) {
-
+            unshiftTheCourse(row) {
+                unshiftCourse(row).then(() => {
+                })
+                this.getList()
             },
-            modifyCourse(row) {
-
-            }
+            lookDetail(row){}
 
         }
     }

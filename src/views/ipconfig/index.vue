@@ -56,7 +56,7 @@
       :before-close="handleClose">
       <el-form ref="IPForm" label-width="80px">
         <el-form-item label="输入IP">
-          <el-input v-model="tempIP"></el-input>
+          <el-input v-model="tempIP.ip"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -68,13 +68,16 @@
 </template>
 
 <script>
+  import {addIP} from '@/api/apis'
     export default {
         name: "index",
         data() {
             return {
                 dialogVisible: false,
                 chosenList: [],
-                tempIP: '',
+                tempIP: {
+                    ip:''
+                },
                 listData: [{
                     id: 121,
                     ip: '172.1.6.8',
@@ -120,6 +123,8 @@
             },
             addIP() {
                 this.dialogVisible = false
+                console.log(this.$store.state.user)
+                this.tempIP=Object.assign({},this.$store.state.user)
                 console.log(this.tempIP)
                 this.tempIP = ''
             }

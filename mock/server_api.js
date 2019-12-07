@@ -412,24 +412,53 @@ export default [
     url: '/apis/v1/shift/courses/[0-9]+',
     type: 'get',
     response: config => {
+      // console.log(config.query)
+      if (Math.random() >= 0.5) {
+        return {
+          code: 20000,
+          // data:''
+          data: {
+            id: 1,
+            course_id: '121',
+            course_name: '高等数学',
+            course_brief: '简介',
+            update_time: '2019-12-11 16:44:55',
+            material_name: '教材名',
+            norm_duration: 12,
+            norm_num: 22,
+            norm_price: 799,
+            cross_price: 199,
+            sales: 12,
+            is_valid: 0 | 1,
+          },
+        }
+      } else {
+        return {
+          code: 20000,
+          data: ''
+        }
+      }
+    }
+  },
+  {
+    url: '/apis/v1/shift/courses/[0-9]+',
+    type: 'delete',
+    response: config => {
       console.log(config.query)
       return {
         code: 20000,
-        data:''
-        // data: {
-        //   id: 1,
-        //   course_id: '121',
-        //   course_name: '高等数学',
-        //   course_brief: '简介',
-        //   update_time: '2019-12-11 16:44:55',
-        //   material_name: '教材名',
-        //   norm_duration: 12,
-        //   norm_num: 22,
-        //   norm_price: 799,
-        //   cross_price: 199,
-        //   sales: 12,
-        //   is_valid: 0 | 1,
-        // },
+        data: ''
+      }
+    }
+  },
+  {
+    url: '/apis/v1/shift/courses',
+    type: 'post',
+    response: config => {
+      console.log(config.body)
+      return {
+        code: 20000,
+        data: ''
       }
     }
   },
