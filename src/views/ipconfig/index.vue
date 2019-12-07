@@ -61,7 +61,7 @@
       </el-form>
       <span slot="footer" class="dialog-footer">
     <el-button @click="dialogVisible = false">取 消</el-button>
-    <el-button type="primary" @click="addIP">确 定</el-button>
+    <el-button type="primary" @click="confirmAdd">确 定</el-button>
   </span>
     </el-dialog>
   </div>
@@ -121,12 +121,13 @@
                     .catch(_ => {
                     });
             },
-            addIP() {
+            confirmAdd() {
                 this.dialogVisible = false
                 console.log(this.$store.state.user)
-                this.tempIP=Object.assign({},this.$store.state.user)
+                Object.assign(this.tempIP,this.$store.state.user)
                 console.log(this.tempIP)
-                this.tempIP = ''
+                addIP(this.tempIP).then(()=>{})
+
             }
         }
     }
