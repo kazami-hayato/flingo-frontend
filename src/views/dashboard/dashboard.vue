@@ -23,6 +23,7 @@
             ])
         },
         created() {
+            console.log(this.$store.state)
             if (!this.roles.includes('system')) {
                 this.currentRole = 'schoolDash'
             }

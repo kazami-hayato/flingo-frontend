@@ -3,7 +3,7 @@
     <div class="filter-container">
       <el-row type="flex" justify="space-between">
         <el-col :span="12">
-          <el-input v-model="searchText" placeholder="可输入 课程名/课程代码" style="width: 200px;" class="filter-item"/>
+          <el-input v-model="listQuery.searchText" placeholder="可输入 课程名/课程代码" style="width: 200px;" class="filter-item"/>
           <el-button class="filter-item" type="primary" icon="el-icon-search" @click="searchCourses">
             查找
           </el-button>
@@ -121,11 +121,12 @@
             return {
                 courseInfoVisible: false,
                 courseInfo: {},
-                searchText: '',
                 listQuery: {
                     page: 1,
                     limit: 20,
-                    req_table: 'main_course_table'
+                    searchText: '',
+                    main_school:this.$store.state.user.main_school,
+                    sub_school:this.$store.state.user.sub_school
                 },
                 total: 5,
                 chosenList: [],

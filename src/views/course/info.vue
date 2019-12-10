@@ -10,22 +10,11 @@
           </el-button>
         </el-col>
         <el-col :span="16" align="right">
-          <!--          <el-button class="filter-item" type="success" icon="el-icon-plus"-->
-          <!--                     @click="shiftSelected">-->
-          <!--            上架已选-->
-          <!--          </el-button>-->
+
           <el-button class="filter-item" type="danger" icon="el-icon-minus"
                      @click="unshiftSelected">
             下架已选
           </el-button>
-          <!--          <el-button class="filter-item" type="success" icon="el-icon-plus"-->
-          <!--                     @click="shiftAll">-->
-          <!--            全部上架-->
-          <!--          </el-button>-->
-          <!--          <el-button class="filter-item" type="danger" icon="el-icon-minus"-->
-          <!--                     @click="unshiftAll">-->
-          <!--            全部下架-->
-          <!--          </el-button>-->
         </el-col>
       </el-row>
     </div>
@@ -71,13 +60,13 @@
       </el-table-column>
       <el-table-column label="精讲课程数" width="100px" align="center">
         <template slot-scope="{row}">
-          <span>{{ row.norm_num}}</span>
+          <span>{{ row.norm_sum}}</span>
         </template>
       </el-table-column>
       <el-table-column label="课程状态" width="150px" align="center">
         <template slot-scope="{row}">
-          <el-tag v-if="row.course_state===1" type="success">已上架</el-tag>
-          <el-tag v-if="row.course_state===0" type="info">未上架</el-tag>
+          <el-tag v-if="row.is_main===1" type="success">已上架</el-tag>
+          <el-tag v-if="row.is_main===0" type="info">未上架</el-tag>
         </template>
       </el-table-column>
 
@@ -86,11 +75,11 @@
           <el-button  size="medium" type="info" @click="lookDetail(row)">
             查看详情
           </el-button>
-          <el-button v-if="row.course_state!=1" type="primary" size="medium" @click="shiftTheCourse(row)">
+          <el-button v-if="row.is_main!=1" type="primary" size="medium" @click="shiftTheCourse(row)">
             上架课程
           </el-button>
 
-          <el-button v-if="row.course_state!=0" size="medium" type="danger" @click="unshiftTheCourse(row)">
+          <el-button v-if="row.is_main!=0" size="medium" type="danger" @click="unshiftTheCourse(row)">
             下架课程
           </el-button>
         </template>
@@ -118,7 +107,7 @@
 </template>
 
 <script>
-    import {getCourses, getShiftCourseById, unshiftCourse, shiftCourse} from '@/api/apis'
+    import {getCourses,getCoursesBySearch,getShiftCourseById, unshiftCourse, shiftCourse} from '@/api/apis'
     import Pagination from '@/components/Pagination'
 
     export default {
@@ -130,6 +119,7 @@
                 courseInfo: {},
                 listLoading: true,
                 listQuery: {
+                    main_school:this.$store.state.user.main_school,
                     searchText: '',
                     page: 1,
                     limit: 20,
@@ -148,19 +138,10 @@
                 getCourses(this.listQuery).then(response => {
                     this.list = response.data
                     this.total = response.total
-                    this.list.forEach(function (ele) {
-                        let status = false
-                        getShiftCourseById({course_id: ele.course_id}).then(response => {
-                            ele.course_state = (response.data === '') ? 0 : 1
-                        })
-                    })
                     setTimeout(() => {
                         this.listLoading = false
                     }, 1000)
-
                 })
-                // this.listLoading=false
-
             },
             handleSelectionChange(val) {
                 let temp = []
@@ -168,25 +149,25 @@
                     temp.push(item.course_id)
                 });
                 this.chosenList = temp
-                console.log(this.chosenList)
             },
             searchCourses() {
-                this.getList()
-                // this.listQuery.searchText=''
+                console.log(this.listQuery)
+                getCoursesBySearch(this.listQuery).then(response=>{
+                    this.list = response.data
+                    this.total = response.total
+                })
             },
             shiftAll() {
-
             },
             unshiftAll() {
-
             },
             shiftSelected() {
+
                 this.chosenList.forEach(item => {
                     shiftCourse(row).then(() => {
                     })
                 })
                 this.getList()
-
             },
             unshiftSelected() {
                 this.chosenList.forEach(item => {
@@ -200,11 +181,12 @@
                 this.courseInfo = row
             },
             postShiftCourse() {
-                shiftCourse(this.courseInfo).then(() => {
+                const theCourse=Object.assign(this.courseInfo,{main_school: this.$store.state.user.main_school})
+                console.log(theCourse)
+                shiftCourse(theCourse).then(() => {
                 })
                 this.courseInfoVisible = false
                 this.getList()
-
             },
             unshiftTheCourse(row) {
                 unshiftCourse(row).then(() => {
@@ -212,7 +194,6 @@
                 this.getList()
             },
             lookDetail(row){}
-
         }
     }
 </script>

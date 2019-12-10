@@ -73,6 +73,7 @@
             handlePub() {
                 const query=Object.assign({notice_id:this.$route.params.id},this.notice)
                 modifyNoticeById(query).then(response=>{
+                    this.$router.push({ path: this.redirect || '/school/notice' })
                 })
             }
         }

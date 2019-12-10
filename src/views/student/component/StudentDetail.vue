@@ -1,5 +1,5 @@
 <template>
-  <el-card>
+  <el-card >
     <el-container>
       <el-header style="background: #addafb;height: 140px">
         <el-row>
@@ -10,17 +10,17 @@
 
           </el-col>
           <el-col :span="12">
-            <p><b>学生姓名：</b>{{studentInfo.name}}</p>
-            <p><b>身份证号：</b>{{studentInfo.id_card}}</p>
-            <p><b>专业名称：</b>{{studentInfo.major}}</p>
-            <p><b>准考证号：</b>{{studentInfo.exam_id}}</p>
+            <p><b>学生姓名：</b>{{studentInfo.stu.real_name}}</p>
+            <p><b>身份证号：</b>{{studentInfo.stu.id_card}}</p>
+            <p><b>专业名称：</b>{{studentInfo.stu.major}}</p>
+            <p><b>准考证号：</b>{{studentInfo.stu.exam_id}}</p>
           </el-col>
         </el-row>
       </el-header>
       <el-main>
         <el-table
           fit
-          :data="studentInfo.exam_info"
+          :data="studentInfo.courses"
           :row-class-name="tableRowClassName"
         >
           <el-table-column

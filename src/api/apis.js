@@ -242,8 +242,8 @@ export function modifyNoticeById(data) {
 * 学生相关
 * */
 
-//学生分页 get ?limit=?page=?searchText=?sub_school=?
-export function getStudents(data) {
+//学生分页 get ?limit=?page=?sub_school=?
+export function getStudentsBySchool(data) {
   //searchText 可以是exam_id,student_name,phone like查询可以缓一缓 为空则不过滤
   /*  data = {
       limit: 20,
@@ -251,7 +251,7 @@ export function getStudents(data) {
       searchText: ''
     }*/
   return request({
-    url: '/apis/v1/students',
+    url: '/apis/v1/students/getBySchool',
     method: 'get',
     params: data
   })
@@ -272,6 +272,63 @@ export function getStudents(data) {
     }*/
 }
 
+export function getStudentsBySystem(data) {
+  //searchText 可以是exam_id,student_name,phone like查询可以缓一缓 为空则不过滤
+  /*  data = {
+      limit: 20,
+      page: 1,
+      searchText: ''
+    }*/
+  return request({
+    url: '/apis/v1/students/system',
+    method: 'get',
+    params: data
+  })
+  /*  const response = {
+      code: 20000,
+      data: [{
+        id: 1,
+        exam_id: 195445,
+        student_name: 'aav',
+        sub_school: '鄂州职业学院|黄石职业学院|孝感职业学院',
+        main_school: '鄂州职业学院|黄石职业学院|孝感职业学院',
+        tag: '190906',
+        phone: 12548547584,
+        register_date: '2019-11-12 16:32:22',
+      }],
+      schoolOptions: '鄂州职业学院|黄石职业学院|孝感职业学院',
+      total: 1
+    }*/
+}
+
+export function getStudentsBySearch(data) {
+  //searchText 可以是exam_id,student_name,phone like查询可以缓一缓 为空则不过滤
+  /*  data = {
+      limit: 20,
+      page: 1,
+      searchText: ''
+    }*/
+  return request({
+    url: '/apis/v1/students/Search',
+    method: 'get',
+    params: data
+  })
+  /*  const response = {
+      code: 20000,
+      data: [{
+        id: 1,
+        exam_id: 195445,
+        student_name: 'aav',
+        sub_school: '鄂州职业学院|黄石职业学院|孝感职业学院',
+        main_school: '鄂州职业学院|黄石职业学院|孝感职业学院',
+        tag: '190906',
+        phone: 12548547584,
+        register_date: '2019-11-12 16:32:22',
+      }],
+      schoolOptions: '鄂州职业学院|黄石职业学院|孝感职业学院',
+      total: 1
+    }*/
+}
 export function createStudent(data) {
   /*  data = {
       student_name: 'aav',
@@ -297,7 +354,7 @@ export function getStudentDetail(data) {
       exam_id:1112
     }*/
   return request({
-    url: '/apis/v1/students/' + data.exam_id,
+    url: '/apis/v1/StuCourse/getByStuId/' + data.exam_id,
     method: 'get',
   })
   /*  const response = {
@@ -360,7 +417,7 @@ export function setStudentCourse(data) {
   return request({
     url: '/apis/v1/students/' + data.exam_id + '/courses/' + data.course_id,
     method: 'post',
-    data: data.status
+    data: data
   })
   const response = {
     code: 20000,
@@ -402,21 +459,51 @@ export function getCourses(data) {
     method: 'get',
     params: data
   })
-  const response = {
-    code: 20000,
-    data: [{
-      id: 1,
-      course_id: 121,
-      course_name: '高等数学',
-      course_brief: '简介',
-      update_time: '2019-11-12 12:22:11',
-      material_name: '教材名',
-      norm_duration: 22,
-      norm_num: 33,
-      // course_state: 0 | 1,
-    }],
-    total: 1
-  }
+  // const response = {
+  //   code: 20000,
+  //   data: [{
+  //     id: 1,
+  //     course_id: 121,
+  //     course_name: '高等数学',
+  //     course_brief: '简介',
+  //     update_time: '2019-11-12 12:22:11',
+  //     material_name: '教材名',
+  //     norm_duration: 22,
+  //     norm_num: 33,
+  //     // course_state: 0 | 1,
+  //   }],
+  //   total: 1
+  // }
+}
+//网校课程相关 获取该校仓库所有课程
+//课程分页 get ?limit=?page=?searchText=?sub_school=?
+export function getCoursesBySearch(data) {
+  /*  data = {
+      limit: 20,
+      page: 1,
+      searchText: '课程名|课程id',
+      sub_school: '鄂州大学'
+    }*/
+  return request({
+    url: '/apis/v1/repository/Search',
+    method: 'get',
+    params: data
+  })
+  // const response = {
+  //   code: 20000,
+  //   data: [{
+  //     id: 1,
+  //     course_id: 121,
+  //     course_name: '高等数学',
+  //     course_brief: '简介',
+  //     update_time: '2019-11-12 12:22:11',
+  //     material_name: '教材名',
+  //     norm_duration: 22,
+  //     norm_num: 33,
+  //     // course_state: 0 | 1,
+  //   }],
+  //   total: 1
+  // }
 }
 
 

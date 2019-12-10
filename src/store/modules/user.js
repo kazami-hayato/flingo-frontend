@@ -1,21 +1,62 @@
 import {login, logout, getInfo} from '@/api/user'
 import {getToken, setToken, removeToken} from '@/utils/auth'
 import router, {resetRouter} from '@/router'
+import role from "@/views/permission/role";
 
 const state = {
   token: getToken(),
-  name: '',
-  avatar: '',
-  introduction: '',
+  username: undefined,
+  real_name: undefined,
+  password: undefined,
+  user_type: undefined,
+  wechat_num:undefined,
+  phone:undefined,
+  main_school: undefined,
+  sub_school: undefined,
+  ip: undefined,
+  prev_time: undefined,
+  name: undefined,
+  avatar: undefined,
+  introduction: undefined,
   /*
   * 鉴权相关
   * */
-  roles: []
+  roles: undefined
 }
 
 const mutations = {
   SET_TOKEN: (state, token) => {
     state.token = token
+  },
+  SET_USERNAME: (state, username) => {
+    state.username = username
+  },
+  SET_REAL_NAME: (state, real_name) => {
+    state.real_name = real_name
+  },
+  SET_PASSWORD: (state, password) => {
+    state.password = password
+  },
+  SET_USER_TYPE: (state, user_type) => {
+    state.user_type = user_type
+  },
+  SET_WECHAT_NUM: (state, wechat_num) => {
+    state.wechat_num = wechat_num
+  },
+  SET_PHONE: (state, phone) => {
+    state.phone = phone
+  },
+  SET_MAIN_SCHOOL: (state, main_school) => {
+    state.main_school = main_school
+  },
+  SET_SUB_SCHOOL: (state, sub_school) => {
+    state.sub_school = sub_school
+  },
+  SET_IP: (state, ip) => {
+    state.ip = ip
+  },
+  SET_PREV_TIME: (state, prev_time) => {
+    state.prev_time = prev_time
   },
   SET_INTRODUCTION: (state, introduction) => {
     state.introduction = introduction
@@ -28,6 +69,8 @@ const mutations = {
   },
   SET_ROLES: (state, roles) => {
     state.roles = roles
+    console.log('this')
+    console.log(roles)
   }
 }
 
@@ -56,22 +99,49 @@ const actions = {
         const {data} = response
 
         if (!data) {
-          reject('Verification failed, please Login again.')
+          reject('认证失败，请重新登录.')
         }
-      console.log(data)
+        console.log(data)
         // const { roles, name, avatar, introduction } = data
-        const {roles, name, avatar, introduction} = data
+        const {
+          username,
+          real_name,
+          main_school,
+          sub_school,
+          password,
+          user_type,
+          wechat_num,
+          phone,
+          ip,
+          prev_time
+        } = data
 
         // roles.push(role)
         // roles must be a non-empty array
-        if (!roles || roles.length <= 0) {
-          reject('getInfo: roles must be a non-null array!')
+        console.log(typeof user_type)
+        if (user_type === null) {
+          reject('角色不为空')
+        }
+        let roles = []
+        if (user_type === 1) {
+          roles.push('system')
+        } else if (user_type === 2) {
+          roles.push('main_school')
+        } else {
+          roles.push('sub_school')
         }
         console.log(roles)
         commit('SET_ROLES', roles)
-        commit('SET_NAME', name)
-        commit('SET_AVATAR', avatar)
-        commit('SET_INTRODUCTION', introduction)
+        commit('SET_USERNAME', username)
+        commit('SET_REAL_NAME', real_name)
+        commit('SET_PASSWORD', password)
+        commit('SET_USER_TYPE', user_type)
+        commit('SET_WECHAT_NUM', wechat_num)
+        commit('SET_PHONE', phone)
+        commit('SET_MAIN_SCHOOL', main_school)
+        commit('SET_SUB_SCHOOL', sub_school)
+        commit('SET_IP', ip)
+        commit('SET_PREV_TIME', prev_time)
         resolve(data)
       }).catch(error => {
         reject(error)

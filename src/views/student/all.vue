@@ -61,49 +61,46 @@
     >
       <el-table-column type="expand">
         <template slot-scope="{row}">
-          <StudentDetail style="width: 100%;height: 1600px" :student-info="row"></StudentDetail>
+          <StudentDetail style="width: 100%;max-height: 1600px" :student-info="row"></StudentDetail>
         </template>
       </el-table-column>
       <el-table-column width="55" type="selection" align="center">
       </el-table-column>
-      <el-table-column label="序号" prop="id" align="center" width="140">
-        <template slot-scope="{row}">
-          <span>{{ row.id }}</span>
-        </template>
+      <el-table-column label="序号" prop="id" align="center" width="140" type="index">
       </el-table-column>
       <el-table-column label="准考证号" prop="id" align="center" width="180">
         <template slot-scope="{row}">
-          <span>{{ row.exam_id }}</span>
+          <span>{{ row.stu.exam_id }}</span>
         </template>
       </el-table-column>
       <el-table-column label="所属主校" prop="sub_school" align="center" width="180">
         <template slot-scope="{row}">
-          <span>{{ row.main_school }}</span>
+          <span>{{ row.stu.main_school }}</span>
         </template>
       </el-table-column>
       <el-table-column label="所属分校" prop="sub_school" align="center" width="180">
         <template slot-scope="{row}">
-          <span>{{ row.sub_school }}</span>
+          <span>{{ row.stu.sub_school }}</span>
         </template>
       </el-table-column>
       <el-table-column label="考期" prop="tag" align="center" width="80">
         <template slot-scope="{row}">
-          <span>{{ row.tag }}</span>
+          <span>{{ row.stu.tag }}</span>
         </template>
       </el-table-column>
       <el-table-column label="姓名" prop="student_name" align="center" width="150">
         <template slot-scope="{row}">
-          <span>{{ row.student_name }}</span>
+          <span>{{ row.stu.real_name }}</span>
         </template>
       </el-table-column>
       <el-table-column label="手机" prop="phone" align="center" minWidth="200">
         <template slot-scope="{row}">
-          <span>{{ row.phone }}</span>
+          <span>{{ row.stu.phone }}</span>
         </template>
       </el-table-column>
       <el-table-column label="注册日期" prop="register_date" width="150px" align="center">
         <template slot-scope="{row}">
-          <span>{{ row.register_date | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
+          <span>{{ row.stu.register_date }}</span>
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center" minWidth="200" class-name="small-padding fixed-width">
@@ -119,18 +116,23 @@
                 @pagination="getList"/>
     <!--修改信息和新增-->
     <el-dialog :title="'修改学生信息'" :visible.sync="StuFormVisible">
-      <el-form ref="dataForm" :rules="rules" :model="temp" label-position="left" label-width="100px"
+      <el-form ref="dataForm" :model="temp" label-position="left" label-width="100px"
                style="width: 500px; margin-left:50px;">
         <el-form-item label="准考证号" prop="exam_id">
           <el-input v-model.number="temp.exam_id" placeholder="请输入准考证号"/>
         </el-form-item>
-        <el-form-item label="学校名" prop="sub_school">
+        <el-form-item label="主校名" prop="sub_school">
+          <el-select v-model="temp.main_school" class="filter-item" placeholder="请选择">
+            <el-option v-for="item in MainschoolOptions" :key="item" :label="item" :value="item"/>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="分校名" prop="sub_school">
           <el-select v-model="temp.sub_school" class="filter-item" placeholder="请选择">
-            <el-option v-for="item in SubschoolOptions" :key="item.value" :label="item.value" :value="item.value"/>
+            <el-option v-for="item in SubschoolOptions" :key="item" :label="item" :value="item"/>
           </el-select>
         </el-form-item>
         <el-form-item label="姓名" prop="student_name">
-          <el-input v-model="temp.student_name" placeholder="请输入姓名"/>
+          <el-input v-model="temp.real_name" placeholder="请输入姓名"/>
         </el-form-item>
         <el-form-item label="手机" prop="phone">
           <el-input v-model.number="temp.phone" placeholder="请输入手机"/>
@@ -192,7 +194,8 @@
 
 <script>
     import {
-        getStudents,
+        getStudentsBySchool,
+        getStudentsBySearch,
         createStudent,
         updateStudent,
         deleteStudent,
@@ -226,10 +229,15 @@
                 listQuery: {
                     page: 1,
                     limit: 20,
+                    main_school: this.$store.state.user.main_school,
+                    sub_school: this.$store.state.user.sub_school,
                     searchText: ''
                 },
                 courseQuery: {
+                    main_school: this.$store.state.user.main_school,
+                    sub_school: this.$store.state.user.sub_school,
                     page: 1,
+                    searchText: '',
                     limit: 10,
                 },
                 //选中
@@ -261,13 +269,13 @@
 
                 //文件上传 [{name,url}]
                 fileList: [],
-                rules: {
-                    exam_id: [{type: 'number', required: true, message: '不为空且必须是数字', trigger: 'change'}],
-                    sub_school: [{required: true, message: '不能为空', trigger: 'change'}],
-                    tag: [{required: true, message: '不能为空', trigger: 'blur'}],
-                    student_name: [{required: true, message: '不能为空', trigger: 'change'}],
-                    phone: [{type: 'number', required: true, message: '不为空且必须是数字', trigger: 'change'}],
-                },
+                // rules: {
+                //     exam_id: [{type: 'number', required: true, message: '不为空且必须是数字', trigger: 'change'}],
+                //     // sub_school: [{required: true, message: '不能为空', trigger: 'change'}],
+                //     tag: [{required: true, message: '不能为空', trigger: 'blur'}],
+                //     student_name: [{required: true, message: '不能为空', trigger: 'change'}],
+                //     phone: [{type: 'number', required: true, message: '不为空且必须是数字', trigger: 'change'}],
+                // },
                 //状态
             }
         },
@@ -320,22 +328,26 @@
             //请求数据
             getList() {
                 this.listLoading = true
-
-                getStudents(this.listQuery).then(response => {
-                    this.list = response.data
-                    this.total = response.total
-                    this.schoolOptions = []
-                    response.schoolOptions.forEach(chs => {
-                        this.schoolOptions.push({"text": chs, value: chs})
+                if (this.listQuery.searchText === '') {
+                    getStudentsBySchool(this.listQuery).then(response => {
+                        this.list = response.data
+                        this.total = response.total
+                        setTimeout(() => {
+                            this.listLoading = false
+                        }, 1.5 * 100)
+                        this.MainschoolOptions = [...new Set(this.list.map(item => item.stu.main_school))];
+                        this.SubschoolOptions = [...new Set(this.list.map(item => item.stu.sub_school))];
                     })
-                    // this.schoolOptions=data.schoolOptions
-                    // Just to simulate the time of the request
-                    setTimeout(() => {
-                        this.listLoading = false
-                    }, 1.5 * 100)
-                })
-            }
-            ,
+                } else {
+                    getStudentsBySearch(this.listQuery).then(response => {
+                        this.list = response.data
+                        this.total = response.total
+                        setTimeout(() => {
+                            this.listLoading = false
+                        }, 1.5 * 100)
+                    })
+                }
+            },
             resetTemp() {
                 this.temp = {}
             }
@@ -346,12 +358,11 @@
                     temp.push(item.course_id)
                 });
                 this.courseSelection = temp
-                console.log(this.courseSelection)
             },
             handleSelectionChange(val) {
                 let temp = []
                 val.forEach(item => {
-                    temp.push(item.exam_id)
+                    temp.push(item.stu.exam_id)
                 });
                 this.multipleSelection = temp
                 console.log(this.multipleSelection)
@@ -406,13 +417,9 @@
             ,
             //操作 更新 查看课程 开课
             handleUpdate(row) {
-                this.temp = Object.assign({}, row) // copy obj
-                this.temp.register_date = new Date(this.temp.register_date)
-                this.StuFormStatus = 'update'
+                this.temp = Object.assign({}, row.stu) // copy obj
                 this.StuFormVisible = true
-                this.$nextTick(() => {
-                    this.$refs['dataForm'].clearValidate()
-                })
+
             }
             ,
             handleCourseReview(row) {
@@ -420,7 +427,7 @@
             },
             handleCourseAdd(row) {
                 // console.log('oo')
-                this.multipleSelection = [row.exam_id]
+                this.multipleSelection = [row.stu.exam_id]
                 console.log(this.multipleSelection)
                 this.subscribeFormVisible = true
                 this.subscribeFormStatus = 'add'
@@ -431,6 +438,7 @@
                         const tempData = Object.assign({}, this.temp)
                         updateStudent(tempData).then(() => {
                             this.StuFormVisible = false
+                            this.getList()
                             this.$notify({
                                 title: '成功',
                                 message: '更新成功',
@@ -453,6 +461,7 @@
                 })
             },
             postSubscribe() {
+                console.log(this.multipleSelection)
                 this.multipleSelection.forEach(stuEId => {
                     this.courseSelection.forEach(cid => {
                         let temp = {'exam_id': stuEId, 'course_id': cid, status: 1}
@@ -470,6 +479,7 @@
                 })
 
                 this.subscribeFormVisible = false
+                this.getList()
             },
             handleExport() {
                 import('@/vendor/Export2Excel').then(excel => {
@@ -501,13 +511,17 @@
             handleSearch() {
                 this.listQuery.page = 1
                 this.listQuery.searchText = this.searchText
-                this.getList()
+                getStudentsBySearch(this.listQuery).then(response => {
+                    this.list = response.data
+                    this.total = response.total
+                })
             }
             , handleFilter() {
-
+                this.listQuery.main_school = this.sMainSchool
+                this.listQuery.sub_school = this.sSubSchool
+                this.getList()
             }
         },
-
     }
 </script>
 <style>
