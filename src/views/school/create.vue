@@ -36,12 +36,14 @@
 
 
     export default {
-        name:'create',
+        name: 'create',
         components: {Tinymce, MDinput},
         data() {
             return {
                 options: ['新闻', '通知', '法律法规'],
                 notice: {
+                    main_school: 'main_school',
+                    sub_school: 'sub_school',
                     notice_type: '',
                     notice_title: '',
                     notice_content: '',
@@ -53,8 +55,9 @@
         },
         methods: {
             handlePub() {
-                const query=Object.assign({},this.notice)
-                createNotice(query).then(response=>{
+                const query = Object.assign({}, this.notice)
+                createNotice(query).then(response => {
+                    this.$router.push({ path: this.redirect || '/school/notice' })
                 })
             }
         }

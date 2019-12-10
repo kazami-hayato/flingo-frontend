@@ -120,7 +120,7 @@ export function modifySchool(data) {
     }*/
   return request({
     url: '/apis/v1/school/',
-    method: 'post',
+    method: 'put',
     data: data
   })
   /*  const response = {
@@ -147,10 +147,11 @@ export function uploadFile(file) {
 * 通知相关
 * */
 
-//通知分页 get?limit=?page=?sub_school=?
+//通知分页 get?limit=?page=?sub_school=?main_school=?
 export function getNotices(data) {
   /*  data={
       sub_school:'鄂州职校',
+      main_school:'',
       page:1,
       limit:20
     }*/

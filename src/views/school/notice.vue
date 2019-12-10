@@ -3,9 +3,9 @@
     <div class="filter-container">
       <el-row type="flex" class="row-bg" justify="space-between">
         <router-link :to="'/school/notice/create'">
-        <el-button style="margin-left: 10px;" type="primary" icon="el-icon-edit"
-                   @click="">新建通知
-        </el-button>
+          <el-button style="margin-left: 10px;" type="primary" icon="el-icon-edit"
+                     @click="">新建通知
+          </el-button>
         </router-link>
         <el-button style="margin-left: 10px;" type="danger" icon="el-icon-remove"
                    @click="deleteChosen">删除所选
@@ -21,13 +21,13 @@
       fit
       highlight-current-row
       style="width: 100%;"
-      :default-sort = "{prop: 'id', order: 'descending'}"
+      :default-sort="{prop: 'id', order: 'descending'}"
       @selection-change="handleSelectionChange"
     >
       <el-table-column width="55" type="selection" align="center"></el-table-column>
       <el-table-column label="序号" prop="id" align="center" width="80" sortable>
         <template slot-scope="{row}">
-          <span>{{ row.id }}</span>
+          <span>{{ row.notice_id }}</span>
         </template>
       </el-table-column>
       <el-table-column label="时间" width="150px" align="center">
@@ -52,7 +52,7 @@
       <el-table-column label="操作" align="center" width="230" class-name="small-padding fixed-width">
         <template slot-scope="{row}">
           <router-link :to="'/school/notice/'+row.notice_id">
-            <el-button type="primary" size="mini" >
+            <el-button type="primary" size="mini">
               修改
             </el-button>
           </router-link>
@@ -73,7 +73,7 @@
 <script>
     // import {fetchList, fetchPv, createArticle, updateArticle} from '@/api/article'
     // import {getAllNotices, removeNoticeById} from "@/api/notice"
-    import {getNotices,removeNoticeById} from "@/api/apis";
+    import {getNotices, removeNoticeById} from "@/api/apis";
     import waves from '@/directive/waves' // waves directive
     import {parseTime} from '@/utils'
     import Pagination from '@/components/Pagination' // secondary package based on el-pagination
@@ -90,10 +90,11 @@
                 listLoading: true,
                 chosenList: [],
                 listQuery: {
+                    main_school: 'main_school',
+                    sub_school: 'sub_school',
                     page: 1,
                     limit: 20,
                 },
-
             }
         },
         created() {

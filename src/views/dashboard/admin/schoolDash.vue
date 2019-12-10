@@ -1,7 +1,7 @@
 <template>
   <div class="dashboard-editor-container">
 
-    <panel-group  :panel-params="panelParams"/>
+    <panel-group :panel-params="panelParams"/>
 
     <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
       <!--      <line-chart :chart-data="lineChartData"/>-->
@@ -53,7 +53,6 @@
                         {'日期': '周五', '本周售课数': 3792, '上周售课数': 3492},
                         {'日期': '周六', '本周售课数': 4593, '上周售课数': 4293},
                         {'日期': '周日', '本周售课数': 4593, '上周售课数': 4293}
-
                     ]
                 }
             }
@@ -78,10 +77,10 @@
                     this.footParams.admin_type = data.admin_type
                     this.footParams.prev_time = data.prev_time
                     for (let i = 0; i < 7; ++i) {
-                        this.chartData.rows[i].上周售课数 = data.prev_sale[i]
-                        this.chartData.rows[i].本周售课数 = data.cur_sale[i]
-
+                        this.chartData.rows[i].上周售课数 = data.prev_sales[i]
+                        this.chartData.rows[i].本周售课数 = data.cur_sales[i]
                     }
+                    console.log(this.chartData)
                     console.log(response.data)
                 })
             },

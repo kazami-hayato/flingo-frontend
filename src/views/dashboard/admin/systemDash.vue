@@ -75,6 +75,7 @@
                     this.footParams.prev_ip = data.prev_ip
                     this.footParams.admin_type = data.admin_type
                     this.footParams.prev_time = data.prev_time
+                    // console.lo
                     for (let i = 0; i < 7; ++i) {
                         this.chartData.rows[i].上周售课数 = data.prev_sale[i]
                         this.chartData.rows[i].本周售课数 = data.cur_sale[i]
