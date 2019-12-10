@@ -419,7 +419,6 @@ export function getCourses(data) {
 }
 
 
-
 //获取该校上架的所有课程
 //课程分页 get ?limit=?page=?searchText=?sub_school=?main_school=
 export function getShiftCourses(data) {
@@ -458,12 +457,12 @@ export function getShiftCourseById(data) {
     course_id:121
     }*/
   return request({
-    url: '/apis/v1/shift/courses/'+data.course_id,
+    url: '/apis/v1/shift/courses/' + data.course_id,
     method: 'get',
   })
   const response = {
     code: 20000,
-    data:{
+    data: {
       id: 1,
       course_id: '121',
       course_name: '高等数学',
@@ -638,3 +637,68 @@ export function getAdmins(data) {
 //新增
 //删除
 //根据用户名查询密码
+//考期管理
+
+export function getTags(data) {
+  /*  data = {
+      limit: 12,
+      page: 1
+    }*/
+  return request({
+    url: '/apis/v1/tags',
+    method: 'get',
+    params: data
+  })
+  const response = {
+    code: 20000,
+    data: [
+      {
+        id: 1,
+        tag_id: 12,
+        tag_name: '',
+        tag_overdate: '',
+        tag_createtime: '2019-12-11 15:33:22'
+      }],
+    total: 1
+  }
+}
+
+export function getMainTags() {
+  return request({
+    url: '/apis/v1/main/tags',
+    method: 'get',
+    params: data
+  })
+  const response = {
+    code: 20000,
+    data: [
+      {
+        id: 1,
+        tag_id: 12,
+        tag_name: '',
+        tag_overdate: '',
+        tag_createtime: '2019-12-11 15:33:22'
+      }],
+    total: 1
+  }
+}
+
+export function addMainTags() {
+  return request({
+    url: '/apis/v1/main/tags',
+    method: 'get',
+    params: data
+  })
+  const response = {
+    code: 20000,
+    data: [
+      {
+        id: 1,
+        tag_id: 12,
+        tag_name: '',
+        tag_overdate: '',
+        tag_createtime: '2019-12-11 15:33:22'
+      }],
+    total: 1
+  }
+}

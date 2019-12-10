@@ -2,41 +2,47 @@
   <div class="app-container">
     <div class="filter-container">
       <el-row>
-        <el-col :span="6">
+        <el-col :span="12">
           <el-row type="flex" justify="start">
-            <el-input v-model="searchFilterText" placeholder="可输入 姓名/手机号/准考证号" style="width: 200px;" class="filter-item"
+            <el-input v-model="searchText" placeholder="输入 姓名/手机号/准考证号" style="width: 200px" class="filter-item"
                       @keyup.enter.native="handleSearch"/>
-            <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleSearch"
-                       style="margin-left: 5px">
-              查找
+
+            <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleSearch">
+            </el-button>
+            <el-select v-model="sMainSchool" placeholder="主校选择" clearable style="margin-left: 5px;width: 150px">
+              <el-option
+                v-for="item in MainschoolOptions"
+                :key="item"
+                :label="item"
+                :value="item">
+              </el-option>
+            </el-select>
+            <el-select v-model="sSubSchool" placeholder="分校选择" clearable style="margin-left: 5px;width: 150px">
+              <el-option
+                v-for="item in SubschoolOptions"
+                :key="item"
+                :label="item"
+                :value="item">
+              </el-option>
+            </el-select>
+            <el-button v-waves class="filter-item" type="primary" @click="handleFilter">
+              过滤
             </el-button>
           </el-row>
         </el-col>
-        <el-col :span="18">
+        <el-col :span="12">
           <el-row type="flex" justify="end">
-            <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit"
-                       @click="handleCreate">
-              增加学员
-            </el-button>
-            <el-button class="filter-item" style="margin-left: 10px;" type="danger" icon="el-icon-edit"
-                       @click="handleDelete">
-              删除学员
-            </el-button>
-            <el-button class="filter-item" type="success" icon="el-icon-upload"
-                       @click="handleImportStu">
-              导入学员
+            <el-button class="filter-item" type="warning" icon="el-icon-download"
+                       @click="handleExport">
+              导出学生信息
             </el-button>
             <el-button class="filter-item" type="warning" icon="el-icon-download"
                        @click="handleExport">
-              导出学员
+              导出成绩
             </el-button>
             <el-button class="filter-item" type="success" icon="el-icon-plus"
                        @click="handleSubscribe">
               批量开课
-            </el-button>
-            <el-button class="filter-item" type="warning" icon="el-icon-plus"
-                       @click="handleImportCourse">
-              批量导入课程
             </el-button>
           </el-row>
         </el-col>
@@ -52,63 +58,10 @@
       highlight-current-row
       style="width: 100%;"
       @selection-change="handleSelectionChange"
-      @expand-change="getRowDetail"
     >
       <el-table-column type="expand">
-        <!--        <template slot-scope="props">-->
         <template slot-scope="{row}">
-          <el-table
-            :data="row.details"
-            :row-class-name="tableRowClassName">
-            <el-table-column
-              prop="course_id"
-              label="课程号"
-              width="100">
-            </el-table-column>
-            <el-table-column
-              prop="course_name"
-              label="课程名"
-              width="200">
-            </el-table-column>
-            <el-table-column
-              prop="watch_time"
-              label="观看时间(分)"
-              width="100">
-            </el-table-column>
-
-            <el-table-column
-              prop="test1"
-              label="阶段测评一"
-              width="100">
-            </el-table-column>
-            <el-table-column
-              prop="test2"
-              label="阶段测评二"
-              width="100">
-            </el-table-column>
-            <el-table-column
-              prop="test3"
-              label="阶段测评三"
-              width="100">
-            </el-table-column>
-            <el-table-column
-              prop="test4"
-              label="阶段测评四"
-              width="100">
-            </el-table-column>
-            <el-table-column
-              prop="main_test"
-              label="综合测验"
-              width="100">
-            </el-table-column>
-            <el-table-column
-              label="查看抓拍详情"
-              width="180">
-              <el-button type="success" size="medium" icon="el-icon-eye">
-                查看
-              </el-button>
-            </el-table-column>
-          </el-table>
+          <StudentDetail style="width: 100%;height: 1600px" :student-info="row"></StudentDetail>
         </template>
       </el-table-column>
       <el-table-column width="55" type="selection" align="center">
@@ -118,14 +71,17 @@
           <span>{{ row.id }}</span>
         </template>
       </el-table-column>
-
       <el-table-column label="准考证号" prop="id" align="center" width="180">
         <template slot-scope="{row}">
           <span>{{ row.exam_id }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="所属分校" prop="sub_school" align="center" width="300"
-                       :filters="schoolOptions" :filter-method="filterTag" filter-placement="bottom-end">
+      <el-table-column label="所属主校" prop="sub_school" align="center" width="180">
+        <template slot-scope="{row}">
+          <span>{{ row.main_school }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="所属分校" prop="sub_school" align="center" width="180">
         <template slot-scope="{row}">
           <span>{{ row.sub_school }}</span>
         </template>
@@ -152,8 +108,8 @@
       </el-table-column>
       <el-table-column label="操作" align="center" minWidth="200" class-name="small-padding fixed-width">
         <template slot-scope="{row}">
-          <el-button type="primary" size="medium" @click="handleUpdate(row)">
-            修改个人信息
+          <el-button type="primary" size="mini" @click="handleUpdate(row)">
+            修改
           </el-button>
         </template>
       </el-table-column>
@@ -162,7 +118,7 @@
     <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit"
                 @pagination="getList"/>
     <!--修改信息和新增-->
-    <el-dialog :title="textMap[StuFormStatus]" :visible.sync="StuFormVisible">
+    <el-dialog :title="'修改学生信息'" :visible.sync="StuFormVisible">
       <el-form ref="dataForm" :rules="rules" :model="temp" label-position="left" label-width="100px"
                style="width: 500px; margin-left:50px;">
         <el-form-item label="准考证号" prop="exam_id">
@@ -170,7 +126,7 @@
         </el-form-item>
         <el-form-item label="学校名" prop="sub_school">
           <el-select v-model="temp.sub_school" class="filter-item" placeholder="请选择">
-            <el-option v-for="item in schoolOptions" :key="item.value" :label="item.value" :value="item.value"/>
+            <el-option v-for="item in SubschoolOptions" :key="item.value" :label="item.value" :value="item.value"/>
           </el-select>
         </el-form-item>
         <el-form-item label="姓名" prop="student_name">
@@ -189,32 +145,7 @@
         </el-button>
       </div>
     </el-dialog>
-    <!--导入文件-->
-    <el-dialog :title="importMap[importFormStatus]" :visible.sync="ImportFormVisible">
-      <el-form>
-        <el-upload
-          class="uploadFile"
-          ref="upload"
-          accept=".xls,.xlsx"
-          action=""
-          :http-request="parseXls"
-          :limit="1"
-          :on-preview="handlePreview"
-          :on-remove="handleRemove"
-          :on-change="onUploadChange"
-          :before-remove="beforeRemove"
-          :file-list="fileList"
-          :auto-upload="false">
-          <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
-          <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button>
-          <el-button type="info" align="right" size="small">下载模板</el-button>
-
-          <div slot="tip" class="el-upload__tip">只能上传xls/xlsx文件</div>
-        </el-upload>
-      </el-form>
-    </el-dialog>
-    <!-- 批量开课-->
-    <el-dialog :title="subscribeMap[subscribeFormStatus]" :visible.sync="subscribeFormVisible">
+    <el-dialog :title="'批量开课'" :visible.sync="subscribeFormVisible">
       <el-form ref="subscribeForm" :model="subscribeTemp" label-position="left" label-width="100px"
                style="width: 500px; margin-left:50px;">
         <el-form-item label="选中学生数量" prop="exam_id">
@@ -260,8 +191,6 @@
 </template>
 
 <script>
-    // import {getStudents, createStudent, updateStudent, deleteStudent, setStudentCourse} from '@/api/student'
-    // import {fetchAllCourses, getStudentDetail, createCourse, updateCourse, deleteCourse} from '@/api/school-course'
     import {
         getStudents,
         createStudent,
@@ -275,20 +204,20 @@
     import {parseTime} from '@/utils'
     import Pagination from '@/components/Pagination' // secondary package based on el-pagination
     import XLSX from 'xlsx'
-    // import {getShiftCourses} from "../../api/apis";
+    import StudentDetail from "./component/StudentDetail";
 
     export default {
         name: 'all',
-        components: {Pagination},
+        components: {StudentDetail, Pagination},
         directives: {waves},
         data() {
             return {
                 //
-                detail: [],
-                //
                 tableKey: 0,
                 //学生表
                 list: [],
+                sMainSchool: '',
+                sSubSchool: '',
                 //总数
                 total: 0,
                 //缓冲状态
@@ -306,27 +235,18 @@
                 //选中
                 multipleSelection: [],
                 //搜索
-                searchFilterText: "",
+                searchText: "",
                 //分校过滤
-                schoolOptions: [],
-                //对话框性别
-                genderOptions: ['男', '女'],
+                SubschoolOptions: [],
+                MainschoolOptions: [],
+
                 //新建学生数据模板
                 temp: {},
                 //学生对话框信息
                 StuFormVisible: false,
                 StuFormStatus: '',
-                textMap: {
-                    update: '修改学员信息',
-                    create: '创建新学员'
-                },
                 //文件导入对话框信息
                 ImportFormVisible: false,
-                importFormStatus: '',
-                importMap: {
-                    student: '导入学员',
-                    course: '导入选课信息'
-                },
                 //批量开课
                 courseSelection: [],
                 subscribeFormVisible: false,
@@ -356,14 +276,6 @@
             console.log(this.tableKey)
         },
         methods: {
-            //获取课程学习子表
-            getRowDetail(row) {
-                getStudentDetail({exam_id: row.exam_id}).then(response => {
-                    console.log(response.data)
-                    row.details = response.data
-                })
-            },
-            //子表ui
             tableRowClassName({row, rowIndex}) {
                 if (rowIndex === 1) {
                     return 'warning-row';
@@ -404,59 +316,6 @@
                     headers.push(hdr)
                 }
                 return headers
-            },
-            readerXls(rawFile) {
-                return new Promise((resolve, reject) => {
-                    const reader = new FileReader()
-                    reader.onload = e => {
-                        const data = e.target.result
-                        const workbook = XLSX.read(data, {type: 'array'})
-                        const firstSheetName = workbook.SheetNames[0]
-                        const worksheet = workbook.Sheets[firstSheetName]
-                        const header = this.getHeaderRow(worksheet)
-                        const results = XLSX.utils.sheet_to_json(worksheet)
-                        const failed_list = []
-                        if (this.importFormStatus === '导入学员') {
-                            results.forEach(item => {
-                                createStudent(item).then(response => {
-                                    if (response.status === -1) failed_list.push(response.failed_id)
-                                })
-                            })
-                        } else {
-                            results.forEach(item => {
-                                //item {exam_id,courses|courses_name}
-                                setStudentCourse(item).then(response => {
-                                    if (response.status === -1) failed_list.push(response.failed_id)
-                                })
-                            })
-                        }
-                        if (failed_list.length == 0)
-                            this.$notify({
-                                title: '成功',
-                                message: '创建成功',
-                                type: 'success',
-                                duration: 2000
-                            })
-                        else
-                            this.$notify({
-                                title: '失败',
-                                message: '导入excel失败 :' + failed_list,
-                                type: 'error',
-                                duration: 2000
-                            })
-                        console.log(results)
-                        this.getList()
-
-                    }
-                    reader.readAsArrayBuffer(rawFile)
-                })
-            },
-            isExcel(file) {
-                return /\.(xlsx|xls|csv)$/.test(file.name)
-            },
-            submitUpload() {
-                //实际上还是调用原生trigger
-                this.$refs.upload.submit();
             },
             //请求数据
             getList() {
@@ -507,15 +366,6 @@
                 } else {
                     this.$refs.courseTable.clearSelection();
                 }
-            }
-            ,
-            handleCreate() {
-                this.resetTemp()
-                this.StuFormStatus = 'create'
-                this.StuFormVisible = true
-                this.$nextTick(() => {
-                    this.$refs['dataForm'].clearValidate()
-                })
             }
             ,
             createData() {
@@ -579,15 +429,7 @@
                 this.$refs['dataForm'].validate((valid) => {
                     if (valid) {
                         const tempData = Object.assign({}, this.temp)
-                        // tempData.register_date = +new Date(tempData.register_date) // change Thu Nov 30 2017 16:41:05 GMT+0800 (CST) to 1512031311464
                         updateStudent(tempData).then(() => {
-                            // for (const v of this.list) {
-                            //     if (v.id === this.temp.id) {
-                            //         const index = this.list.indexOf(v)
-                            //         this.list.splice(index, 1, this.temp)
-                            //         break
-                            //     }
-                            // }
                             this.StuFormVisible = false
                             this.$notify({
                                 title: '成功',
@@ -598,17 +440,7 @@
                         })
                     }
                 })
-            }
-            ,
-            handleImportStu() {
-                this.importFormStatus = 'student'
-                this.ImportFormVisible = true
             },
-            handleImportCourse() {
-                this.importFormStatus = 'course'
-                this.ImportFormVisible = true
-            }
-            ,
             handleSubscribe() {
                 this.subscribeFormStatus = 'default'
                 this.subscribeFormVisible = true
@@ -622,12 +454,6 @@
             },
             postSubscribe() {
                 this.multipleSelection.forEach(stuEId => {
-                    // let tempStudent = this.list.filter(stu => {
-                    //     return stu.exam_id === stuEId
-                    // })[0]
-                    // console.log(tempStudent)
-                    // tempStudent.courses = tempStudent.courses.concat(this.courseSelection)
-
                     this.courseSelection.forEach(cid => {
                         let temp = {'exam_id': stuEId, 'course_id': cid, status: 1}
                         setStudentCourse(temp).then(response => {
@@ -668,14 +494,17 @@
                 }))
             }
             ,
-            filterTag(value, row) {
+            filterSubschool(value, row) {
                 return row.sub_school === value;
             }
             ,
             handleSearch() {
                 this.listQuery.page = 1
-                this.listQuery.searchText = this.searchFilterText
+                this.listQuery.searchText = this.searchText
                 this.getList()
+            }
+            , handleFilter() {
+
             }
         },
 

@@ -60,20 +60,91 @@ for (let i = 0; i < student_count; i++) {
     'sub_school|1': ['鄂州职业学院', '黄石职业学院', '孝感职业学院'],
     'main_school|1': ['鄂州职业学院', '黄石职业学院', '孝感职业学院'],
     tag: '190906',
+    id_card: '@Integer(42102319950101123,42102319990205135)',
     phone: '@integer(13765717681,15671640897)',
     register_date: +Mock.Random.date('T'),
+    exam_info: [
+      {
+      course_id: '@Integer(10005,20005)',
+      'course_name|1': ['高等数学', '大学物理', '计算机基础'],
+      watch_time: '@Integer(10,200)',
+      total_time: '@Integer(200,300)',
+      test1: '@Integer(10,100)',
+      test2: '@Integer(10,100)',
+      test3: '@Integer(10,100)',
+      test4: '@Integer(10,100)',
+      main_test: '@Integer(10,100)',
+    },
+      {
+        course_id: '@Integer(10005,20005)',
+        'course_name|1': ['高等数学', '大学物理', '计算机基础'],
+        watch_time: '@Integer(10,200)',
+        total_time: '@Integer(200,300)',
+        test1: '@Integer(10,100)',
+        test2: '@Integer(10,100)',
+        test3: '@Integer(10,100)',
+        test4: '@Integer(10,100)',
+        main_test: '@Integer(10,100)',
+      },
+      {
+        course_id: '@Integer(10005,20005)',
+        'course_name|1': ['高等数学', '大学物理', '计算机基础'],
+        watch_time: '@Integer(10,200)',
+        total_time: '@Integer(200,300)',
+        test1: '@Integer(10,100)',
+        test2: '@Integer(10,100)',
+        test3: '@Integer(10,100)',
+        test4: '@Integer(10,100)',
+        main_test: '@Integer(10,100)',
+      },
+      {
+        course_id: '@Integer(10005,20005)',
+        'course_name|1': ['高等数学', '大学物理', '计算机基础'],
+        watch_time: '@Integer(10,200)',
+        total_time: '@Integer(200,300)',
+        test1: '@Integer(10,100)',
+        test2: '@Integer(10,100)',
+        test3: '@Integer(10,100)',
+        test4: '@Integer(10,100)',
+        main_test: '@Integer(10,100)',
+      },
+      {
+        course_id: '@Integer(10005,20005)',
+        'course_name|1': ['高等数学', '大学物理', '计算机基础'],
+        watch_time: '@Integer(10,200)',
+        total_time: '@Integer(200,300)',
+        test1: '@Integer(10,100)',
+        test2: '@Integer(10,100)',
+        test3: '@Integer(10,100)',
+        test4: '@Integer(10,100)',
+        main_test: '@Integer(10,100)',
+      },
+      {
+        course_id: '@Integer(10005,20005)',
+        'course_name|1': ['高等数学', '大学物理', '计算机基础'],
+        watch_time: '@Integer(10,200)',
+        total_time: '@Integer(200,300)',
+        test1: '@Integer(10,100)',
+        test2: '@Integer(10,100)',
+        test3: '@Integer(10,100)',
+        test4: '@Integer(10,100)',
+        main_test: '@Integer(10,100)',
+      }
+    ]
+
     // courses: [10, 12]
   }))
 }
 
 //学生成绩 api
 const stu_courses = []
-const st_count = 5
+const st_count = 6
 for (let i = 0; i < st_count; i++) {
   stu_courses.push(Mock.mock({
     course_id: '@Integer(10005,20005)',
     'course_name|1': ['高等数学', '大学物理', '计算机基础'],
     watch_time: '@Integer(10,200)',
+    total_time: '@Integer(200,300)',
     test1: '@Integer(10,100)',
     test2: '@Integer(10,100)',
     test3: '@Integer(10,100)',
@@ -114,7 +185,8 @@ for (let i = 0; i < courseCount; i++) {
     'is_valid|1': [0, 1],
   }))
 }
-const catalogs = [{
+const catalogs = [
+  {
   id: 1, // 目录的id，唯一
   label: '第一章，毛泽东思想及其历史地位', // 目录名称
   isTitle: true, // 是否是大章节标题
@@ -145,6 +217,25 @@ const catalogs = [{
     status: true,
   }]
 }];
+
+
+//考期相关
+
+const tags=[]
+const tag_count=5
+for(let i=0;i<tag_count;i++){
+  tags.push(
+    Mock.mock({
+      id: '@increment',
+      tag_id: '@Integer(1025,2048)',
+      tag_name: '@Integer(1025,2048)',
+      tag_overdate: +Mock.Random.date('T'),
+      tag_createtime:  +Mock.Random.date('T'),
+    })
+  )
+}
+
+
 export default [
   // 登录
   {
@@ -514,7 +605,16 @@ export default [
     }
   },
 
-
+  {
+    url: '/apis/v1/tags',
+    type: 'get',
+    response: config => {
+      return {
+        code: 20000,
+        data: tags
+      }
+    }
+  },
 ]
 
 

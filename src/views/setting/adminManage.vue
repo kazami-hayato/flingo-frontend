@@ -12,7 +12,7 @@
           <!--                     @click="dialogVisible = true">批量导入-->
           <!--          </el-button>-->
           <el-button style="margin-left: 10px;" type="danger" icon="el-icon-remove"
-                     @click="deleteChosen">删除管理员
+                     @click="forbiddenChosen">禁用管理员
           </el-button>
         </el-col>
       </el-row>
@@ -82,7 +82,7 @@
     <el-button @click="dialogVisible = false">取 消</el-button>
     <el-button type="primary" @click="addIP">确 定</el-button>
   </span>
-    </el-dialog>
+  </el-dialog>
   </div>
 </template>
 
@@ -113,7 +113,7 @@
                 this.chosenList = temp
                 console.log(this.chosenList)
             },
-            deleteChosen() {
+            forbiddenChosen() {
 
             },
             handleClose(done) {

@@ -186,61 +186,10 @@ export const asyncRoutes = [
         component: () => import('@/views/student/tag'),
         name: 'tag',
         meta: {
-          title: '考期设置',
+          title: '查看考期',
           roles: ['main_school', 'sub_school'] // or you can only set roles in sub nav
         }
       },
-      {
-        path: 'scoreManage',
-        component: () => import('@/views/student/scoreManage'),
-        name: 'ScoreManage',
-        meta: {
-          title: '成绩管理',
-          roles: ['main_school', 'sub_school'] // or you can only set roles in sub nav
-        }
-      },
-      // {
-      //   path: 'groups',
-      //   component: () => import('@/views/student/group'),
-      //   name: 'Group',
-      //   meta: {
-      //     title: '学员分组',
-      //     roles: ['main_school', 'sub_school']
-      //     // if do not set roles, means: this page does not require permission
-      //   }
-      // },
-      // {
-      //   path: 'study',
-      //   component: () => import('@/views/student/study'),
-      //   name: 'Study',
-      //   meta: {
-      //     title: '学习情况',
-      //     roles: ['main_school', 'sub_school']
-      //     // if do not set roles, means: this page does not require permission
-      //   }
-      // },
-      // {
-      //   path: ':exam_id(\\d+)',
-      //   component: () => import('@/views/student/subscribe'),
-      //   name: 'Subscribe',
-      //   hidden: true,
-      //   meta: {
-      //     title: '开课详情',
-      //     roles: ['main_school', 'sub_school']
-      //     // if do not set roles, means: this page does not require permission
-      //   }
-      // },
-      // {
-      //   path: 'statistics/:exam_id(\\d+)',
-      //   component: () => import('@/views/student/statistics'),
-      //   name: 'statistics',
-      //   hidden: true,
-      //   meta: {
-      //     title: '课程学习统计',
-      //     roles: ['main_school', 'sub_school']
-      //     // if do not set roles, means: this page does not require permission
-      //   }
-      // },
     ]
   },
   {
