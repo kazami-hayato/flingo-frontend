@@ -46,7 +46,7 @@
             <el-input v-model="form.icp"></el-input>
           </el-form-item>
           <el-form-item label="网站介绍">
-            <el-input type="textarea" v-model="form.description"></el-input>
+            <el-input type="textarea" v-model="form.web_brief"></el-input>
           </el-form-item>
           <el-form-item label="联系地址">
             <el-input v-model="form.address"></el-input>

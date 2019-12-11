@@ -29,7 +29,7 @@
         width="55">
       </el-table-column>
       <el-table-column
-        prop="id"
+        type="index"
         label="序号"
         min-width="120">
       </el-table-column>
@@ -44,7 +44,7 @@
         min-width="120">
       </el-table-column>
       <el-table-column
-        prop="register_admin"
+        prop="operator"
         label="操作人"
         show-overflow-tooltip>
       </el-table-column>
@@ -68,50 +68,57 @@
 </template>
 
 <script>
-  import {addIP} from '@/api/apis'
+    import {addIP, getIPS, removeIP} from '@/api/apis'
+
     export default {
         name: "index",
+
         data() {
             return {
                 dialogVisible: false,
                 chosenList: [],
                 tempIP: {
-                    ip:''
+                    ip: '',
+                    operator: this.$store.state.user.username,
+                    main_school: this.$store.state.user.main_school,
+                    sub_school: this.$store.state.user.sub_school
                 },
-                listData: [{
-                    id: 121,
-                    ip: '172.1.6.8',
-                    register_date: '2019-12-1 14:22:11',
-                    register_admin: 'main_school'
-                }, {
-                    id: 121,
-                    ip: '172.1.6.8',
-                    register_date: '2019-12-1 14:22:11',
-                    register_admin: 'main_school'
-                }, {
-                    id: 121,
-                    ip: '172.1.6.8',
-                    register_date: '2019-12-1 14:22:11',
-                    register_admin: 'main_school'
-                }, {
-                    id: 121,
-                    ip: '172.1.6.8',
-                    register_date: '2019-12-1 14:22:11',
-                    register_admin: 'main_school'
-                }]
+                listQuery: {
+                    limit: 10,
+                    page: 1,
+                    main_school: this.$store.state.user.main_school,
+                    sub_school: this.$store.state.user.sub_school
+                    // operator:
+                },
+                listData: [],
+                total: 0
             }
         },
+        created() {
+            this.getList()
+        },
         methods: {
+            getList() {
+                getIPS(this.listQuery).then(response => {
+                    this.listData = response.data
+                    this.total = response.total
+                })
+                console.log(this.$store.state.user)
+            },
             handleSelectionChange(val) {
                 let temp = []
                 val.forEach(item => {
-                    temp.push(item.id)
+                    temp.push(item.ip_id)
                 });
                 this.chosenList = temp
                 console.log(this.chosenList)
             },
             deleteChosen() {
-
+                this.chosenList.forEach(item => {
+                    removeIP({ip_id: item}).then(() => {
+                        this.getList()
+                    })
+                })
             },
             handleClose(done) {
                 this.$confirm('确认关闭？')
@@ -123,10 +130,9 @@
             },
             confirmAdd() {
                 this.dialogVisible = false
-                console.log(this.$store.state.user)
-                Object.assign(this.tempIP,this.$store.state.user)
-                console.log(this.tempIP)
-                addIP(this.tempIP).then(()=>{})
+                addIP(this.tempIP).then(() => {
+                    this.getList()
+                })
 
             }
         }

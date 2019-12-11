@@ -202,14 +202,18 @@
             postModify(){
                 this.courseInfoVisible = false
                 updateShiftCourse(this.courseInfo).then(()=>{
-
+                    setTimeout(() => {
+                        this.listLoading = false
+                    }, 1.5 * 100)
                 })
                 this.getList()
             },
             makeUnvalid(row){
                 row.is_valid=0
                 updateShiftCourse(row).then(()=>{
-
+                    setTimeout(() => {
+                        this.listLoading = false
+                    }, 1.5 * 100)
                 })
                 this.getList()
             }

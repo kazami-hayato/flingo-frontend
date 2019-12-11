@@ -696,7 +696,7 @@ export function removeIP(data) {
 * 管理员管理
 * */
 
-//分页 get?limit=?page=?sub_school=
+//分页 get?limit=?page=?main_school=?sub_school=
 export function getAdmins(data) {
   /*  data={
     sub_school:'鄂州职校',
@@ -720,6 +720,12 @@ export function getAdmins(data) {
     }],
     total: 1
   }
+}
+export function forbidAdmin(data) {
+  return request({
+    url: '/apis/v1/admins/'+data.user_id,
+    method: 'delete',
+  })
 }
 
 //新增

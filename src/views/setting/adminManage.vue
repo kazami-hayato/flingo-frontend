@@ -82,39 +82,53 @@
     <el-button @click="dialogVisible = false">取 消</el-button>
     <el-button type="primary" @click="addIP">确 定</el-button>
   </span>
-  </el-dialog>
+    </el-dialog>
   </div>
 </template>
 
 <script>
+    import {getAdmins,forbidAdmin} from '@/api/apis'
+
     export default {
         name: "admin",
         data() {
             return {
                 dialogVisible: false,
                 chosenList: [],
-                tempIP: '',
-                listData: [{
-                    id: 121,
-                    admin_name: 'xxs',
-                    admin_type: '主校',
-                    main_name: 'whu',
-                    sub_name: 'whue',
-                    register_date: '2019-12-1 14:22:11',
-                }]
+                listQuery: {
+                    limit: 10,
+                    page: 1,
+                    main_school: this.$store.state.user.main_school,
+                    sub_school: this.$store.state.user.sub_school
+                    // operator:
+                },
+                listData: [],
+
             }
         },
+        created() {
+            this.getList()
+        },
         methods: {
+            getList() {
+                getAdmins(this.listQuery).then(response => {
+                    this.listData = response.data
+                    this.total = response.total
+                })
+            },
             handleSelectionChange(val) {
                 let temp = []
                 val.forEach(item => {
-                    temp.push(item.id)
+                    temp.push(item.user_id)
                 });
                 this.chosenList = temp
-                console.log(this.chosenList)
             },
             forbiddenChosen() {
-
+                this.chosenList.forEach(item => {
+                    forbidAdmin({user_id: item}).then(() => {
+                        this.getList()
+                    })
+                })
             },
             handleClose(done) {
                 this.$confirm('确认关闭？')
