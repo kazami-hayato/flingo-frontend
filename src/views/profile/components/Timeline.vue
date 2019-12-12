@@ -12,27 +12,32 @@
 </template>
 
 <script>
-    export default {
-        data() {
-            return {
-                timeline: [
-                    {
-                        timestamp: '2019/4/20',
-                        title: '插入',
-                        content: '新建学生xx'
-                    },
-                    {
-                        timestamp: '2019/4/21',
-                        title: '删除',
-                        content: '删除学生xx'
-                    },
-                    {
-                        timestamp: '2019/4/21',
-                        title: '插入',
-                        content: '新建课程tt'
-                    },
-                ]
-            }
+export default {
+  data() {
+    return {
+      timeline: [
+        {
+          timestamp: '2019/4/20',
+          title: 'Update Github template',
+          content: 'PanJiaChen committed 2019/4/20 20:46'
+        },
+        {
+          timestamp: '2019/4/21',
+          title: 'Update Github template',
+          content: 'PanJiaChen committed 2019/4/21 20:46'
+        },
+        {
+          timestamp: '2019/4/22',
+          title: 'Build Template',
+          content: 'PanJiaChen committed 2019/4/22 20:46'
+        },
+        {
+          timestamp: '2019/4/23',
+          title: 'Release New Version',
+          content: 'PanJiaChen committed 2019/4/23 20:46'
         }
+      ]
     }
+  }
+}
 </script>

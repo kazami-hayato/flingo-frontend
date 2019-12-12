@@ -46,10 +46,10 @@
             <el-input v-model="form.icp"></el-input>
           </el-form-item>
           <el-form-item label="网站介绍">
-            <el-input type="textarea" v-model="form.web_brief"></el-input>
+            <el-input type="textarea" v-model="form.web_brief"/>
           </el-form-item>
           <el-form-item label="联系地址">
-            <el-input v-model="form.address"></el-input>
+            <el-input v-model="form.address"/>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="onSubmit">确定</el-button>
@@ -63,7 +63,6 @@
 
 <script>
 
-    import {fetchSchool, uploadLogo, changeSchoolById} from '@/api/school'
     import {getSchool,modifySchool,uploadFile} from "@/api/apis";
 
     export default {

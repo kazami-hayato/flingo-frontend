@@ -5,9 +5,9 @@
 
     <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
       <!--      <line-chart :chart-data="lineChartData"/>-->
-      <v-line-chart :chart-data="chartData"></v-line-chart>
+      <v-line-chart :chart-data="chartData"/>
     </el-row>
-    <footer-panel :foot-params="footParams"></footer-panel>
+    <footer-panel :foot-params="footParams"/>
   </div>
 </template>
 

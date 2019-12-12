@@ -60,7 +60,7 @@
 </template>
 
 <script>
-    import {getCoursesByQuery,deleteCourseById} from '@/api/school-course'
+    // import {getCoursesByQuery,deleteCourseById} from '@/api/school-course'
     import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
     export default {

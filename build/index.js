@@ -1,4 +1,4 @@
-const { run } = require('runjs')
+const {run} = require('runjs')
 const chalk = require('chalk')
 const config = require('../vue.config.js')
 const rawArgv = process.argv.slice(2)
@@ -18,7 +18,7 @@ if (process.env.npm_config_preview || rawArgv.includes('--preview')) {
 
   app.use(
     publicPath,
-    serveStatic('./dist', {
+    serveStatic('./', {
       index: ['index.html', '/']
     })
   )
