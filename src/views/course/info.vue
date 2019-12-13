@@ -10,7 +10,6 @@
           </el-button>
         </el-col>
         <el-col :span="16" align="right">
-
           <el-button class="filter-item" type="danger" icon="el-icon-minus"
                      @click="unshiftSelected">
             下架已选
@@ -27,7 +26,7 @@
       style="width: 100%;"
       @selection-change="handleSelectionChange"
     >
-      <el-table-column width="55" type="selection" align="center"></el-table-column>
+      <el-table-column width="55" type="selection" align="center"/>
       <el-table-column label="课程号" prop="id" align="center" width="100">
         <template slot-scope="{row}">
           <span>{{ row.course_id }}</span>
@@ -75,11 +74,11 @@
           <el-button  size="medium" type="info" @click="lookDetail(row)">
             查看详情
           </el-button>
-          <el-button v-if="row.is_main!=1" type="primary" size="medium" @click="shiftTheCourse(row)">
+          <el-button v-if="row.is_main!==1" type="primary" size="medium" @click="shiftTheCourse(row)">
             上架课程
           </el-button>
 
-          <el-button v-if="row.is_main!=0" size="medium" type="danger" @click="unshiftTheCourse(row)">
+          <el-button v-if="row.is_main!==0" size="medium" type="danger" @click="unshiftTheCourse(row)">
             下架课程
           </el-button>
         </template>
@@ -91,10 +90,10 @@
     <el-dialog title="修改课程" :visible.sync="courseInfoVisible">
       <el-form :model="courseInfo">
         <el-form-item label="精讲价格" :label-width="'120px'">
-          <el-input v-model="courseInfo.norm_price" autocomplete="off"></el-input>
+          <el-input v-model="courseInfo.norm_price" autocomplete="off"/>
         </el-form-item>
         <el-form-item label="串讲价格" :label-width="'120px'">
-          <el-input v-model="courseInfo.cross_price" autocomplete="off"></el-input>
+          <el-input v-model="courseInfo.cross_price" autocomplete="off"/>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">

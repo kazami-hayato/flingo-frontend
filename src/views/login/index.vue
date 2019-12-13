@@ -105,7 +105,7 @@
             return {
                 loginForm: {
                     username: 'main_school',
-                    password: '111111'
+                    password: '123456'
                 },
                 loginRules: {
                     username: [{required: true, trigger: 'blur', validator: validateUsername}],

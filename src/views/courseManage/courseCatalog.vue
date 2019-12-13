@@ -42,7 +42,7 @@
             </el-upload>
             <el-button type="text" size="mini" @click="uploadVideo(data)">上传</el-button>
             <div style="width: 100px;display: inline-block;font-size: 11px;" v-show="data.uploading">
-              <el-progress :percentage="percentage" :text-inside="true" :stroke-width="12" ></el-progress>
+              <el-progress :percentage="percentage" :text-inside="true" :stroke-width="12"/>
             </div>
             <div style="width: 100px;display: inline-block;font-size: 11px;" v-if="data.status">
               已上传

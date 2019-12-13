@@ -24,7 +24,7 @@
       :default-sort="{prop: 'id', order: 'descending'}"
       @selection-change="handleSelectionChange"
     >
-      <el-table-column width="55" type="selection" align="center"></el-table-column>
+      <el-table-column width="55" type="selection" align="center"/>
       <el-table-column label="序号" prop="id" align="center" width="80" sortable>
         <template slot-scope="{row}">
           <span>{{ row.notice_id }}</span>

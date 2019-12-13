@@ -329,6 +329,7 @@ export function getStudentsBySearch(data) {
       total: 1
     }*/
 }
+
 export function createStudent(data) {
   /*  data = {
       student_name: 'aav',
@@ -475,6 +476,7 @@ export function getCourses(data) {
   //   total: 1
   // }
 }
+
 //网校课程相关 获取该校仓库所有课程
 //课程分页 get ?limit=?page=?searchText=?sub_school=?
 export function getCoursesBySearch(data) {
@@ -721,9 +723,10 @@ export function getAdmins(data) {
     total: 1
   }
 }
+
 export function forbidAdmin(data) {
   return request({
-    url: '/apis/v1/admins/'+data.user_id,
+    url: '/apis/v1/admins/' + data.user_id,
     method: 'delete',
   })
 }
@@ -734,27 +737,20 @@ export function forbidAdmin(data) {
 //考期管理
 
 export function getTags(data) {
-  /*  data = {
-      limit: 12,
-      page: 1
-    }*/
   return request({
-    url: '/apis/v1/tags',
+    url: '/apis/v1/students/getTags',
     method: 'get',
     params: data
   })
-  const response = {
-    code: 20000,
-    data: [
-      {
-        id: 1,
-        tag_id: 12,
-        tag_name: '',
-        tag_overdate: '',
-        tag_createtime: '2019-12-11 15:33:22'
-      }],
-    total: 1
-  }
+}
+
+export function getStudentsByTag(data) {
+  return request({
+    url: '/apis/v1/students/getStuByTag',
+    method: 'get',
+    params: data
+  })
+
 }
 
 export function getMainTags() {

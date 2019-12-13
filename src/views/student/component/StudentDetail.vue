@@ -1,5 +1,5 @@
 <template>
-  <el-card >
+  <el-card>
     <el-container>
       <el-header style="background: #addafb;height: 140px">
         <el-row>
@@ -26,42 +26,50 @@
           <el-table-column
             prop="course_id"
             label="课程号"
+            align="center"
             min-width="100">
           </el-table-column>
           <el-table-column
             prop="course_name"
             label="课程名"
+            align="center"
             min-width="100">
           </el-table-column>
           <el-table-column
             label="学习进度"
+            align="center"
             min-width="250">
             <template slot-scope="{row}" style="height: 200px">
-              <pie-chart style="height: 200px;width: 300px" :study="row"></pie-chart>
+              <pie-chart style="height: 200px;width: 300px" :study="row"/>
             </template>
           </el-table-column>
           <el-table-column
             prop="test1"
+            align="center"
             label="阶段测评一"
-            min-width="80">
+            min-width="100">
           </el-table-column>
           <el-table-column
             prop="test2"
+            align="center"
             label="阶段测评二"
-            min-width="70">
+            min-width="100">
           </el-table-column>
           <el-table-column
             label="阶段测评三"
             prop="test3"
-            min-width="70">
+            align="center"
+            min-width="100">
           </el-table-column>
           <el-table-column
             label="阶段测评四"
             prop="test4"
-            min-width="70">
+            align="center"
+            min-width="100">
           </el-table-column>
           <el-table-column
             label="测评得分"
+            align="center"
             min-width="200">
             <template slot-scope="{row}">
               <div style="text-align: center">测评综合得分：{{computeTest(row)}}</div>
@@ -70,13 +78,15 @@
           </el-table-column>
           <el-table-column
             prop="main_test"
+            align="center"
             label="综合测验"
-            min-width="100">
+            min-width="70">
           </el-table-column>
           <el-table-column
-            label="查看抓拍详情"
-            width="180">
-            <el-button type="success" size="medium" icon="el-icon-eye" >
+            label="抓拍"
+            align="center"
+            width="100">
+            <el-button type="success" size="mini" icon="el-icon-search">
               查看
             </el-button>
           </el-table-column>
@@ -87,31 +97,31 @@
 </template>
 
 <script>
-    import PieChart from "./PieChart";
+  import PieChart from "./PieChart";
 
-    export default {
-        name: "StudentDetail",
-        props: ['studentInfo'],
-        components: {PieChart},
-        methods: {
-            tableRowClassName({row, rowIndex}) {
-                if (rowIndex === 1) {
-                    return 'warning-row';
-                } else if (rowIndex === 3) {
-                    return 'success-row';
-                }
-                return '';
-            },
-            computeTest(row) {
-                return Math.ceil(((row.test1 + row.test2 + row.test3 + row.test4) * 0.3) / 4)
-            },
-            computeTestDetail(row) {
-                let ret = Math.ceil(((row.test1 + row.test2 + row.test3 + row.test4) * 0.3) / 4)
-                let ans = `[(${row.test1}+${row.test2}+${row.test3}+${row.test4})x0.3]÷400=${ret}`
-                return ans
-            }
+  export default {
+    name: "StudentDetail",
+
+    props: ['studentInfo'],
+    components: {PieChart},
+    methods: {
+      tableRowClassName({row, rowIndex}) {
+        if (rowIndex === 1) {
+          return 'warning-row';
+        } else if (rowIndex === 3) {
+          return 'success-row';
         }
+        return '';
+      },
+      computeTest(row) {
+        return Math.ceil(((row.test1 + row.test2 + row.test3 + row.test4) * 0.3) / 4)
+      },
+      computeTestDetail(row) {
+        let ret = Math.ceil(((row.test1 + row.test2 + row.test3 + row.test4) * 0.3) / 4)
+        return `[(${row.test1}+${row.test2}+${row.test3}+${row.test4})x0.3]÷400=${ret}`
+      }
     }
+  }
 </script>
 
 <style scoped>
