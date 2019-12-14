@@ -11,7 +11,7 @@
         </el-table-column>
         <el-table-column type="expand">
           <template slot-scope="{row}">
-            <StuCourseDetail :tag="row" style="width: 100%;max-height: 1000px" />
+            <StuCourseDetail :tag="row" style="width: 100%;max-height: 2700px"/>
           </template>
         </el-table-column>
         <el-table-column
@@ -82,14 +82,13 @@
     components: {StuCourseDetail, Pagination},
     data() {
       return {
-        total: 1,
+        total: 0,
         listQuery: {
           limit: 10,
           page: 0
         },
         multipleSelection: [],
-        tableData: [
-        ]
+        tableData: []
       }
     },
     created() {

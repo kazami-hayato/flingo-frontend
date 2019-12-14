@@ -39,7 +39,7 @@
         min-width="120">
       </el-table-column>
       <el-table-column
-        prop="register_date"
+        prop="add_date"
         label="添加日期"
         min-width="120">
       </el-table-column>
@@ -48,7 +48,11 @@
         label="操作人"
         show-overflow-tooltip>
       </el-table-column>
+
     </el-table>
+    <pagination v-show="total>0" :total="total" :page.sync="listQuery.page"
+                :limit.sync="listQuery.limit"
+                @pagination="getList"/>
     <el-dialog
       title="IP输入框"
       :visible.sync="dialogVisible"
@@ -69,10 +73,12 @@
 
 <script>
   import {addIP, getIPS, removeIP} from '@/api/apis'
+  import {Current} from '@/utils/time'
+  import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
   export default {
     name: "index",
-
+    components:{Pagination},
     data() {
       return {
         dialogVisible: false,
@@ -81,13 +87,14 @@
           ip: '',
           operator: this.$store.state.user.username,
           main_school: this.$store.state.user.main_school,
-          sub_school: this.$store.state.user.sub_school
+          sub_school: this.$store.state.user.sub_school,
+          add_date:Current()
         },
         listQuery: {
           limit: 10,
           page: 1,
           main_school: this.$store.state.user.main_school,
-          sub_school: this.$store.state.user.sub_school
+          sub_school: this.$store.state.user.sub_school,
           // operator:
         },
         listData: [],
@@ -103,7 +110,6 @@
           this.listData = response.data
           this.total = response.total
         })
-        console.log(this.$store.state.user)
       },
       handleSelectionChange(val) {
         let temp = []

@@ -6,7 +6,7 @@
           <el-form-item label="Logo">
             <span> <img
               style="width: 100px; height: 100px"
-              :src="form.logo"
+              :src="form.logo" alt="logo"
             >
             </span>
             <el-upload
@@ -28,22 +28,22 @@
             </el-upload>
           </el-form-item>
           <el-form-item label="网校名称">
-            <el-input v-model="form.school_name"></el-input>
+            <el-input v-model="form.school_name"/>
           </el-form-item>
           <el-form-item label="H5域名">
-            <el-input v-model="form.h5_domain"></el-input>
+            <el-input v-model="form.h5_domain"/>
           </el-form-item>
           <el-form-item label="咨询热线">
-            <el-input v-model="form.hotline"></el-input>
+            <el-input v-model="form.hotline"/>
           </el-form-item>
           <el-form-item label="咨询QQ">
-            <el-input v-model="form.qq"></el-input>
+            <el-input v-model="form.qq"/>
           </el-form-item>
           <el-form-item label="咨询邮箱">
-            <el-input v-model="form.email"></el-input>
+            <el-input v-model="form.email"/>
           </el-form-item>
           <el-form-item label="备案号">
-            <el-input v-model="form.icp"></el-input>
+            <el-input v-model="form.icp"/>
           </el-form-item>
           <el-form-item label="网站介绍">
             <el-input type="textarea" v-model="form.web_brief"/>

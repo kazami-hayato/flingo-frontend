@@ -15,9 +15,9 @@ const state = {
   sub_school: undefined,
   ip: undefined,
   prev_time: undefined,
-  name: undefined,
+  // name: undefined,
   avatar: undefined,
-  introduction: undefined,
+  // introduction: undefined,
   /*
   * 鉴权相关
   * */
@@ -58,19 +58,11 @@ const mutations = {
   SET_PREV_TIME: (state, prev_time) => {
     state.prev_time = prev_time
   },
-  SET_INTRODUCTION: (state, introduction) => {
-    state.introduction = introduction
-  },
-  SET_NAME: (state, name) => {
-    state.name = name
-  },
   SET_AVATAR: (state, avatar) => {
     state.avatar = avatar
   },
   SET_ROLES: (state, roles) => {
     state.roles = roles
-    console.log('this')
-    console.log(roles)
   }
 }
 
@@ -104,6 +96,7 @@ const actions = {
         console.log(data)
         // const { roles, name, avatar, introduction } = data
         const {
+          avatar,
           username,
           real_name,
           main_school,
@@ -140,6 +133,7 @@ const actions = {
         commit('SET_PHONE', phone)
         commit('SET_MAIN_SCHOOL', main_school)
         commit('SET_SUB_SCHOOL', sub_school)
+        commit('SET_AVATAR', avatar)
         commit('SET_IP', ip)
         commit('SET_PREV_TIME', prev_time)
         resolve(data)

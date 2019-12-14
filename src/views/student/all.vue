@@ -193,336 +193,350 @@
 </template>
 
 <script>
-    import {
-        getStudentsBySchool,
-        getStudentsBySearch,
-        createStudent,
-        updateStudent,
-        deleteStudent,
-        setStudentCourse,
-        getShiftCourses,
-        getStudentDetail
-    } from "@/api/apis";
-    import waves from '@/directive/waves' // waves directive
-    import {parseTime} from '@/utils'
-    import Pagination from '@/components/Pagination' // secondary package based on el-pagination
-    import XLSX from 'xlsx'
-    import StudentDetail from "./component/StudentDetail";
+  import {
+    getStudentsBySchool,
+    getStudentsBySearch,
+    createStudent,
+    updateStudent,
+    deleteStudent,
+    setStudentCourse,
+    getShiftCourses,
+    getStudentDetail
+  } from "@/api/apis";
+  import waves from '@/directive/waves' // waves directive
+  import {parseTime} from '@/utils'
+  import Pagination from '@/components/Pagination' // secondary package based on el-pagination
+  import XLSX from 'xlsx'
+  import StudentDetail from "./component/StudentDetail";
 
-    export default {
-        name: 'all',
-        components: {StudentDetail, Pagination},
-        directives: {waves},
-        data() {
-            return {
-                //
-                tableKey: 0,
-                //学生表
-                list: [],
-                sMainSchool: '',
-                sSubSchool: '',
-                //总数
-                total: 0,
-                //缓冲状态
-                listLoading: true,
-                //分页请求
-                listQuery: {
-                    page: 1,
-                    limit: 20,
-                    main_school: this.$store.state.user.main_school,
-                    sub_school: this.$store.state.user.sub_school,
-                    searchText: ''
-                },
-                courseQuery: {
-                    main_school: this.$store.state.user.main_school,
-                    sub_school: this.$store.state.user.sub_school,
-                    page: 1,
-                    searchText: '',
-                    limit: 10,
-                },
-                //选中
-                multipleSelection: [],
-                //搜索
-                searchText: "",
-                //分校过滤
-                SubschoolOptions: [],
-                MainschoolOptions: [],
-
-                //新建学生数据模板
-                temp: {},
-                //学生对话框信息
-                StuFormVisible: false,
-                StuFormStatus: '',
-                //文件导入对话框信息
-                ImportFormVisible: false,
-                //批量开课
-                courseSelection: [],
-                subscribeFormVisible: false,
-                subscribeFormStatus: '',
-                subscribeMap: {
-                    default: '批量开课',
-                    add: '新增课程'
-                },
-                subscribeTemp: {},
-                courseInfo: [],
-                course_total: 1,
-
-                //文件上传 [{name,url}]
-                fileList: [],
-                // rules: {
-                //     exam_id: [{type: 'number', required: true, message: '不为空且必须是数字', trigger: 'change'}],
-                //     // sub_school: [{required: true, message: '不能为空', trigger: 'change'}],
-                //     tag: [{required: true, message: '不能为空', trigger: 'blur'}],
-                //     student_name: [{required: true, message: '不能为空', trigger: 'change'}],
-                //     phone: [{type: 'number', required: true, message: '不为空且必须是数字', trigger: 'change'}],
-                // },
-                //状态
-            }
+  export default {
+    name: 'all',
+    components: {StudentDetail, Pagination},
+    directives: {waves},
+    data() {
+      return {
+        //
+        tableKey: 0,
+        //学生表
+        list: [],
+        sMainSchool: '',
+        sSubSchool: '',
+        //总数
+        total: 0,
+        //缓冲状态
+        listLoading: true,
+        //分页请求
+        listQuery: {
+          page: 1,
+          limit: 20,
+          main_school: this.$store.state.user.main_school,
+          sub_school: this.$store.state.user.sub_school,
+          searchText: ''
         },
-        created() {
-            this.getList()
-            console.log(this.tableKey)
+        courseQuery: {
+          main_school: this.$store.state.user.main_school,
+          sub_school: this.$store.state.user.sub_school,
+          page: 1,
+          searchText: '',
+          limit: 10,
         },
-        methods: {
-            tableRowClassName({row, rowIndex}) {
-                if (rowIndex === 1) {
-                    return 'warning-row';
-                } else if (rowIndex === 3) {
-                    return 'success-row';
-                }
-                return '';
-            },
-            //文件上传相关
-            handleRemove(file, fileList) {
-                console.log(file, fileList);
-            },
-            handlePreview(file) {
-                console.log(file);
-            },
-            beforeRemove(file, fileList) {
-                return this.$confirm(`确定移除 ${file.name}？`);
-            },
-            onUploadChange(file) {
-                console.log(file.raw.type)
-            },
-            //实际上上传按钮的函数
-            parseXls(param) {
-                this.readerXls(param.file)
-                this.ImportFormVisible = false
-            },
-            getHeaderRow(sheet) {
-                const headers = []
-                const range = XLSX.utils.decode_range(sheet['!ref'])
-                let C
-                const R = range.s.r
-                /* start in the first row */
-                for (C = range.s.c; C <= range.e.c; ++C) { /* walk every column in the range */
-                    const cell = sheet[XLSX.utils.encode_cell({c: C, r: R})]
-                    /* find the cell in the first row */
-                    let hdr = 'UNKNOWN ' + C // <-- replace with your desired default
-                    if (cell && cell.t) hdr = XLSX.utils.format_cell(cell)
-                    headers.push(hdr)
-                }
-                return headers
-            },
-            //请求数据
-            getList() {
-                this.listLoading = true
-                if (this.listQuery.searchText === '') {
-                    getStudentsBySchool(this.listQuery).then(response => {
-                        this.list = response.data
-                        this.total = response.total
-                        setTimeout(() => {
-                            this.listLoading = false
-                        }, 1.5 * 100)
-                        this.MainschoolOptions = [...new Set(this.list.map(item => item.stu.main_school))];
-                        this.SubschoolOptions = [...new Set(this.list.map(item => item.stu.sub_school))];
-                    })
-                } else {
-                    getStudentsBySearch(this.listQuery).then(response => {
-                        this.list = response.data
-                        this.total = response.total
-                        setTimeout(() => {
-                            this.listLoading = false
-                        }, 1.5 * 100)
-                    })
-                }
-            },
-            resetTemp() {
-                this.temp = {}
-            }
-            ,
-            handleCoursesChange(val) {
-                let temp = []
-                val.forEach(item => {
-                    temp.push(item.course_id)
-                });
-                this.courseSelection = temp
-            },
-            handleSelectionChange(val) {
-                let temp = []
-                val.forEach(item => {
-                    temp.push(item.stu.exam_id)
-                });
-                this.multipleSelection = temp
-                console.log(this.multipleSelection)
-            }
-            ,
-            // 接口留着以后用
-            toggleSelection(rows) {
-                if (rows) {
-                    rows.forEach(row => {
-                        this.$refs.courseTable.toggleRowSelection(row);
-                    });
-                } else {
-                    this.$refs.courseTable.clearSelection();
-                }
-            }
-            ,
-            createData() {
-                this.$refs['dataForm'].validate((valid) => {
-                    if (valid) {
-                        console.log(this.temp)
-                        // 发送到后端 并返回完整数据
-                        createStudent(this.temp).then(() => {
-                            this.StuFormVisible = false
-                            this.$notify({
-                                title: '成功',
-                                message: '创建成功',
-                                type: 'success',
-                                duration: 2000
-                            })
-                            this.getList()
-                        })
-                    }
-                })
-            }
-            ,
-            handleDelete() {
-                this.multipleSelection.forEach(exam_id => {
-                    deleteStudent({exam_id: exam_id}).then(() => {
-                        const index = this.multipleSelection.indexOf(exam_id)
-                        if (index !== -1) this.multipleSelection.splice(index, 1)
-                    })
-                })
-                console.log(this.multipleSelection)
-                this.$notify({
-                    title: '成功',
-                    message: '删除数据完成',
-                    type: 'success',
-                    duration: 2000
-                })
-                this.getList()
-            }
-            ,
-            //操作 更新 查看课程 开课
-            handleUpdate(row) {
-                this.temp = Object.assign({}, row.stu) // copy obj
-                this.StuFormVisible = true
+        //选中
+        multipleSelection: [],
+        //搜索
+        searchText: "",
+        //分校过滤
+        SubschoolOptions: [],
+        MainschoolOptions: [],
 
-            }
-            ,
-            handleCourseReview(row) {
-
-            },
-            handleCourseAdd(row) {
-                // console.log('oo')
-                this.multipleSelection = [row.stu.exam_id]
-                console.log(this.multipleSelection)
-                this.subscribeFormVisible = true
-                this.subscribeFormStatus = 'add'
-            },
-            updateData() {
-                this.$refs['dataForm'].validate((valid) => {
-                    if (valid) {
-                        const tempData = Object.assign({}, this.temp)
-                        updateStudent(tempData).then(() => {
-                            this.StuFormVisible = false
-                            this.getList()
-                            this.$notify({
-                                title: '成功',
-                                message: '更新成功',
-                                type: 'success',
-                                duration: 2000
-                            })
-                        })
-                    }
-                })
-            },
-            handleSubscribe() {
-                this.subscribeFormStatus = 'default'
-                this.subscribeFormVisible = true
-                this.getCourses()
-            },
-            getCourses() {
-                console.log(this.$store.state.user)
-                getShiftCourses(this.courseQuery).then(response => {
-                    this.courseInfo = response.data
-                })
-            },
-            postSubscribe() {
-                console.log(this.multipleSelection)
-                this.multipleSelection.forEach(stuEId => {
-                    this.courseSelection.forEach(cid => {
-                        let temp = {'exam_id': stuEId, 'course_id': cid, status: 1}
-                        setStudentCourse(temp).then(response => {
-                            console.log(temp)
-                        })
-                    })
-
-                })
-                this.$notify({
-                    title: '成功',
-                    message: '选课成功',
-                    type: 'success',
-                    duration: 2000
-                })
-
-                this.subscribeFormVisible = false
-                this.getList()
-            },
-            handleExport() {
-                import('@/vendor/Export2Excel').then(excel => {
-                    const tHeader = ['ID', '准考证号', '分校名', '性别', '姓名', '手机', '身份证号', '注册日期']
-                    const filterVal = ['id', 'exam_id', 'sub_school', 'tag', 'student_name', 'phone', 'id_card', 'register_date']
-                    const data = this.formatJson(filterVal, this.list)
-                    excel.export_json_to_excel({
-                        header: tHeader,
-                        data,
-                        filename: 'student'
-                    })
-                    // this.downloadLoading = false
-                })
-            },
-            formatJson(filterVal, jsonData) {
-                return jsonData.map(v => filterVal.map(j => {
-                    if (j === 'register_date') {
-                        return parseTime(v[j])
-                    } else {
-                        return v[j]
-                    }
-                }))
-            }
-            ,
-            filterSubschool(value, row) {
-                return row.sub_school === value;
-            }
-            ,
-            handleSearch() {
-                this.listQuery.page = 1
-                this.listQuery.searchText = this.searchText
-                getStudentsBySearch(this.listQuery).then(response => {
-                    this.list = response.data
-                    this.total = response.total
-                })
-            }
-            , handleFilter() {
-                this.listQuery.main_school = this.sMainSchool
-                this.listQuery.sub_school = this.sSubSchool
-                this.getList()
-            }
+        //新建学生数据模板
+        temp: {},
+        //学生对话框信息
+        StuFormVisible: false,
+        StuFormStatus: '',
+        //文件导入对话框信息
+        ImportFormVisible: false,
+        //批量开课
+        courseSelection: [],
+        subscribeFormVisible: false,
+        subscribeFormStatus: '',
+        subscribeMap: {
+          default: '批量开课',
+          add: '新增课程'
         },
-    }
+        subscribeTemp: {},
+        courseInfo: [],
+        course_total: 1,
+
+        //文件上传 [{name,url}]
+        fileList: [],
+        // rules: {
+        //     exam_id: [{type: 'number', required: true, message: '不为空且必须是数字', trigger: 'change'}],
+        //     // sub_school: [{required: true, message: '不能为空', trigger: 'change'}],
+        //     tag: [{required: true, message: '不能为空', trigger: 'blur'}],
+        //     student_name: [{required: true, message: '不能为空', trigger: 'change'}],
+        //     phone: [{type: 'number', required: true, message: '不为空且必须是数字', trigger: 'change'}],
+        // },
+        //状态
+      }
+    },
+    created() {
+      this.getList()
+      console.log(this.tableKey)
+    },
+    methods: {
+      tableRowClassName({row, rowIndex}) {
+        if (rowIndex === 1) {
+          return 'warning-row';
+        } else if (rowIndex === 3) {
+          return 'success-row';
+        }
+        return '';
+      },
+      //文件上传相关
+      handleRemove(file, fileList) {
+        console.log(file, fileList);
+      },
+      handlePreview(file) {
+        console.log(file);
+      },
+      beforeRemove(file, fileList) {
+        return this.$confirm(`确定移除 ${file.name}？`);
+      },
+      onUploadChange(file) {
+        console.log(file.raw.type)
+      },
+      //实际上上传按钮的函数
+      parseXls(param) {
+        this.readerXls(param.file)
+        this.ImportFormVisible = false
+      },
+      getHeaderRow(sheet) {
+        const headers = []
+        const range = XLSX.utils.decode_range(sheet['!ref'])
+        let C
+        const R = range.s.r
+        /* start in the first row */
+        for (C = range.s.c; C <= range.e.c; ++C) { /* walk every column in the range */
+          const cell = sheet[XLSX.utils.encode_cell({c: C, r: R})]
+          /* find the cell in the first row */
+          let hdr = 'UNKNOWN ' + C // <-- replace with your desired default
+          if (cell && cell.t) hdr = XLSX.utils.format_cell(cell)
+          headers.push(hdr)
+        }
+        return headers
+      },
+      //请求数据
+      getList() {
+        this.listLoading = true
+
+        if (this.listQuery.searchText === '') {
+          getStudentsBySchool(this.listQuery).then(response => {
+            this.list = response.data
+            this.total = response.total
+            setTimeout(() => {
+              this.listLoading = false
+            }, 1.5 * 100)
+            if (this.total > 1) {
+              this.MainschoolOptions = [...new Set(this.list.map(item => item.stu.main_school))];
+              this.SubschoolOptions = [...new Set(this.list.map(item => item.stu.sub_school))];
+            }
+          })
+        } else {
+          getStudentsBySearch(this.listQuery).then(response => {
+            this.list = response.data
+            this.total = response.total
+            setTimeout(() => {
+              this.listLoading = false
+            }, 1.5 * 100)
+          })
+        }
+      },
+      resetTemp() {
+        this.temp = {}
+      }
+      ,
+      handleCoursesChange(val) {
+        let temp = []
+        val.forEach(item => {
+          temp.push(item.course_id)
+        });
+        this.courseSelection = temp
+      },
+      handleSelectionChange(val) {
+        let temp = []
+        val.forEach(item => {
+          temp.push(item.stu.exam_id)
+        });
+        this.multipleSelection = temp
+        console.log(this.multipleSelection)
+      }
+      ,
+      // 接口留着以后用
+      toggleSelection(rows) {
+        if (rows) {
+          rows.forEach(row => {
+            this.$refs.courseTable.toggleRowSelection(row);
+          });
+        } else {
+          this.$refs.courseTable.clearSelection();
+        }
+      }
+      ,
+      createData() {
+        this.$refs['dataForm'].validate((valid) => {
+          if (valid) {
+            console.log(this.temp)
+            // 发送到后端 并返回完整数据
+            createStudent(this.temp).then(() => {
+              this.StuFormVisible = false
+              this.$notify({
+                title: '成功',
+                message: '创建成功',
+                type: 'success',
+                duration: 2000
+              })
+              this.getList()
+            })
+          }
+        })
+      }
+      ,
+      handleDelete() {
+        this.multipleSelection.forEach(exam_id => {
+          deleteStudent({exam_id: exam_id}).then(() => {
+            const index = this.multipleSelection.indexOf(exam_id)
+            if (index !== -1) this.multipleSelection.splice(index, 1)
+          })
+        })
+        console.log(this.multipleSelection)
+        this.$notify({
+          title: '成功',
+          message: '删除数据完成',
+          type: 'success',
+          duration: 2000
+        })
+        this.getList()
+      }
+      ,
+      //操作 更新 查看课程 开课
+      handleUpdate(row) {
+        this.temp = Object.assign({}, row.stu) // copy obj
+        this.StuFormVisible = true
+
+      }
+      ,
+      handleCourseReview(row) {
+
+      },
+      handleCourseAdd(row) {
+        // console.log('oo')
+        this.multipleSelection = [row.stu.exam_id]
+        console.log(this.multipleSelection)
+        this.subscribeFormVisible = true
+        this.subscribeFormStatus = 'add'
+      },
+      updateData() {
+        this.$refs['dataForm'].validate((valid) => {
+          if (valid) {
+            const tempData = Object.assign({}, this.temp)
+            updateStudent(tempData).then(() => {
+              this.StuFormVisible = false
+              this.getList()
+              this.$notify({
+                title: '成功',
+                message: '更新成功',
+                type: 'success',
+                duration: 2000
+              })
+            })
+          }
+        })
+      },
+      handleSubscribe() {
+        this.subscribeFormStatus = 'default'
+        this.subscribeFormVisible = true
+        this.getCourses()
+      },
+      getCourses() {
+        console.log(this.$store.state.user)
+        getShiftCourses(this.courseQuery).then(response => {
+          this.courseInfo = response.data
+        })
+      },
+      postSubscribe() {
+        console.log(this.multipleSelection)
+        this.multipleSelection.forEach(stuEId => {
+          this.courseSelection.forEach(cid => {
+            let temp = {'exam_id': stuEId, 'course_id': cid, status: 1}
+            setStudentCourse(temp).then(response => {
+              console.log(temp)
+            })
+          })
+
+        })
+        this.$notify({
+          title: '成功',
+          message: '选课成功',
+          type: 'success',
+          duration: 2000
+        })
+
+        this.subscribeFormVisible = false
+        this.getList()
+      },
+      handleExport() {
+        import('@/vendor/Export2Excel').then(excel => {
+          const tHeader = ['ID', '准考证号', '分校名', '性别', '姓名', '手机', '身份证号', '注册日期']
+          const filterVal = ['id', 'exam_id', 'sub_school', 'tag', 'student_name', 'phone', 'id_card', 'register_date']
+          const data = this.formatJson(filterVal, this.list)
+          excel.export_json_to_excel({
+            header: tHeader,
+            data,
+            filename: 'student'
+          })
+          // this.downloadLoading = false
+        })
+      },
+      formatJson(filterVal, jsonData) {
+        return jsonData.map(v => filterVal.map(j => {
+          if (j === 'register_date') {
+            return parseTime(v[j])
+          } else {
+            return v[j]
+          }
+        }))
+      }
+      ,
+      filterSubschool(value, row) {
+        return row.sub_school === value;
+      }
+      ,
+      handleSearch() {
+        this.listQuery.page = 1
+        this.listQuery.searchText = this.searchText
+        if (this.listQuery.searchText === '') {
+          this.getList()
+        } else {
+          getStudentsBySearch(this.listQuery).then(response => {
+            this.list = response.data
+            this.total = response.total
+          })
+        }
+      }
+      , handleFilter() {
+        this.listQuery.main_school = this.sMainSchool
+        this.listQuery.sub_school = this.sSubSchool
+        if (this.listQuery.main_school === '') {
+          this.listQuery.main_school = this.$store.state.user.main_school
+        }
+        if (this.listQuery.sub_school === '') {
+          this.listQuery.sub_school = this.$store.state.user.sub_school
+        }
+        console.log(this.listQuery)
+        this.getList()
+      }
+    },
+  }
 </script>
 <style>
   .el-table .warning-row {

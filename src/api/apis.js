@@ -512,34 +512,11 @@ export function getCoursesBySearch(data) {
 //获取该校上架的所有课程
 //课程分页 get ?limit=?page=?searchText=?sub_school=?main_school=
 export function getShiftCourses(data) {
-  /*  data = {
-      limit: 20,
-      page: 1,
-      searchText: '课程名|课程id',
-    }*/
   return request({
     url: '/apis/v1/shift/courses',
     method: 'get',
     params: data
   })
-  const response = {
-    code: 20000,
-    data: [{
-      id: 1,
-      course_id: '121',
-      course_name: '高等数学',
-      course_brief: '简介',
-      update_time: '2019-12-11 16:44:55',
-      material_name: '教材名',
-      norm_duration: 12,
-      norm_num: 22,
-      norm_price: 799,
-      cross_price: 199,
-      sales: 12,
-      is_valid: 0 | 1,
-    }],
-    total: 1
-  }
 }
 
 export function getShiftCourseById(data) {
@@ -640,26 +617,12 @@ export function getCourseCatalog(data) {
 
 //分页查询 get ?limit=?page=?
 export function getIPS(data) {
-  /*  data = {
-      limit=20,
-      page=1,
-    }*/
   return request({
-    url: '/apis/v1/ips',
+    url: '/apis/v1/ips/school',
     method: 'get',
     params: data
   })
-  const response = {
-    code: 20000,
-    data: [{
-      id: 1,
-      ip_id: 22,
-      ip: '192.168.1.1',
-      add_date: '2019-11-12 15:33:11',
-      operator: 'xxx'
-    }],
-    total: 1
-  }
+
 }
 
 export function addIP(data) {
@@ -673,10 +636,6 @@ export function addIP(data) {
     method: 'post',
     data: data
   })
-  const response = {
-    code: 20000,
-    data: '添加成功'
-  }
 }
 
 export function removeIP(data) {
@@ -700,34 +659,35 @@ export function removeIP(data) {
 
 //分页 get?limit=?page=?main_school=?sub_school=
 export function getAdmins(data) {
-  /*  data={
-    sub_school:'鄂州职校',
-    page:1,
-    limit:20
-  }*/
+
   return request({
-    url: '/apis/v1/admins/',
+    url: '/apis/v1/admins',
     method: 'get',
     params: data
   })
-  const response = {
-    code: 20000,
-    data: [{
-      id: 1,
-      user_id: 12,
-      username: '',
-      user_type: '',
-      sub_school: '',
-      register_date: '2019-12-11 15:33:22'
-    }],
-    total: 1
-  }
 }
 
-export function forbidAdmin(data) {
+export function addAdmin(data) {
+  return request({
+    url: '/apis/v1/admins',
+    method: 'post',
+    data: data
+  })
+}
+
+
+export function deleteAdmin(data) {
   return request({
     url: '/apis/v1/admins/' + data.user_id,
     method: 'delete',
+  })
+}
+
+export function updateAdmin(data) {
+  return request({
+    url: '/apis/v1/admins',
+    method: 'put',
+    data:data
   })
 }
 

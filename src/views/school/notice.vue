@@ -25,11 +25,14 @@
       @selection-change="handleSelectionChange"
     >
       <el-table-column width="55" type="selection" align="center"/>
-      <el-table-column label="序号" prop="id" align="center" width="80" sortable>
-        <template slot-scope="{row}">
-          <span>{{ row.notice_id }}</span>
-        </template>
-      </el-table-column>
+      <el-table-column label="序号" type="index" align="center" width="80" sortable/>
+
+
+<!--      <el-table-column label="通知号"  align="center" width="150" sortable>-->
+<!--        <template slot-scope="{row}">-->
+<!--          <span>{{ row.notice_id }}</span>-->
+<!--        </template>-->
+<!--      </el-table-column>-->
       <el-table-column label="时间" width="150px" align="center">
         <template slot-scope="{row}">
           <span>{{ row.pub_date | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>

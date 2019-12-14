@@ -34,7 +34,7 @@
             label="课程名"
             min-width="100">
             <template slot-scope="{row}">
-              <div style="text-align: center">{{row.courses[0]}}</div>
+              <div style="text-align: center" v-if="row.courses.length>0">{{row.courses[0].course_name}}</div>
             </template>
           </el-table-column>
           <el-table-column
@@ -42,7 +42,7 @@
             label="课程名"
             min-width="100">
             <template slot-scope="{row}">
-              <div style="text-align: center">{{row.courses[1]}}</div>
+              <div style="text-align: center" v-if="row.courses.length>1">{{row.courses[1].course_name}}</div>
             </template>
           </el-table-column>
           <el-table-column
@@ -50,7 +50,7 @@
             label="课程名"
             min-width="100">
             <template slot-scope="{row}">
-              <div style="text-align: center">{{row.courses[2]}}</div>
+              <div style="text-align: center" v-if="row.courses.length>2">{{row.courses[2].course_name}}</div>
             </template>
           </el-table-column>
           <el-table-column
@@ -58,7 +58,7 @@
             label="课程名"
             min-width="100">
             <template slot-scope="{row}">
-              <div style="text-align: center">{{row.courses[3]}}</div>
+              <div style="text-align: center" v-if="row.courses.length>3">{{row.courses[3].course_name}}</div>
             </template>
           </el-table-column>
           <el-table-column
@@ -66,7 +66,7 @@
             label="课程名"
             min-width="100">
             <template slot-scope="{row}">
-              <div style="text-align: center">{{row.courses[4]}}</div>
+              <div style="text-align: center" v-if="row.courses.length>4">{{row.courses[4].course_name}}</div>
             </template>
           </el-table-column>
           <el-table-column
@@ -74,7 +74,7 @@
             label="课程名"
             min-width="100">
             <template slot-scope="{row}">
-              <div style="text-align: center">{{row.courses[5]}}</div>
+              <div style="text-align: center" v-if="row.courses.length>5">{{row.courses[5].course_name}}</div>
             </template>
           </el-table-column>
           <el-table-column
@@ -112,9 +112,8 @@
     },
     data() {
       return {
-        total: undefined,
+        total: 0,
         tableData: undefined,
-
         studentQuery: {
           page: 1,
           limit: 10,
