@@ -1,9 +1,6 @@
 <template>
   <el-card>
     <el-container>
-      <el-header>
-        <div>wqe</div>
-      </el-header>
       <el-main>
         <el-table
           fit
@@ -16,18 +13,21 @@
             align="center"
             min-width="100">
           </el-table-column>
-
           <el-table-column
-            prop="exam_id"
             label="考号"
             align="center"
             min-width="100">
+            <template slot-scope="{row}">
+              <div style="text-align: center">{{row.stu.exam_id}}</div>
+            </template>
           </el-table-column>
           <el-table-column
-            prop="real_name"
             label="姓名"
             align="center"
             min-width="70">
+            <template slot-scope="{row}">
+              <div style="text-align: center">{{row.stu.real_name}}</div>
+            </template>
           </el-table-column>
           <el-table-column
             align="center"
@@ -112,12 +112,12 @@
     },
     data() {
       return {
-        total: 10,
+        total: undefined,
         tableData: undefined,
 
         studentQuery: {
           page: 1,
-          limit: 20,
+          limit: 10,
           main_school: this.$store.state.user.main_school,
           sub_school: this.$store.state.user.sub_school,
           tag: this.tag.tag_name
@@ -129,6 +129,7 @@
         getStudentsByTag(this.studentQuery).then(response => {
           this.tableData = response.data
           this.total = response.total
+          console.log(this.total)
         })
       },
       tableRowClassName({row, rowIndex}) {

@@ -1,8 +1,5 @@
 <template>
   <el-container>
-    <el-header>
-
-    </el-header>
     <el-main>
       <el-table
         :data="tableData"
@@ -40,29 +37,36 @@
         <el-table-column
           label="考期过期时间"
           align="center"
-          prop="tag_overdate">
+          prop="tag_overtime">
         </el-table-column>
         <el-table-column
           align="center"
+          min-width="300"
           label="操作">
           <template slot-scope="{row}">
             <el-button
-              v-if="row.active===true"
+              v-if="row.active===1"
               size="mini"
               type="success"
               @click="handleImportStu(row)">导入学生
             </el-button>
             <el-button
-              v-if="row.active===true"
+              v-if="row.active===1"
               size="mini"
               type="success"
               @click="handleImportCourse(scope.$index, scope.row)">导入选课信息
+            </el-button>
+            <el-button
+              size="mini"
+              type="warning"
+              @click="handleImportStu(row)">导出成绩
             </el-button>
           </template>
         </el-table-column>
       </el-table>
       <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit"
                   @pagination="getList"/>
+
     </el-main>
   </el-container>
 </template>
@@ -78,29 +82,13 @@
     components: {StuCourseDetail, Pagination},
     data() {
       return {
-        total: 0,
+        total: 1,
         listQuery: {
-          main_school: this.$store.state.user.main_school,
-          sub_school: this.$store.state.user.sub_school,
-          limit: 20,
+          limit: 10,
           page: 0
         },
         multipleSelection: [],
         tableData: [
-          {
-            tag_id: 12,
-            tag_name: '1805',
-            tag_overdate: '2019-12-11 15:33:22',
-            tag_createtime: '2019-12-11 15:33:22',
-            active: true,
-            all_students: '',
-          },
-          {
-            tag_id: 13,
-            tag_name: '1806',
-            tag_overdate: '2019-12-11 15:33:22',
-            tag_createtime: '2019-12-11 15:33:22'
-          }
         ]
       }
     },

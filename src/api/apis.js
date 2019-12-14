@@ -738,7 +738,7 @@ export function forbidAdmin(data) {
 
 export function getTags(data) {
   return request({
-    url: '/apis/v1/students/getTags',
+    url: '/apis/v1/tags/getTags',
     method: 'get',
     params: data
   })

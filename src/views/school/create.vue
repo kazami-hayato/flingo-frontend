@@ -30,38 +30,39 @@
 
 <script>
 
-    import Tinymce from '@/components/Tinymce'
-    import MDinput from '@/components/MDinput'
-    import {createNotice} from "@/api/apis"
+  import Tinymce from '@/components/Tinymce'
+  import MDinput from '@/components/MDinput'
+  import {createNotice} from "@/api/apis"
 
 
-    export default {
-        name: 'create',
-        components: {Tinymce, MDinput},
-        data() {
-            return {
-                options: ['新闻', '通知', '法律法规'],
-                notice: {
-                    main_school: 'main_school',
-                    sub_school: 'sub_school',
-                    notice_type: '',
-                    notice_title: '',
-                    notice_content: '',
-                },
-                name: '',
-                content: undefined,
-                components: {Tinymce}
-            }
+  export default {
+    name: 'create',
+    components: {Tinymce, MDinput},
+    data() {
+      return {
+        options: ['新闻', '通知', '法律法规'],
+        notice: {
+          main_school: this.$store.state.user.main_school,
+          sub_school: this.$store.state.user.sub_school,
+          notice_type: '',
+          notice_author: this.$store.state.user.username,
+          notice_title: '',
+          notice_content: '',
         },
-        methods: {
-            handlePub() {
-                const query = Object.assign({}, this.notice)
-                createNotice(query).then(response => {
-                    this.$router.push({ path: this.redirect || '/school/notice' })
-                })
-            }
-        }
+        name: '',
+        content: undefined,
+        components: {Tinymce}
+      }
+    },
+    methods: {
+      handlePub() {
+        const query = Object.assign({}, this.notice)
+        createNotice(query).then(response => {
+          this.$router.push({path: this.redirect || '/school/notice'})
+        })
+      }
     }
+  }
 </script>
 
 

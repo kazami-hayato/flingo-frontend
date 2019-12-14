@@ -90,8 +90,8 @@
                 listLoading: true,
                 chosenList: [],
                 listQuery: {
-                    main_school: 'main_school',
-                    sub_school: 'sub_school',
+                    main_school: this.$store.state.user.main_school,
+                    sub_school: this.$store.state.user.sub_school,
                     page: 1,
                     limit: 20,
                 },
