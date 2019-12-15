@@ -5,19 +5,11 @@ import Mock from "mockjs";
 * 登录相关
 * */
 export function login(data) {
-  /*  data={
-      username:string,
-      password:string
-    }*/
   return request({
     url: '/apis/v1/auth/login',
     method: 'post',
     data: data
   })
-  /*  const response = {
-      code: 20000,
-      data: '登陆成功'
-    }*/
 }
 
 export function getInfo() {
