@@ -479,33 +479,12 @@ export function getCourses(data) {
 
 //网校课程相关 获取该校仓库所有课程
 //课程分页 get ?limit=?page=?searchText=?sub_school=?
-export function getCoursesBySearch(data) {
-  /*  data = {
-      limit: 20,
-      page: 1,
-      searchText: '课程名|课程id',
-      sub_school: '鄂州大学'
-    }*/
+export function getMainCourseBySearch(data) {
   return request({
-    url: '/apis/v1/repository/Search',
+    url: '/apis/v1/repository/courses/searchMainCourse',
     method: 'get',
     params: data
   })
-  // const response = {
-  //   code: 20000,
-  //   data: [{
-  //     id: 1,
-  //     course_id: 121,
-  //     course_name: '高等数学',
-  //     course_brief: '简介',
-  //     update_time: '2019-11-12 12:22:11',
-  //     material_name: '教材名',
-  //     norm_duration: 22,
-  //     norm_num: 33,
-  //     // course_state: 0 | 1,
-  //   }],
-  //   total: 1
-  // }
 }
 
 
@@ -580,35 +559,18 @@ export function unshiftCourse(data) {
 }
 
 export function updateShiftCourse(data) {
-  /*  data = {
-      course_id: 121,
-      norm_price: 799,
-      cross_price: 199,
-      sub_school: '鄂州大学'
-    }*/
   return request({
-    url: '/apis/v1/shift/courses/' + data.course_id,
+    url: '/apis/v1/sales/update',
     method: 'put',
     data: data
   })
-  const response = {
-    code: 20000,
-    data: '更新成功'
-  }
 }
 
 export function getCourseCatalog(data) {
-  /*  data={
-      course_id:121
-    }*/
   return request({
     url: '/api/v1/courses/catalog/' + data.course_id,
     method: 'get',
   })
-  const response = {
-    code: 20000,
-    data: 'catalog json'
-  }
 }
 
 /*
@@ -687,7 +649,7 @@ export function updateAdmin(data) {
   return request({
     url: '/apis/v1/admins',
     method: 'put',
-    data:data
+    data: data
   })
 }
 
@@ -713,42 +675,34 @@ export function getStudentsByTag(data) {
 
 }
 
-export function getMainTags() {
+export function getPasswordByParams(data) {
   return request({
-    url: '/apis/v1/main/tags',
+    url: '/apis/v1/students/password',
     method: 'get',
     params: data
   })
-  const response = {
-    code: 20000,
-    data: [
-      {
-        id: 1,
-        tag_id: 12,
-        tag_name: '',
-        tag_overdate: '',
-        tag_createtime: '2019-12-11 15:33:22'
-      }],
-    total: 1
-  }
 }
 
-export function addMainTags() {
+export function getMainCourseSale(data) {
   return request({
-    url: '/apis/v1/main/tags',
+    url: '/apis/v1/sales',
     method: 'get',
     params: data
   })
-  const response = {
-    code: 20000,
-    data: [
-      {
-        id: 1,
-        tag_id: 12,
-        tag_name: '',
-        tag_overdate: '',
-        tag_createtime: '2019-12-11 15:33:22'
-      }],
-    total: 1
-  }
 }
+
+// export function getMainTags() {
+//   return request({
+//     url: '/apis/v1/main/tags',
+//     method: 'get',
+//     params: data
+//   })
+// }
+//
+// export function addMainTags() {
+//   return request({
+//     url: '/apis/v1/main/tags',
+//     method: 'get',
+//     params: data
+//   })
+// }

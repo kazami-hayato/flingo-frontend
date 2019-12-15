@@ -2,12 +2,16 @@
   <div class="app-container">
     <div class="filter-container">
       <el-row type="flex" justify="space-between">
-        <el-col :span="12">
-          <el-input v-model="listQuery.searchText" placeholder="可输入 课程名/课程代码" style="width: 200px;"
-                    class="filter-item"/>
-          <el-button class="filter-item" type="primary" icon="el-icon-search" @click="searchCourses">
-            查找
-          </el-button>
+        <el-col :span="6">
+          <el-input placeholder="请输入内容" v-model="listQuery.searchText">
+            <el-select v-model="listQuery.searchType" slot="prepend" placeholder="请选择"
+                       style="width: 130px;background: #1890FF;color: #fff">
+              <el-option label="课程号" value='1'/>
+              <el-option label="课程名" value='2'/>
+            </el-select>
+            <el-button slot="append" icon="el-icon-search" @click="searchCourses"
+                       style="background: #1890FF;color: #fff;border-radius: 0"/>
+          </el-input>
         </el-col>
         <el-col :span="16" align="right">
           <el-button class="filter-item" type="danger" icon="el-icon-minus"
@@ -71,7 +75,7 @@
 
       <el-table-column label="操作" align="center" minWidth="300" class-name="small-padding fixed-width">
         <template slot-scope="{row}">
-          <el-button  size="medium" type="info" @click="lookDetail(row)">
+          <el-button size="medium" type="info" @click="lookDetail(row)">
             查看详情
           </el-button>
           <el-button v-if="row.is_main!==1" type="primary" size="medium" @click="shiftTheCourse(row)">
@@ -106,93 +110,98 @@
 </template>
 
 <script>
-    import {getCourses,getCoursesBySearch,getShiftCourseById, unshiftCourse, shiftCourse} from '@/api/apis'
-    import Pagination from '@/components/Pagination'
+  import {getCourses, getMainCourseBySearch, getShiftCourseById, unshiftCourse, shiftCourse} from '@/api/apis'
+  import Pagination from '@/components/Pagination'
 
-    export default {
-        name: 'info',
-        components: {Pagination},
-        data() {
-            return {
-                courseInfoVisible: false,
-                courseInfo: {},
-                listLoading: true,
-                listQuery: {
-                    main_school:this.$store.state.user.main_school,
-                    searchText: '',
-                    page: 1,
-                    limit: 20,
-                },
-                total: 5,
-                chosenList: [],
-                list: undefined,
-            }
+  export default {
+    name: 'info',
+    components: {Pagination},
+    data() {
+      return {
+        courseInfoVisible: false,
+        courseInfo: {},
+        listLoading: true,
+        listQuery: {
+          main_school: this.$store.state.user.main_school,
+          sub_school: this.$store.state.user.sub_school,
+          searchText: '',
+          searchType: '1',
+          page: 1,
+          limit: 20,
         },
-        created() {
-            this.getList()
-        },
-        methods: {
-            getList() {
-                this.listLoading = true
-                getCourses(this.listQuery).then(response => {
-                    this.list = response.data
-                    this.total = response.total
-                    setTimeout(() => {
-                        this.listLoading = false
-                    }, 1000)
-                })
-            },
-            handleSelectionChange(val) {
-                let temp = []
-                val.forEach(item => {
-                    temp.push(item.course_id)
-                });
-                this.chosenList = temp
-            },
-            searchCourses() {
-                console.log(this.listQuery)
-                getCoursesBySearch(this.listQuery).then(response=>{
-                    this.list = response.data
-                    this.total = response.total
-                })
-            },
-            shiftAll() {
-            },
-            unshiftAll() {
-            },
-            shiftSelected() {
+        total: 0,
+        chosenList: [],
+        list: undefined,
+      }
+    },
+    created() {
+      this.getList()
+    },
+    methods: {
+      getList() {
+        this.listLoading = true
+        getCourses(this.listQuery).then(response => {
+          this.list = response.data
+          this.total = response.total
+          setTimeout(() => {
+            this.listLoading = false
+          }, 1000)
+        })
+      },
+      handleSelectionChange(val) {
+        let temp = []
+        val.forEach(item => {
+          temp.push(item.course_id)
+        });
+        this.chosenList = temp
+      },
+      searchCourses() {
+        if (this.listQuery.searchText === '') this.getList()
+        else
+          getMainCourseBySearch(this.listQuery).then(response => {
+            this.list = response.data
+            this.total = response.total
+          })
+      },
+      shiftAll() {
+      },
+      unshiftAll() {
+      },
+      shiftSelected() {
 
-                this.chosenList.forEach(item => {
-                    shiftCourse(row).then(() => {
-                    })
-                })
-                this.getList()
-            },
-            unshiftSelected() {
-                this.chosenList.forEach(item => {
-                    unshiftCourse({course_id:item}).then(() => {
-                    })
-                })
-                this.getList()
-            },
-            shiftTheCourse(row) {
-                this.courseInfoVisible = true
-                this.courseInfo = row
-            },
-            postShiftCourse() {
-                const theCourse=Object.assign(this.courseInfo,{main_school: this.$store.state.user.main_school})
-                console.log(theCourse)
-                shiftCourse(theCourse).then(() => {
-                })
-                this.courseInfoVisible = false
-                this.getList()
-            },
-            unshiftTheCourse(row) {
-                unshiftCourse(row).then(() => {
-                })
-                this.getList()
-            },
-            lookDetail(row){}
-        }
+        this.chosenList.forEach(item => {
+          shiftCourse(row).then(() => {
+          })
+        })
+        this.getList()
+      },
+      unshiftSelected() {
+        this.chosenList.forEach(item => {
+          unshiftCourse({course_id: item}).then(() => {
+          })
+        })
+        this.getList()
+      },
+      shiftTheCourse(row) {
+        this.courseInfoVisible = true
+        this.courseInfo = row
+      },
+      postShiftCourse() {
+        const theCourse = Object.assign(this.courseInfo, {main_school: this.$store.state.user.main_school})
+        console.log(theCourse)
+        shiftCourse(theCourse).then(() => {
+          this.courseInfoVisible = false
+          this.getList()
+        })
+
+      },
+      unshiftTheCourse(row) {
+        unshiftCourse(row).then(() => {
+        })
+        this.getList()
+      },
+      lookDetail(row) {
+      }
     }
+  }
 </script>

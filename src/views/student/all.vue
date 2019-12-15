@@ -2,14 +2,19 @@
   <div class="app-container">
     <div class="filter-container">
       <el-row>
-        <el-col :span="12">
+        <el-col :span="10">
           <el-row type="flex" justify="start">
-            <el-input v-model="searchText" placeholder="输入 姓名/手机号/准考证号" style="width: 200px" class="filter-item"
-                      @keyup.enter.native="handleSearch"/>
+            <el-input placeholder="请输入内容" v-model="listQuery.searchText">
+              <el-select v-model="listQuery.searchType" slot="prepend" placeholder="请选择"
+                         style="width: 130px;background: #1890FF;color: #fff">
+                <el-option label="考号/用户名" value='1'/>
+                <el-option label="身份证" value='2'/>
+              </el-select>
+              <el-button slot="append" icon="el-icon-search" @click="handleSearch"
+                         style="background: #1890FF;color: #fff;border-radius: 0"/>
+            </el-input>
 
-            <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleSearch">
-            </el-button>
-            <el-select v-model="sMainSchool" placeholder="主校选择" clearable style="margin-left: 5px;width: 150px">
+            <el-select v-model="sMainSchool" placeholder="主校选择" clearable style="margin-left: 5px;min-width: 150px">
               <el-option
                 v-for="item in MainschoolOptions"
                 :key="item"
@@ -17,7 +22,7 @@
                 :value="item">
               </el-option>
             </el-select>
-            <el-select v-model="sSubSchool" placeholder="分校选择" clearable style="margin-left: 5px;width: 150px">
+            <el-select v-model="sSubSchool" placeholder="分校选择" clearable style="margin-left: 5px;min-width: 150px">
               <el-option
                 v-for="item in SubschoolOptions"
                 :key="item"
@@ -30,7 +35,7 @@
             </el-button>
           </el-row>
         </el-col>
-        <el-col :span="12">
+        <el-col :span="14">
           <el-row type="flex" justify="end">
             <el-button class="filter-item" type="warning" icon="el-icon-download"
                        @click="handleExport">
@@ -231,6 +236,7 @@
           limit: 20,
           main_school: this.$store.state.user.main_school,
           sub_school: this.$store.state.user.sub_school,
+          searchType:'1',
           searchText: ''
         },
         courseQuery: {
@@ -513,7 +519,6 @@
       ,
       handleSearch() {
         this.listQuery.page = 1
-        this.listQuery.searchText = this.searchText
         if (this.listQuery.searchText === '') {
           this.getList()
         } else {
@@ -532,7 +537,6 @@
         if (this.listQuery.sub_school === '') {
           this.listQuery.sub_school = this.$store.state.user.sub_school
         }
-        console.log(this.listQuery)
         this.getList()
       }
     },
