@@ -9,20 +9,24 @@
           </el-button>
         </el-col>
         <el-col :span="2">
-          <el-upload
-            :name="'File'"
-            :on-success="handleUpload"
-            :file-list="fileList"
-            :limit="1"
-            action="/apis/v1/static/file">
-            <el-button icon="el-icon-upload" type="primary">点击上传</el-button>
-          </el-upload>
-        </el-col>
-        <el-col :span="1">
-          <el-button style="margin-left: 10px;" type="danger" icon="el-icon-remove"
-                     @click="deleteChosen">删除IP
+          <el-button
+            class="el-icon-upload"
+            size="medium"
+            type="info"
+            @click="uploadVisible=true">&nbsp导入学生信息
           </el-button>
         </el-col>
+        <el-col :span="2">
+          <el-button style="margin-left: 30px" type="success" class="el-icon-service"
+                     @click="deleteChosen">&nbsp启动访问
+          </el-button>
+        </el-col>
+        <el-col :span="2">
+          <el-button style="margin-left: 30px;" type="danger" class="el-icon-circle-close"
+                     @click="deleteChosen">&nbsp停止访问
+          </el-button>
+        </el-col>
+
       </el-row>
     </div>
     <el-table
@@ -76,6 +80,38 @@
     <el-button type="primary" @click="confirmAdd">确 定</el-button>
   </span>
     </el-dialog>
+    <el-dialog
+      title="导入学生信息面板"
+      :visible.sync="uploadVisible"
+      width="30%"
+    >
+      <el-container>
+        <el-header>
+          <el-button type="success" size="mini" class="el-icon-download">下载模板</el-button>
+        </el-header>
+        <el-main>
+          <el-upload
+            class="upload-demo"
+            drag
+            :name="'File'"
+            :on-success="handleUpload"
+            :file-list="fileList"
+            :limit="1"
+            action="/apis/v1/static/file"
+          >
+            <i class="el-icon-upload"/>
+            <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+          </el-upload>
+        </el-main>
+        <el-footer>
+          <el-row type="flex" class="row-bg" justify="end">
+            <el-button @click="dialogVisible = false">取 消</el-button>
+            <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+          </el-row>
+        </el-footer>
+      </el-container>
+    </el-dialog>
+
   </div>
 </template>
 
@@ -91,6 +127,7 @@
       return {
         fileList: [],
         dialogVisible: false,
+        uploadVisible: false,
         chosenList: [],
         tempIP: {
           ip: '',
@@ -114,7 +151,7 @@
       this.getList()
     },
     methods: {
-      handleUpload(response,File){
+      handleUpload(response, File) {
         console.log(response)
       },
       getList() {
