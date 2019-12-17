@@ -2,11 +2,11 @@
   <div class="app-container">
     <div class="filter-container">
       <el-row>
-        <el-col :span="10">
+        <el-col :span="16">
           <el-row type="flex" justify="start">
-            <el-input placeholder="请输入内容" v-model="listQuery.searchText">
+            <el-input placeholder="请输入内容" v-model="listQuery.searchText" style="max-width: 400px">
               <el-select v-model="listQuery.searchType" slot="prepend" placeholder="请选择"
-                         style="width: 130px;background: #1890FF;color: #fff">
+                         style="min-width: 130px; background: #1890FF;color: #fff">
                 <el-option label="考号/用户名" value='1'/>
                 <el-option label="身份证" value='2'/>
               </el-select>
@@ -30,12 +30,12 @@
                 :value="item">
               </el-option>
             </el-select>
-            <el-button v-waves class="filter-item" type="primary" @click="handleFilter">
+            <el-button  class="filter-item" type="primary" @click="handleFilter">
               过滤
             </el-button>
           </el-row>
         </el-col>
-        <el-col :span="14">
+        <el-col :span="8">
           <el-row type="flex" justify="end">
             <el-button class="filter-item" type="warning" icon="el-icon-download"
                        @click="handleExport">
@@ -208,16 +208,14 @@
     getShiftCourses,
     getStudentDetail
   } from "@/api/apis";
-  import waves from '@/directive/waves' // waves directive
   import {parseTime} from '@/utils'
   import Pagination from '@/components/Pagination' // secondary package based on el-pagination
-  import XLSX from 'xlsx'
+  // import XLSX from 'xlsx'
   import StudentDetail from "./component/StudentDetail";
 
   export default {
     name: 'all',
     components: {StudentDetail, Pagination},
-    directives: {waves},
     data() {
       return {
         //
@@ -239,6 +237,7 @@
           searchType:'1',
           searchText: ''
         },
+        course_total: 1,
         courseQuery: {
           main_school: this.$store.state.user.main_school,
           sub_school: this.$store.state.user.sub_school,
@@ -271,7 +270,6 @@
         },
         subscribeTemp: {},
         courseInfo: [],
-        course_total: 1,
 
         //文件上传 [{name,url}]
         fileList: [],
@@ -464,9 +462,9 @@
         this.getCourses()
       },
       getCourses() {
-        console.log(this.$store.state.user)
         getShiftCourses(this.courseQuery).then(response => {
           this.courseInfo = response.data
+          this.course_total=response.total
         })
       },
       postSubscribe() {

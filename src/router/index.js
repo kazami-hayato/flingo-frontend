@@ -77,7 +77,7 @@ export const constantRoutes = [
         path: 'dashboard',
         component: () => import('@/views/dashboard/dashboard'),
         name: 'Dashboard',
-        meta: {title: '后台概览', icon: 'z_home', affix: true}
+        meta: {title: '后台概览', icon: 'z_dashboard', affix: true}
       }
     ]
   },
@@ -166,7 +166,7 @@ export const asyncRoutes = [
     name: 'Student',
     meta: {
       title: '学员管理',
-      icon: 'people',
+      icon: 'z_student',
       roles: ['main_school', 'sub_school'] // you can set roles in root nav
     },
     children: [

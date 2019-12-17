@@ -28,11 +28,11 @@
       <el-table-column label="序号" type="index" align="center" width="80" sortable/>
 
 
-<!--      <el-table-column label="通知号"  align="center" width="150" sortable>-->
-<!--        <template slot-scope="{row}">-->
-<!--          <span>{{ row.notice_id }}</span>-->
-<!--        </template>-->
-<!--      </el-table-column>-->
+      <!--      <el-table-column label="通知号"  align="center" width="150" sortable>-->
+      <!--        <template slot-scope="{row}">-->
+      <!--          <span>{{ row.notice_id }}</span>-->
+      <!--        </template>-->
+      <!--      </el-table-column>-->
       <el-table-column label="时间" width="150px" align="center">
         <template slot-scope="{row}">
           <span>{{ row.pub_date | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
@@ -60,7 +60,7 @@
             </el-button>
           </router-link>
 
-          <el-button size="mini" type="danger" @click="handleDelete(row)">
+          <el-button size="mini" type="danger" @click="handleDelete(row)" style="margin-left: 3px">
             删除
           </el-button>
         </template>
@@ -74,85 +74,85 @@
 </template>
 
 <script>
-    // import {fetchList, fetchPv, createArticle, updateArticle} from '@/api/article'
-    // import {getAllNotices, removeNoticeById} from "@/api/notice"
-    import {getNotices, removeNoticeById} from "@/api/apis";
-    import waves from '@/directive/waves' // waves directive
-    import {parseTime} from '@/utils'
-    import Pagination from '@/components/Pagination' // secondary package based on el-pagination
+  // import {fetchList, fetchPv, createArticle, updateArticle} from '@/api/article'
+  // import {getAllNotices, removeNoticeById} from "@/api/notice"
+  import {getNotices, removeNoticeById} from "@/api/apis";
+  import waves from '@/directive/waves' // waves directive
+  import {parseTime} from '@/utils'
+  import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
-    export default {
-        name: 'notice',
-        components: {Pagination},
-        directives: {waves},
-        data() {
-            return {
-                tableKey: 0,
-                list: null,
-                total: 0,
-                listLoading: true,
-                chosenList: [],
-                listQuery: {
-                    main_school: this.$store.state.user.main_school,
-                    sub_school: this.$store.state.user.sub_school,
-                    page: 1,
-                    limit: 20,
-                },
-            }
+  export default {
+    name: 'notice',
+    components: {Pagination},
+    directives: {waves},
+    data() {
+      return {
+        tableKey: 0,
+        list: null,
+        total: 0,
+        listLoading: true,
+        chosenList: [],
+        listQuery: {
+          main_school: this.$store.state.user.main_school,
+          sub_school: this.$store.state.user.sub_school,
+          page: 1,
+          limit: 20,
         },
-        created() {
-            this.getList()
-        },
-        methods: {
-            getList() {
-                this.listLoading = true
-                getNotices(this.listQuery).then(response => {
-                    this.list = response.data
-                    this.total = response.total
-                    // 设置延时以便于优化
-                    setTimeout(() => {
-                        this.listLoading = false
-                    }, 1.5 * 100)
-                })
-            },
-            handleSelectionChange(val) {
-                let temp = []
-                val.forEach(item => {
-                    temp.push(item.notice_id)
-                });
-                this.chosenList = temp
-                console.log(this.chosenList)
-            },
-            deleteChosen() {
-                for (const notice_id of this.chosenList) {
-                    const query = {
-                        notice_id: notice_id
-                    }
-                    removeNoticeById(query).then(() => {
-                    })
-                }
-                this.$notify({
-                    title: '成功',
-                    message: '删除所选',
-                    type: 'success',
-                    duration: 2000
-                })
-                this.getList()
-            },
-            handleDelete(row) {
-                const query = {
-                    notice_id: row.notice_id
-                }
-                removeNoticeById(query).then(() => {
-                    this.$notify({
-                        title: '成功',
-                        message: '删除成功',
-                        type: 'success',
-                        duration: 2000
-                    })
-                    this.getList()
-                })
-            },
+      }
+    },
+    created() {
+      this.getList()
+    },
+    methods: {
+      getList() {
+        this.listLoading = true
+        getNotices(this.listQuery).then(response => {
+          this.list = response.data
+          this.total = response.total
+          // 设置延时以便于优化
+          setTimeout(() => {
+            this.listLoading = false
+          }, 1.5 * 100)
+        })
+      },
+      handleSelectionChange(val) {
+        let temp = []
+        val.forEach(item => {
+          temp.push(item.notice_id)
+        });
+        this.chosenList = temp
+        console.log(this.chosenList)
+      },
+      deleteChosen() {
+        for (const notice_id of this.chosenList) {
+          const query = {
+            notice_id: notice_id
+          }
+          removeNoticeById(query).then(() => {
+          })
         }
+        this.$notify({
+          title: '成功',
+          message: '删除所选',
+          type: 'success',
+          duration: 2000
+        })
+        this.getList()
+      },
+      handleDelete(row) {
+        const query = {
+          notice_id: row.notice_id
+        }
+        removeNoticeById(query).then(() => {
+          this.$notify({
+            title: '成功',
+            message: '删除成功',
+            type: 'success',
+            duration: 2000
+          })
+          this.getList()
+        })
+      },
     }
+  }
 </script>

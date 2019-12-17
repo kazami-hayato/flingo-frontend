@@ -410,12 +410,9 @@ export function setStudentCourse(data) {
   return request({
     url: '/apis/v1/students/' + data.exam_id + '/courses/' + data.course_id,
     method: 'post',
-    data: data
+    data:data,
   })
-  const response = {
-    code: 20000,
-    data: '操作成功'
-  }
+
 }
 
 //查看抓拍
