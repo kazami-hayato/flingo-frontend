@@ -36,17 +36,25 @@
       return {
         course_names: [],
         course_sales: [],
-        chart: null
+        chart: null,
+        timingFun:null
       }
     },
     created() {
-
+        this.timingFun=setInterval(()=>{
+          if(this.chartData.length!==0) {
+            this.initChart()
+            clearInterval(this.timingFun)
+          }
+        },100)
     },
     mounted() {
-
-      this.$nextTick(() => {
-        this.initChart()
-      })
+      // this.$nextTick(() => {
+      //   this.initChart()
+      // })
+      // setTimeout(() => {
+      //   this.initChart()
+      // },1000)
     },
     beforeDestroy() {
       if (!this.chart) {
@@ -60,7 +68,7 @@
 
         this.chart = echarts.init(this.$el, 'macarons')
         console.log('ff')
-        console.log(this.chartData)
+        console.log("bar",this.chartData)
         this.chartData.forEach(item => {
           this.course_names.push(item.course_name)
           this.course_sales.push(item.topsales)

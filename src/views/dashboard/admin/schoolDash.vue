@@ -6,7 +6,7 @@
     <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
       <!--      <line-chart :chart-data="lineChartData"/>-->
       <div class="chart-wrapper">
-        <bar-chart :chart-data="courseData"/>
+        <bar-chart :chart-data="courseData" />
       </div>
     </el-row>
     <footer-panel :foot-params="footParams"/>
