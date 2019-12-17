@@ -10,6 +10,7 @@
         </el-col>
         <el-col :span="2">
           <el-upload
+            :name="'File'"
             :on-success="handleUpload"
             :file-list="fileList"
             :limit="1"
@@ -113,7 +114,7 @@
       this.getList()
     },
     methods: {
-      handleUpload(response,file){
+      handleUpload(response,File){
         console.log(response)
       },
       getList() {
