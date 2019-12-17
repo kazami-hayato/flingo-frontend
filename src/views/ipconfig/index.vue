@@ -2,15 +2,22 @@
 
   <div class="app-container">
     <div class="filter-container">
-      <el-row type="flex" class="row-bg" justify="space-between">
-
-        <el-col>
+      <el-row>
+        <el-col :span="2">
           <el-button style="margin-left: 10px;" type="primary" icon="el-icon-edit"
                      @click="dialogVisible = true">新增IP
           </el-button>
-          <el-button style="margin-left: 10px;" type="primary" icon="el-icon-edit"
-                     @click="dialogVisible = true">批量导入
-          </el-button>
+        </el-col>
+        <el-col :span="2">
+          <el-upload
+            :on-success="handleUpload"
+            :file-list="fileList"
+            :limit="1"
+            action="/apis/v1/static/file">
+            <el-button icon="el-icon-upload" type="primary">点击上传</el-button>
+          </el-upload>
+        </el-col>
+        <el-col :span="1">
           <el-button style="margin-left: 10px;" type="danger" icon="el-icon-remove"
                      @click="deleteChosen">删除IP
           </el-button>
@@ -78,9 +85,10 @@
 
   export default {
     name: "index",
-    components:{Pagination},
+    components: {Pagination},
     data() {
       return {
+        fileList: [],
         dialogVisible: false,
         chosenList: [],
         tempIP: {
@@ -88,7 +96,7 @@
           operator: this.$store.state.user.username,
           main_school: this.$store.state.user.main_school,
           sub_school: this.$store.state.user.sub_school,
-          add_date:Current()
+          add_date: Current()
         },
         listQuery: {
           limit: 10,
@@ -105,6 +113,9 @@
       this.getList()
     },
     methods: {
+      handleUpload(response,file){
+        console.log(response)
+      },
       getList() {
         getIPS(this.listQuery).then(response => {
           this.listData = response.data

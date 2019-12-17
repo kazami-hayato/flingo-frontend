@@ -1,5 +1,5 @@
 module.exports = {
-  title: '必过网系统管理中心',
+  title: '网络教育系统管理中心',
 
   /**
    * @type {boolean} true | false
