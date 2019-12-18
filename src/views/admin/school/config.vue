@@ -24,10 +24,13 @@
             </el-upload>
           </el-form-item>
           <el-form-item label="网校名称">
-            <el-input v-model="form.school_name"/>
+            <el-input v-model="form.title"/>
           </el-form-item>
           <el-form-item label="H5域名">
             <el-input v-model="form.h5_domain"/>
+          </el-form-item>
+          <el-form-item label="子域名">
+            <el-input v-model="form.sub_domain"/>
           </el-form-item>
           <el-form-item label="咨询热线">
             <el-input v-model="form.hotline"/>
@@ -76,13 +79,14 @@
         form: {
           school_id: undefined,
           logo: '',
-          school_name: '',
-          h5_domain: '',
+          title: '',
+          h5_domain:'',
+          sub_domain: '',
           hotline: '',
           qq: '',
           email: '',
           icp: '',
-          description: '',
+          web_brief: '',
           address: ''
 
         }
@@ -95,13 +99,17 @@
     },
     methods: {
 
-      handleUpload(response,File) {
-          console.log(response)
+      handleUpload(response, File) {
+        this.form.logo = '/cdn/' + response.data
       },
       onSubmit() {
         console.log(this.form)
         modifySchool(this.form).then(() => {
-          // window.location.reload();
+          this.$notify({
+            title: '成功',
+            message: '更新成功',
+            type: 'success'
+          });
         })
       },
       onCancel() {

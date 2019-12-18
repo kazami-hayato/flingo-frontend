@@ -42,18 +42,34 @@
       </el-table-column>
       <el-table-column
         type="index"
+        align="center"
+
         label="序号"
         min-width="120">
       </el-table-column>
       <el-table-column
         prop="ip"
+        align="center"
+
         label="IP地址"
         min-width="120">
       </el-table-column>
+
       <el-table-column
         prop="add_date"
+        align="center"
+
         label="添加日期"
         min-width="120">
+      </el-table-column>
+      <el-table-column
+        label="IP使用状态"
+        align="center"
+        min-width="120">
+        <template slot-scope="{row}">
+          <el-tag style="margin-left: 5px;border-radius: 0" v-if="row.is_allowed===0">未开启</el-tag>
+          <el-tag style="margin-left: 5px;border-radius: 0" v-else>已经开启</el-tag>
+        </template>
       </el-table-column>
       <el-table-column
         prop="operator"
@@ -81,7 +97,7 @@
   </span>
     </el-dialog>
     <el-dialog
-      title="导入学生信息面板"
+      title="导入IP信息面板"
       :visible.sync="uploadVisible"
       width="30%"
     >
@@ -97,7 +113,7 @@
             :on-success="handleUpload"
             :file-list="fileList"
             :limit="1"
-            action="/apis/v1/static/file"
+            action="apis/v1/static/file"
           >
             <i class="el-icon-upload"/>
             <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
