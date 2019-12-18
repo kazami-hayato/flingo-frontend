@@ -12,7 +12,7 @@
         :on-success="handleSuccess"
         :before-upload="beforeUpload"
         class="editor-slide-upload"
-        action="https://httpbin.org/post"
+        action="/apis/v1/static/file"
         list-type="picture-card"
       >
         <el-button size="small" type="primary">
