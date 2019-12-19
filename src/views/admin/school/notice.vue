@@ -36,7 +36,6 @@
         <template slot-scope="{row}">
           <router-link :to="'/school/notice/'+row.notice_id">
             <span class="link-type">{{ row.notice_title }}</span>
-
           </router-link>
           <el-tag style="margin-left: 5px;border-radius: 0">{{ row.notice_type }}</el-tag>
         </template>

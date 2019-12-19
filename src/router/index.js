@@ -239,6 +239,41 @@ export const asyncRoutes = [
     }]
   },
 
+
+  //系统管理员
+  {
+    path: '/courseCenter',
+    component: Layout,
+    redirect: '/courseCenter/manage',
+    alwaysShow: true, // will always show the root menu
+    name: 'CourseCenter',
+    meta: {
+      title: '课程中心',
+      icon: 'z_book_center',
+      roles: ['system'] // you can set roles in root nav
+    },
+    children: [
+      {
+        path: 'manage',
+        component: () => import('@/views/system/courseCenter/manage'),
+        name: 'Manage',
+        meta: {
+          title: '课程仓库',
+          roles: ['system'] // or you can only set roles in sub nav
+        }
+      }, {
+        path: 'courseCatalog/:course_id(\\d+)',
+        component: () => import('@/views/system/courseCenter/courseCatalog'),
+        hidden: true,
+        name: 'SetCatalog',
+        meta: {
+          title: '设置目录',
+          roles: ['system']
+        }
+      }
+    ]
+  },
+
   {
     path: '/setting',
     component: Layout,
@@ -274,67 +309,6 @@ export const asyncRoutes = [
     ]
   },
 
-  // {
-  //   path: '/exam',
-  //   component: Layout,
-  //   children: [{
-  //     path: 'index',
-  //     component: () => import('@/views/exam'),
-  //     name: 'Exam',
-  //     meta: {title: '题库管理', icon: 'z_exam', roles: ['system']}
-  //   }]
-  // },
-  // {
-  //   path: '/material',
-  //   component: Layout,
-  //   children: [{
-  //     path: 'index',
-  //     component: () => import('@/views/material'),
-  //     name: 'Material',
-  //     meta: {title: '教材管理', icon: 'z_handout', roles: ['system']}
-  //   }]
-  // },
-  //系统管理员
-  {
-    path: '/courseCenter',
-    component: Layout,
-    redirect: '/courseCenter/manage',
-    alwaysShow: true, // will always show the root menu
-    name: 'CourseCenter',
-    meta: {
-      title: '课程中心',
-      icon: 'z_book_center',
-      roles: ['system'] // you can set roles in root nav
-    },
-    children: [
-      {
-        path: 'manage',
-        component: () => import('@/views/system/courseCenter/manage'),
-        name: 'Manage',
-        meta: {
-          title: '课程信息',
-          roles: ['system'] // or you can only set roles in sub nav
-        }
-      }, , {
-        path: 'courseset',
-        component: () => import('@/views/system/courseCenter/catalog'),
-        name: 'Catalog',
-        meta: {
-          title: '课程管理',
-          roles: ['system']
-        }
-      }, {
-        path: 'setCatalog',
-        component: () => import('@/views/system/courseCenter/courseCatalog'),
-        hidden: true,
-        name: 'SetCatalog',
-        meta: {
-          title: '设置目录',
-          roles: ['system']
-        }
-      }
-    ]
-  },
 
   // 404 page must be placed at the end !!!
   {path: '*', redirect: '/404', hidden: true}

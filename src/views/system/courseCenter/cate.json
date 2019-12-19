@@ -1,0 +1,193 @@
+{
+  "catalogtree": [
+    {
+      "children": [
+        {
+          "children": [
+            {
+              "vid": "1f875362c362a7353d640f6adec837ae_1",
+              "finished": false,
+              "id": 3,
+              "label": "饮料概述",
+              "type": true
+            }
+          ],
+          "id": 2,
+          "label": "饮料概述",
+          "type": false
+        }
+      ],
+      "id": 1,
+      "label": "第一章 饮料概述",
+      "type": false
+    },
+    {
+      "children": [
+        {
+          "children": [
+            {
+              "vid": "1f875362c341682bea8ffe4b1ffd5311_1",
+              "finished": false,
+              "id": 6,
+              "label": "酒类饮料概述",
+              "type": true
+            }
+          ],
+          "id": 5,
+          "label": "酒类饮料概述",
+          "type": false
+        }
+      ],
+      "id": 4,
+      "label": "第二章 酒类饮料概述",
+      "type": false
+    },
+    {
+      "children": [
+        {
+          "children": [
+            {
+              "vid": "1f875362c394217b5786a3814ab7ccd7_1",
+              "finished": false,
+              "id": 9,
+              "label": "发酵酒",
+              "type": true
+            }
+          ],
+          "id": 8,
+          "label": "发酵酒",
+          "type": false
+        }
+      ],
+      "id": 7,
+      "label": "第三章 发酵酒",
+      "type": false
+    },
+    {
+      "children": [
+        {
+          "children": [
+            {
+              "vid": "1f875362c3aac6506524b572fff8ff28_1",
+              "finished": false,
+              "id": 12,
+              "label": "蒸馏酒",
+              "type": true
+            }
+          ],
+          "id": 11,
+          "label": "蒸馏酒",
+          "type": false
+        }
+      ],
+      "id": 10,
+      "label": "第四章 蒸馏酒",
+      "type": false
+    },
+    {
+      "children": [
+        {
+          "children": [
+            {
+              "vid": "1f875362c30d379a2a5e1d8c33cd3b7b_1",
+              "finished": false,
+              "id": 15,
+              "label": "配制酒",
+              "type": true
+            }
+          ],
+          "id": 14,
+          "label": "配制酒",
+          "type": false
+        }
+      ],
+      "id": 13,
+      "label": "第五章 配制酒",
+      "type": false
+    },
+    {
+      "children": [
+        {
+          "children": [
+            {
+              "vid": "1f875362c30d379a2a5e1d8c33cd3b7b_1",
+              "finished": false,
+              "id": 18,
+              "label": "鸡尾酒与混合饮品",
+              "type": true
+            }
+          ],
+          "id": 17,
+          "label": "鸡尾酒与混合饮品",
+          "type": false
+        }
+      ],
+      "id": 16,
+      "label": "第六章 鸡尾酒与混合饮品",
+      "type": false
+    },
+    {
+      "children": [
+        {
+          "children": [
+            {
+              "vid": "1f875362c30d379a2a5e1d8c33cd3b7b_1",
+              "finished": false,
+              "id": 21,
+              "label": "酒吧服务",
+              "type": true
+            }
+          ],
+          "id": 20,
+          "label": "酒吧服务",
+          "type": false
+        }
+      ],
+      "id": 19,
+      "label": "第七章 酒吧服务",
+      "type": false
+    },
+    {
+      "children": [
+        {
+          "children": [
+            {
+              "vid": "1f875362c386fa895fda622372a20497_1",
+              "finished": false,
+              "id": 24,
+              "label": "酒单的设计与制作",
+              "type": true
+            }
+          ],
+          "id": 23,
+          "label": "酒单的设计与制作",
+          "type": false
+        }
+      ],
+      "id": 22,
+      "label": "第八章 酒单的设计与制作",
+      "type": false
+    },
+    {
+      "children": [
+        {
+          "children": [
+            {
+              "vid": "1f875362c343e260f156e160b2d4dfa9_1",
+              "finished": false,
+              "id": 27,
+              "label": "酒水经营与成本控制",
+              "type": true
+            }
+          ],
+          "id": 26,
+          "label": "酒水经营与成本控制",
+          "type": false
+        }
+      ],
+      "id": 25,
+      "label": "第九章 酒水经营与成本控制",
+      "type": false
+    }
+  ]
+}
