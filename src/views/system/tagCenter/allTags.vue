@@ -1,6 +1,12 @@
 <template>
   <el-container>
+
     <el-main>
+      <el-row type="flex" justify="end">
+        <el-button type="warning" class="el-icon-plus" size="medium" @click="tagVisible=true">&nbsp新建考期</el-button>
+
+        <el-button type="danger" class="el-icon-minus" size="medium" @click="handleDelete">&nbsp删除选中</el-button>
+      </el-row>
       <el-table
         :data="tableData"
         style="width: 100%"
@@ -43,13 +49,13 @@
           label="考期过期时间"
           align="center">
           <template slot-scope="{row}">
-            <el-tag type="warning" v-if="row.active===0" >历史考期</el-tag>
-            <el-tag type="success" v-else >当前考期</el-tag>
+            <el-tag type="warning" v-if="row.active===0">历史考期</el-tag>
+            <el-tag type="success" v-else>当前考期</el-tag>
           </template>
         </el-table-column>
         <el-table-column
           align="center"
-          min-width="300"
+          min-width="200"
           label="操作">
           <template slot-scope="{row}">
             <el-button
@@ -59,7 +65,13 @@
               type="success"
               @click="dialogVisible=true">&nbsp导入学生信息
             </el-button>
-
+            <el-button
+              v-if="row.active===1"
+              class="el-icon-edit-outline"
+              size="mini"
+              type="warning"
+              @click="editTag(row)">&nbsp修改考期信息
+            </el-button>
             <el-button
               size="mini"
               type="warning"
@@ -93,7 +105,7 @@
               <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
             </el-upload>
           </el-main>
-          <el-footer >
+          <el-footer>
             <el-row type="flex" class="row-bg" justify="end">
               <el-button @click="dialogVisible = false">取 消</el-button>
               <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
@@ -102,21 +114,76 @@
         </el-container>
       </el-dialog>
 
+      <el-dialog
+        title="新建考期面板"
+        :visible.sync="tagVisible"
+        width="40%"
+      >
+        <el-form :model="tempTag" label-width="140px" :label-position="'right'">
+          <el-form-item label="考期名" required>
+            <el-input v-model="tempTag.tag_name" style="width: 200px" />
+          </el-form-item>
+          <el-form-item label="考期结束时间" required>
+            <el-date-picker
+              v-model="tempTag.tag_overtime"
+              type="date"
+              placeholder="选择日期"
+              format="yyyy 年 MM 月 dd 日"
+              value-format="yyyy-MM-dd">
+            </el-date-picker>
+          </el-form-item>
+        </el-form>
+        <el-footer>
+          <el-row type="flex" class="row-bg" justify="end">
+            <el-button @click="tagVisible = false">取 消</el-button>
+            <el-button type="primary" @click="handleCreateTag">确 定</el-button>
+          </el-row>
+        </el-footer>
+      </el-dialog>
+      <el-dialog
+        title="修改考期面板"
+        :visible.sync="editTagVisible"
+        width="40%"
+      >
+        <el-form :model="tempTag" label-width="140px" :label-position="'right'">
+          <el-form-item label="考期结束时间" required>
+            <el-date-picker
+              v-model="tempTag.tag_overtime"
+              type="date"
+              placeholder="选择日期"
+              format="yyyy 年 MM 月 dd 日"
+              value-format="yyyy-MM-dd">
+            </el-date-picker>
+          </el-form-item>
+        </el-form>
+        <el-footer>
+          <el-row type="flex" class="row-bg" justify="end">
+            <el-button @click="editTagVisible = false">取 消</el-button>
+            <el-button type="primary" @click="handleEdit">确 定</el-button>
+          </el-row>
+        </el-footer>
+      </el-dialog>
+
     </el-main>
   </el-container>
 </template>
 
 <script>
   import {getTags} from '@/api/apis'
+  import {createTag, deleteTag,modifyTag} from '@/api/system_apis'
   import Pagination from '@/components/Pagination' // secondary package based on el-pagination
   import {mapGetters} from 'vuex'
-  import StuCourseDetail from "./component/StuCourseDetail";
+  import StuCourseDetail from "../../admin/student/component/StuCourseDetail";
 
   export default {
-    name: "tag",
+    name: "AllTags",
     components: {StuCourseDetail, Pagination},
     data() {
       return {
+        editTagVisible:false,
+        tagVisible: false,
+        tempTag: {
+        },
         dialogVisible: false,
         fileList: [],
         fileList1: [],
@@ -133,7 +200,49 @@
       this.getList()
     },
     methods: {
+      handleCreateTag() {
+        console.log(this.tempTag)
+        createTag(this.tempTag).then(() => {
+          this.getList()
+          this.tagVisible=false
+        })
+      },
       handleUpload(response, file) {
+
+      },
+      editTag(row){
+        this.editTagVisible=true
+        this.tempTag=row
+      },
+      handleEdit(){
+        modifyTag(this.tempTag).then(()=>{
+          this.editTagVisible=false
+          this.tempTag={}
+          this.getList()
+        })
+      },
+      handleDelete() {
+        this.$confirm('此操作将永久删除考期, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning',
+          center: true
+        }).then(() => {
+          this.multipleSelection.forEach(item => {
+            deleteTag(item).then(() => {
+            })
+          })
+          this.getList()
+          this.$message({
+            type: 'success',
+            message: '删除成功!'
+          });
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          });
+        });
 
       },
       handleImportStu(row) {

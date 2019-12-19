@@ -27,8 +27,39 @@ export function createSystemCourse(data) {
 export function getCatalogTreeById(data) {
 
   return request({
-    url:'/apis/v1/system/courses/'+data.course_id,
-    method:'get',
+    url: '/apis/v1/system/courses/' + data.course_id,
+    method: 'get',
   })
 
+}
+
+export function createTag(data) {
+  return request({
+    url: '/apis/v1/system/tags',
+    method: 'post',
+    data:data
+  })
+}
+
+export function modifyTag(data) {
+  return request({
+    url: '/apis/v1/system/tags',
+    method: 'put',
+    data:data
+  })
+}
+
+export function deleteTag(data) {
+  return request({
+    url: '/apis/v1/system/tags/'+data.tag_id,
+    method: 'delete'
+  })
+}
+
+export function getSchools(data) {
+  return request({
+    url: '/apis/v1/system/schools',
+    method: 'get',
+    params:data
+  })
 }

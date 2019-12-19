@@ -241,6 +241,19 @@ export const asyncRoutes = [
 
 
   //系统管理员
+
+  {
+    path:'/allSchool',
+    component:Layout,
+    children:[
+      {
+        path: 'index',
+        component: () => import('@/views/system/allschool'),
+        name: 'AllSchool',
+        meta: {title: '学校管理', icon: 'z_school', roles: ['system']}
+      }
+    ]
+  },
   {
     path: '/courseCenter',
     component: Layout,
@@ -271,6 +284,38 @@ export const asyncRoutes = [
           roles: ['system']
         }
       }
+    ]
+  },
+  {
+    path:'/tagCenter',
+    component:Layout,
+    redirect:'/tagCenter/tag_manage',
+    alwaysShow: true, // will always show the root menu
+    name: 'tagCenter',
+    meta: {
+      title: '考期中心',
+      icon: 'z_tag',
+      roles: ['system'] // you can set roles in root nav
+    },
+    children: [
+      {
+        path: 'tags',
+        component: () => import('@/views/system/tagCenter/allTags'),
+        name: 'Tags',
+        meta: {
+          title: '考期管理',
+          roles: ['system']
+        }
+      },
+      {
+        path: 'tag_info',
+        component: () => import('@/views/system/tagCenter/tagInfo'),
+        name: 'TagInfo',
+        meta: {
+          title: '当前学员',
+          roles: ['system'] // or you can only set roles in sub nav
+        }
+      },
     ]
   },
 
