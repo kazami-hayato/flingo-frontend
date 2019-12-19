@@ -91,7 +91,6 @@
         getCatalogTreeById({course_id: this.course_id}).then(response => {
           this.course = response.data
           this.data = JSON.parse(this.course.catalogtree).catalogtree
-          console.log(this.data)
         }).catch(error => {
           console.log(error)
         })
@@ -119,6 +118,7 @@
       * 添加 子目录
       */
       append(data) {
+        console.log(data)
         const newChild = {id: ++id, label: '新目录', children: [], status: false}
         if (!data.children) {
           this.$set(data, 'children', [])
