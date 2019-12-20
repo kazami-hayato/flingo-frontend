@@ -56,7 +56,7 @@
                 </el-upload>
               </el-aside>
               <el-main>
-                <el-form :model="row" label-width="80px" :label-position="'right'">
+                <el-form :model="row" ref="form" label-width="80px" :label-position="'right'">
                   <el-form-item label="学校Id" required>
                     <el-input v-model="row.school_id" style="width: 200px" disabled/>
                   </el-form-item>
@@ -212,7 +212,7 @@
     },
     methods: {
       handleUpload(response, File) {
-        this.form.logo = '/cdn/' + response.data
+        this.$refs.form.model.logo = '/cdn/' + response.data
       },
       getList() {
         getSchools(this.listQuery).then(response => {
