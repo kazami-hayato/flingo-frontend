@@ -27,12 +27,6 @@
       <el-table-column width="55" type="selection" align="center"/>
       <el-table-column label="序号" type="index" align="center" width="80" sortable/>
 
-
-      <!--      <el-table-column label="通知号"  align="center" width="150" sortable>-->
-      <!--        <template slot-scope="{row}">-->
-      <!--          <span>{{ row.notice_id }}</span>-->
-      <!--        </template>-->
-      <!--      </el-table-column>-->
       <el-table-column label="时间" width="150px" align="center">
         <template slot-scope="{row}">
           <span>{{ row.pub_date | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
@@ -42,9 +36,8 @@
         <template slot-scope="{row}">
           <router-link :to="'/school/notice/'+row.notice_id">
             <span class="link-type">{{ row.notice_title }}</span>
-
           </router-link>
-          <el-tag>{{ row.notice_type }}</el-tag>
+          <el-tag style="margin-left: 5px;border-radius: 0">{{ row.notice_type }}</el-tag>
         </template>
       </el-table-column>
       <el-table-column label="发布者" width="110px" align="center">

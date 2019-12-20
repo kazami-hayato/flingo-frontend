@@ -2,7 +2,7 @@
   <div :class="{fullscreen:fullscreen}" class="tinymce-container" :style="{width:containerWidth}">
     <textarea :id="tinymceId" class="tinymce-textarea"/>
     <div class="editor-custom-btn-container">
-      <editorImage color="#1890ff" class="editor-upload-btn" @successCBK="imageSuccessCBK"/>
+      <upload-image color="#1890ff" class="editor-upload-btn" @successCBK="imageSuccessCBK"/>
     </div>
   </div>
 </template>
@@ -12,7 +12,8 @@
      * docs:
      * https://panjiachen.github.io/vue-element-admin-site/feature/component/rich-editor.html#tinymce
      */
-    import editorImage from './components/EditorImage'
+    // import editorImage from './components/EditorImage'
+    import uploadImage from "./components/uploadImage";
     import plugins from './plugins'
     import toolbar from './toolbar'
     import load from './dynamicLoadScript'
@@ -22,7 +23,7 @@
 
     export default {
         name: 'Tinymce',
-        components: {editorImage},
+        components: {uploadImage},
         props: {
             id: {
                 type: String,
@@ -200,10 +201,12 @@
                 window.tinymce.get(this.tinymceId).getContent()
             },
             imageSuccessCBK(arr) {
+                console.log(arr)
                 const _this = this
-                arr.forEach(v => {
-                    window.tinymce.get(_this.tinymceId).insertContent(`<img class="wscnph" src="${v.url}" >`)
-                })
+              window.tinymce.get(_this.tinymceId).insertContent(`<img class="wscnph" src="${arr}" >`)
+                // arr.forEach(v => {
+                //     window.tinymce.get(_this.tinymceId).insertContent(`<img class="wscnph" src="/cdn/${v.url}" >`)
+                // })
             }
         }
     }

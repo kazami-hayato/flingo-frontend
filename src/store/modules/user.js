@@ -93,8 +93,7 @@ const actions = {
         if (!data) {
           reject('认证失败，请重新登录.')
         }
-        console.log(data)
-        // const { roles, name, avatar, introduction } = data
+
         const {
           avatar,
           username,

@@ -31,6 +31,10 @@ import { mockXHR } from '../mock'
 if (process.env.NODE_ENV === 'degit v') {
   mockXHR()
 }
+// import { mockXHR } from '../mock'
+// if (process.env.NODE_ENV === 'dev') {
+//   mockXHR()
+// }
 
 Vue.use(Element, {
   size: Cookies.get('size') || 'medium' // set element-ui default size

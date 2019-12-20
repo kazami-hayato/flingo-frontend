@@ -2,19 +2,31 @@
 
   <div class="app-container">
     <div class="filter-container">
-      <el-row type="flex" class="row-bg" justify="space-between">
-
-        <el-col>
+      <el-row>
+        <el-col :span="2">
           <el-button style="margin-left: 10px;" type="primary" icon="el-icon-edit"
                      @click="dialogVisible = true">新增IP
           </el-button>
-          <el-button style="margin-left: 10px;" type="primary" icon="el-icon-edit"
-                     @click="dialogVisible = true">批量导入
-          </el-button>
-          <el-button style="margin-left: 10px;" type="danger" icon="el-icon-remove"
-                     @click="deleteChosen">删除IP
+        </el-col>
+        <el-col :span="2">
+          <el-button
+            class="el-icon-upload"
+            size="medium"
+            type="info"
+            @click="uploadVisible=true">&nbsp导入学生信息
           </el-button>
         </el-col>
+        <el-col :span="2">
+          <el-button style="margin-left: 30px" type="success" class="el-icon-service"
+                     @click="deleteChosen">&nbsp启动访问
+          </el-button>
+        </el-col>
+        <el-col :span="2">
+          <el-button style="margin-left: 30px;" type="danger" class="el-icon-circle-close"
+                     @click="deleteChosen">&nbsp停止访问
+          </el-button>
+        </el-col>
+
       </el-row>
     </div>
     <el-table
@@ -30,18 +42,34 @@
       </el-table-column>
       <el-table-column
         type="index"
+        align="center"
+
         label="序号"
         min-width="120">
       </el-table-column>
       <el-table-column
         prop="ip"
+        align="center"
+
         label="IP地址"
         min-width="120">
       </el-table-column>
+
       <el-table-column
         prop="add_date"
+        align="center"
+
         label="添加日期"
         min-width="120">
+      </el-table-column>
+      <el-table-column
+        label="IP使用状态"
+        align="center"
+        min-width="120">
+        <template slot-scope="{row}">
+          <el-tag style="margin-left: 5px;border-radius: 0" v-if="row.is_allowed===0">未开启</el-tag>
+          <el-tag style="margin-left: 5px;border-radius: 0" v-else>已经开启</el-tag>
+        </template>
       </el-table-column>
       <el-table-column
         prop="operator"
@@ -68,6 +96,38 @@
     <el-button type="primary" @click="confirmAdd">确 定</el-button>
   </span>
     </el-dialog>
+    <el-dialog
+      title="导入IP信息面板"
+      :visible.sync="uploadVisible"
+      width="30%"
+    >
+      <el-container>
+        <el-header>
+          <el-button type="success" size="mini" class="el-icon-download">下载模板</el-button>
+        </el-header>
+        <el-main>
+          <el-upload
+            class="upload-demo"
+            drag
+            :name="'File'"
+            :on-success="handleUpload"
+            :file-list="fileList"
+            :limit="1"
+            action="apis/v1/static/file"
+          >
+            <i class="el-icon-upload"/>
+            <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+          </el-upload>
+        </el-main>
+        <el-footer>
+          <el-row type="flex" class="row-bg" justify="end">
+            <el-button @click="dialogVisible = false">取 消</el-button>
+            <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+          </el-row>
+        </el-footer>
+      </el-container>
+    </el-dialog>
+
   </div>
 </template>
 
@@ -78,17 +138,19 @@
 
   export default {
     name: "index",
-    components:{Pagination},
+    components: {Pagination},
     data() {
       return {
+        fileList: [],
         dialogVisible: false,
+        uploadVisible: false,
         chosenList: [],
         tempIP: {
           ip: '',
           operator: this.$store.state.user.username,
           main_school: this.$store.state.user.main_school,
           sub_school: this.$store.state.user.sub_school,
-          add_date:Current()
+          add_date: Current()
         },
         listQuery: {
           limit: 10,
@@ -105,6 +167,9 @@
       this.getList()
     },
     methods: {
+      handleUpload(response, File) {
+        console.log(response)
+      },
       getList() {
         getIPS(this.listQuery).then(response => {
           this.listData = response.data

@@ -9,9 +9,7 @@
         :file-list="fileList"
         :name="'File'"
         :show-file-list="true"
-        :on-remove="handleRemove"
         :on-success="handleSuccess"
-        :before-upload="beforeUpload"
         class="editor-slide-upload"
         action="/apis/v1/static/file"
         list-type="picture-card"
@@ -34,7 +32,7 @@
 // import { getToken } from 'api/qiniu'
 
 export default {
-  name: 'EditorSlideUpload',
+  name: 'EditorUpload',
   props: {
     color: {
       type: String,
@@ -45,7 +43,8 @@ export default {
     return {
       dialogVisible: false,
       listObj: {},
-      fileList: []
+      fileList: [],
+      cdnFile:''
     }
   },
   methods: {
@@ -53,20 +52,18 @@ export default {
       return Object.keys(this.listObj).every(item => this.listObj[item].hasSuccess)
     },
     handleSubmit() {
-      console.log()
-
-      const arr = Object.keys(this.listObj).map(v => this.listObj[v])
       if (!this.checkAllSuccess()) {
         this.$message('请等待上传')
         return
       }
-      this.$emit('successCBK', arr)
+      this.$emit('successCBK', this.cdnFile)
       this.listObj = {}
       this.fileList = []
       this.dialogVisible = false
     },
     handleSuccess(response, file) {
       const uid = file.uid
+      this.cdnFile='/cdn/'+response.data
       const objKeyArr = Object.keys(this.listObj)
       for (let i = 0, len = objKeyArr.length; i < len; i++) {
         if (this.listObj[objKeyArr[i]].uid === uid) {

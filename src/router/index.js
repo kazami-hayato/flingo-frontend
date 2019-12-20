@@ -103,6 +103,8 @@ export const constantRoutes = [
  * the routes that need to be dynamically loaded based on user roles
  */
 export const asyncRoutes = [
+
+  //学校
   {
     path: '/school',
     component: Layout,
@@ -117,7 +119,7 @@ export const asyncRoutes = [
     children: [
       {
         path: 'config',
-        component: () => import('@/views/school/config'),
+        component: () => import('@/views/admin/school/config'),
         name: 'config',
         meta: {
           title: '学校信息设置',
@@ -126,7 +128,7 @@ export const asyncRoutes = [
       },
       {
         path: 'notice',
-        component: () => import('@/views/school/notice'),
+        component: () => import('@/views/admin/school/notice'),
         name: 'Notice',
         meta: {
           title: '推送信息管理',
@@ -136,7 +138,7 @@ export const asyncRoutes = [
       },
       {
         path: 'notice/:id(\\d+)',
-        component: () => import('@/views/school/edit'),
+        component: () => import('@/views/admin/school/edit'),
         name: 'edit',
         hidden: true,
         meta: {
@@ -147,7 +149,7 @@ export const asyncRoutes = [
       },
       {
         path: 'notice/create',
-        component: () => import('@/views/school/create'),
+        component: () => import('@/views/admin/school/create'),
         name: 'create',
         hidden: true,
         meta: {
@@ -158,6 +160,7 @@ export const asyncRoutes = [
       }
     ]
   },
+  //学员
   {
     path: '/student',
     component: Layout,
@@ -172,7 +175,7 @@ export const asyncRoutes = [
     children: [
       {
         path: 'all',
-        component: () => import('@/views/student/all'),
+        component: () => import('@/views/admin/student/all'),
         name: 'All',
         meta: {
           title: '所有学员',
@@ -181,7 +184,7 @@ export const asyncRoutes = [
       },
       {
         path: 'tag',
-        component: () => import('@/views/student/tag'),
+        component: () => import('@/views/admin/student/tag'),
         name: 'tag',
         meta: {
           title: '查看考期',
@@ -190,6 +193,7 @@ export const asyncRoutes = [
       },
     ]
   },
+  //学校课程管理
   {
     path: '/course',
     component: Layout,
@@ -204,7 +208,7 @@ export const asyncRoutes = [
     children: [
       {
         path: 'info',
-        component: () => import('@/views/course/info'),
+        component: () => import('@/views/admin/course/info'),
         name: 'Info',
         meta: {
           title: '课程信息',
@@ -213,7 +217,7 @@ export const asyncRoutes = [
       },
       {
         path: 'sale',
-        component: () => import('@/views/course/sale'),
+        component: () => import('@/views/admin/course/sale'),
         name: 'Sale',
         meta: {
           title: '课程销量',
@@ -223,12 +227,39 @@ export const asyncRoutes = [
       }
     ]
   },
+
   {
-    path: '/courseManage',
+    path: '/ipconfig',
     component: Layout,
-    redirect: '/courseManage/manage',
+    children: [{
+      path: 'index',
+      component: () => import('@/views/admin/ipconfig'),
+      name: 'IpConfig',
+      meta: {title: 'IP管理', icon: 'z_ip', roles: ['main_school', 'sub_school']}
+    }]
+  },
+
+
+  //系统管理员
+
+  {
+    path:'/allSchool',
+    component:Layout,
+    children:[
+      {
+        path: 'index',
+        component: () => import('@/views/system/allschool'),
+        name: 'AllSchool',
+        meta: {title: '学校管理', icon: 'z_school', roles: ['system']}
+      }
+    ]
+  },
+  {
+    path: '/courseCenter',
+    component: Layout,
+    redirect: '/courseCenter/manage',
     alwaysShow: true, // will always show the root menu
-    name: 'CourseManage',
+    name: 'CourseCenter',
     meta: {
       title: '课程中心',
       icon: 'z_book_center',
@@ -237,23 +268,15 @@ export const asyncRoutes = [
     children: [
       {
         path: 'manage',
-        component: () => import('@/views/courseManage/manage'),
+        component: () => import('@/views/system/courseCenter/manage'),
         name: 'Manage',
         meta: {
-          title: '课程信息',
+          title: '课程仓库',
           roles: ['system'] // or you can only set roles in sub nav
         }
-      }, , {
-        path: 'courseset',
-        component: () => import('@/views/courseManage/catalog'),
-        name: 'Catalog',
-        meta: {
-          title: '课程管理',
-          roles: ['system']
-        }
       }, {
-        path: 'setCatalog',
-        component: () => import('@/views/courseManage/courseCatalog'),
+        path: 'courseCatalog/:course_id(\\d+)',
+        component: () => import('@/views/system/courseCenter/courseCatalog'),
         hidden: true,
         name: 'SetCatalog',
         meta: {
@@ -264,34 +287,36 @@ export const asyncRoutes = [
     ]
   },
   {
-    path: '/exam',
-    component: Layout,
-    children: [{
-      path: 'index',
-      component: () => import('@/views/exam'),
-      name: 'Exam',
-      meta: {title: '题库管理', icon: 'z_exam', roles: ['system']}
-    }]
-  },
-  {
-    path: '/material',
-    component: Layout,
-    children: [{
-      path: 'index',
-      component: () => import('@/views/material'),
-      name: 'Material',
-      meta: {title: '教材管理', icon: 'z_handout', roles: ['system']}
-    }]
-  },
-  {
-    path: '/ipconfig',
-    component: Layout,
-    children: [{
-      path: 'index',
-      component: () => import('@/views/ipconfig'),
-      name: 'IpConfig',
-      meta: {title: 'IP管理', icon: 'z_ip', roles: ['system', 'main_school', 'sub_school']}
-    }]
+    path:'/tagCenter',
+    component:Layout,
+    redirect:'/tagCenter/tag_manage',
+    alwaysShow: true, // will always show the root menu
+    name: 'tagCenter',
+    meta: {
+      title: '考期中心',
+      icon: 'z_tag',
+      roles: ['system'] // you can set roles in root nav
+    },
+    children: [
+      {
+        path: 'tags',
+        component: () => import('@/views/system/tagCenter/allTags'),
+        name: 'Tags',
+        meta: {
+          title: '考期管理',
+          roles: ['system']
+        }
+      },
+      {
+        path: 'tag_info',
+        component: () => import('@/views/system/tagCenter/tagInfo'),
+        name: 'TagInfo',
+        meta: {
+          title: '当前学员',
+          roles: ['system'] // or you can only set roles in sub nav
+        }
+      },
+    ]
   },
 
   {
@@ -308,7 +333,7 @@ export const asyncRoutes = [
     children: [
       {
         path: 'detail',
-        component: () => import('@/views/setting/adminManage'),
+        component: () => import('@/views/admin/setting/adminManage'),
         name: 'Detail',
         meta: {
           title: '管理员管理',
@@ -317,7 +342,7 @@ export const asyncRoutes = [
       },
       {
         path: 'lookup',
-        component: () => import('@/views/setting/lookup'),
+        component: () => import('@/views/admin/setting/lookup'),
         name: 'Lookup',
         meta: {
           title: '查看密码',
@@ -328,6 +353,8 @@ export const asyncRoutes = [
       ,
     ]
   },
+
+
   // 404 page must be placed at the end !!!
   {path: '*', redirect: '/404', hidden: true}
 ]

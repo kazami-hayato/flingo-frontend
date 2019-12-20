@@ -46,7 +46,7 @@ module.exports = {
         pathRewrite: {
           ['^' + process.env.VUE_APP_BASE_API]: ''
         }
-      }
+      },
     },
     // proxy: {
     //   // change xxx-api/login => mock/login
