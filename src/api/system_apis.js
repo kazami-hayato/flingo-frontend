@@ -80,3 +80,36 @@ export function modifySchools(data) {
   })
 
 }
+
+export function getTests(data) {
+  return request({
+    url: '/apis/v1/system/tests',
+    method: 'get',
+    params: data
+  })
+
+}
+export function createTest(data) {
+  return request({
+    url: '/apis/v1/system/tests',
+    method: 'post',
+    data: data
+  })
+
+}
+export function modifyTest(data) {
+  return request({
+    url: '/apis/v1/system/tests',
+    method: 'put',
+    data: data
+  })
+
+}
+
+export function deleteTest(data) {
+  return request({
+    url: '/apis/v1/system/tests/'+data.test_id,
+    method: 'delete',
+  })
+
+}

@@ -286,6 +286,39 @@ export const asyncRoutes = [
       }
     ]
   },
+
+  {
+    path: '/testCenter',
+    component: Layout,
+    redirect: '/testCenter/testRepo',
+    alwaysShow: true, // will always show the root menu
+    name: 'TestCenter',
+    meta: {
+      title: '试卷中心',
+      icon: 'z_test',
+      roles: ['system'] // you can set roles in root nav
+    },
+    children: [
+      {
+        path: 'testRepo',
+        component: () => import('@/views/system/testCenter/testRepo'),
+        name: 'TestRepo',
+        meta: {
+          title: '试卷库',
+          roles: ['system'] // or you can only set roles in sub nav
+        }
+      }, {
+        path: 'testRepo/:test_id(\\d+)',
+        component: () => import('@/views/system/testCenter/testInfo'),
+        hidden: true,
+        name: 'TestInfo',
+        meta: {
+          title: '考卷详细',
+          roles: ['system']
+        }
+      }
+    ]
+  },
   {
     path:'/tagCenter',
     component:Layout,

@@ -175,7 +175,7 @@
   import StuCourseDetail from "../../admin/student/component/StuCourseDetail";
 
   export default {
-    name: "AllTags",
+    name: "TestInfo",
     components: {StuCourseDetail, Pagination},
     data() {
       return {

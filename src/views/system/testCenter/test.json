@@ -1,0 +1,36 @@
+[
+  {
+    "type": 1,
+    "questionInfo": "",
+    "questionId": 0,
+    "marked": 0,
+    "answers": [
+      {
+        "label": "A",
+        "content": ""
+      },
+      {
+        "label": "B",
+        "content": ""
+      },
+      {
+        "label": "C",
+        "content": ""
+      },
+      {
+        "label": "D",
+        "content": ""
+      }
+    ],
+    "correctAnswer": [
+      "A"
+    ],
+    "myAnswer": [
+      "A",
+      "B",
+      "C",
+      "D",
+      -1
+    ]
+  }
+]

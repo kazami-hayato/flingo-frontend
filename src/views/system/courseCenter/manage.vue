@@ -3,7 +3,7 @@
     <div class="filter-container">
 
       <el-row type="flex" justify="space-between">
-        <el-col :span="12">
+        <el-col :span="6">
 
           <el-input placeholder="请输入内容" v-model="courseQuery.searchText">
             <el-select v-model="courseQuery.searchType" slot="prepend" placeholder="请选择"
@@ -174,14 +174,13 @@
         tempCourse: {},
         dialogVisible: false,
         fileList: [],
-        searchText: '',
         courseQuery: {
           searchType: '1',
           searchText: '',
           page: 1,
           limit: 20,
         },
-        total: 5,
+        total: 0,
         chosenList: [],
         courseList: []
       }

@@ -57,7 +57,7 @@
               </el-aside>
               <el-main>
                 <el-form :model="row" label-width="80px" :label-position="'right'">
-                  <el-form-item label="学校id" required>
+                  <el-form-item label="学校Id" required>
                     <el-input v-model="row.school_id" style="width: 200px" disabled/>
                   </el-form-item>
                   <el-form-item label="网校名称">
@@ -153,6 +153,12 @@
         <el-form-item label="输入网校名">
           <el-input v-model="tempSchool.title"/>
         </el-form-item>
+        <el-form-item label="输入主校名">
+          <el-input v-model="tempSchool.main_school"/>
+        </el-form-item>
+        <el-form-item label="输入分校名">
+          <el-input v-model="tempSchool.sub_school"/>
+        </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
     <el-button @click="dialogVisible = false">取 消</el-button>
@@ -238,14 +244,24 @@
         })
       },
       confirmAdd() {
-        createSchool(this.tempSchool).then(()=>{
-          this.getList()
+        createSchool(this.tempSchool).then(response=>{
+          if(response.data===1)
           this.$notify({
             title: '成功',
             message: '添加成功',
             type: 'success'
           });
+          else
+            this.$notify({
+              title: '失败',
+              message: '已存在',
+              type: 'error'
+            });
+          this.getList()
+          this.tempSchool=[]
         })
+        this.dialogVisible=false
+
       },
 
       handleClose(done) {
