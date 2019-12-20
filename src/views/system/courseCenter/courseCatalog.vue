@@ -259,6 +259,7 @@
         this.$prompt('请输入该课程对应的Vid', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
+          inputValue:data.vid?data.vid:''
         }).then(({ value }) => {
           data.vid  = value
           this.type = true
