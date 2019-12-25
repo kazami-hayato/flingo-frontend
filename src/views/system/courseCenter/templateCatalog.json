@@ -1,0 +1,67 @@
+{
+  'catalogTree': [
+    {
+      id: 0,
+      label: '绪论',
+      type: false,
+      children: [
+        {
+          id: 1,
+          label: '绪论',
+          type: true,
+          finished: false,
+          vid: ''
+        }
+      ]
+    },
+    {
+      id: 2,
+      label: '第一章 毛泽东思想及其历史地位',
+      type: false,
+      children: [
+        {
+          id: 3,
+          label: '第一节 毛泽东思想的形成',
+          type: false,
+          children: [
+            {
+              id: 4,
+              label: '毛泽东思想的形成',
+              type: true,
+              finished: false,
+              vid: ''
+            }
+          ]
+        }
+      ]
+    },
+    {
+      id: 5,
+      label: '第二章 毛泽东思想及其历史地位',
+      type: false,
+      children: [
+        {
+          id: 6,
+          label: '第一节 毛泽东思想的主要内容',
+          type: false,
+          children: [
+            {
+              id: 7,
+              label: '毛泽东思想主要内容',
+              type: true,
+              finished: false,
+              vid: ''
+            },
+            {
+              id: 8,
+              label: '毛泽东思想活的灵魂',
+              type: true,
+              finished: false,
+              vid: ''
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

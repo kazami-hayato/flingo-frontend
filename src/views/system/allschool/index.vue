@@ -171,7 +171,7 @@
 
 <script>
   import {Current} from '@/utils/time'
-  import {getSchools, modifySchools,createSchool} from '@/api/system_apis'
+  import {getSchools, modifySchools, createSchool, deleteSchools} from '@/api/system_apis'
   import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
   export default {
@@ -231,26 +231,29 @@
         })
       },
       handleSelectionChange(val) {
-        let temp = []
-        val.forEach(item => {
-          temp.push(item.ip_id)
-        });
-        this.chosenList = temp
-        console.log(this.chosenList)
+
+        this.chosenList = val
       },
       deleteChosen() {
         this.chosenList.forEach(item => {
-
+          deleteSchools(item).then(() => {
+            this.getList()
+            this.$notify({
+              title: '成功',
+              message: '删除成功',
+              type: 'success'
+            });
+          })
         })
       },
       confirmAdd() {
-        createSchool(this.tempSchool).then(response=>{
-          if(response.data===1)
-          this.$notify({
-            title: '成功',
-            message: '添加成功',
-            type: 'success'
-          });
+        createSchool(this.tempSchool).then(response => {
+          if (response.data === 1)
+            this.$notify({
+              title: '成功',
+              message: '添加成功',
+              type: 'success'
+            });
           else
             this.$notify({
               title: '失败',
@@ -258,9 +261,9 @@
               type: 'error'
             });
           this.getList()
-          this.tempSchool=[]
+          this.tempSchool = []
         })
-        this.dialogVisible=false
+        this.dialogVisible = false
 
       },
 

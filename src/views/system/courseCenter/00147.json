@@ -1,0 +1,690 @@
+{
+  "catalogTree": [
+    {
+      "id": 0,
+      "label": "人力资源管理导论",
+      "type": false,
+      "children": [
+        {
+          "id": 1,
+          "label": "人力资源概述",
+          "type": false,
+          "children": [
+            {
+              "id": 2,
+              "label": "人力资源及相关概念",
+              "type": true,
+              "finished": false,
+              "vid": "d6001adfae4da6445a467ccaf4db62a2_d"
+            },
+            {
+              "id": 3,
+              "label": "人力资源的特征和作用，人力资源相关理论",
+              "type": true,
+              "finished": false,
+              "vid": "d6001adfae4244b6c59282f2690c8f99_d"
+            }
+          ]
+        },
+        {
+          "id": 4,
+          "label": "人力资源管理概述",
+          "type": false,
+          "children": [
+            {
+              "id": 5,
+              "label": "人力资源管理概述",
+              "type": true,
+              "finished": false,
+              "vid": "d6001adfae8d644b3d092d3e030338ed_d"
+            }
+          ]
+        },
+        {
+          "id": 6,
+          "label": "战略性人力资源管理概述",
+          "type": false,
+          "children": [
+            {
+              "id": 7,
+              "label": "战略性人力资源管理概述",
+              "type": true,
+              "finished": false,
+              "vid": "d6001adfae20161a09850c912f231c82_d"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "label": "员工激励",
+      "type": false,
+      "children": [
+        {
+          "id": 9,
+          "label": "激励概述",
+          "type": false,
+          "children": [
+            {
+              "id": 10,
+              "label": "激励概述",
+              "type": true,
+              "finished": false,
+              "vid": "d6001adfae16ecf636973d240c20e556_d"
+            }
+          ]
+        },
+        {
+          "id": 11,
+          "label": "激励理论",
+          "type": false,
+          "children": [
+            {
+              "id": 12,
+              "label": "内容型激励理论",
+              "type": true,
+              "finished": false,
+              "vid": "d6001adfae675837549ba6631c90392d_d"
+            },
+            {
+              "id": 13,
+              "label": "过程性激励理论",
+              "type": true,
+              "finished": false,
+              "vid": "d6001adfae931aea3e4c2eeb522fbe35_d"
+            },
+            {
+              "id": 14,
+              "label": "行为后果激励理论",
+              "type": true,
+              "finished": false,
+              "vid": "d6001adfae5f28372eec4a59cdb56c09_d"
+            }
+          ]
+        },
+        {
+          "id": 15,
+          "label": "激励机制",
+          "type": false,
+          "children": [
+            {
+              "id": 16,
+              "label": "激励机制",
+              "type": true,
+              "finished": false,
+              "vid": "d6001adfae878eb90a0a39c6ceaa2c45_d"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 17,
+      "label": "工作分析",
+      "type": false,
+      "children": [
+        {
+          "id": 18,
+          "label": "工作分析概述",
+          "type": false,
+          "children": [
+            {
+              "id": 19,
+              "label": "工作分析概述",
+              "type": true,
+              "finished": false,
+              "vid": "d6001adfae35c3e9b0298b6c1c29bbcd_d"
+            }
+          ]
+        },
+        {
+          "id": 20,
+          "label": "工作分析的程序与办法",
+          "type": false,
+          "children": [
+            {
+              "id": 21,
+              "label": "工作分析的程序及工作分析的办法",
+              "type": true,
+              "finished": false,
+              "vid": "d6001adfae4ddc1ee918bef3193a338d_d"
+            },
+            {
+              "id": 22,
+              "label": "工作说明书的编写",
+              "type": true,
+              "finished": false,
+              "vid": "d6001adfae66c1375acde09ffbde7798_d"
+            }
+          ]
+        },
+        {
+          "id": 23,
+          "label": "工作设计",
+          "type": false,
+          "children": [
+            {
+              "id": 24,
+              "label": "工作设计",
+              "type": true,
+              "finished": false,
+              "vid": "d6001adfae07a3db31df37cb012e5365_d"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 25,
+      "label": "人力资源规划",
+      "type": false,
+      "children": [
+        {
+          "id": 26,
+          "label": "人力资源规划概述",
+          "type": false,
+          "children": [
+            {
+              "id": 27,
+              "label": "人力资源规划概述",
+              "type": true,
+              "finished": false,
+              "vid": "d6001adfae3354f2df9078488a917bb1_d"
+            }
+          ]
+        },
+        {
+          "id": 28,
+          "label": "人力资源预测",
+          "type": false,
+          "children": [
+            {
+              "id": 29,
+              "label": "人力资源需求预测",
+              "type": true,
+              "finished": false,
+              "vid": "d6001adfaefa81360ddbdcef730fef35_d"
+            },
+            {
+              "id": 30,
+              "label": "人力资源供给预测",
+              "type": true,
+              "finished": false,
+              "vid": "d6001adfaea4a97fbaf0c15644d11e40_d"
+            }
+          ]
+        },
+        {
+          "id": 31,
+          "label": "人力资源战略规划",
+          "type": false,
+          "children": [
+            {
+              "id": 32,
+              "label": "人力资源战略规划",
+              "type": true,
+              "finished": false,
+              "vid": "d6001adfaeeae52bc4377aaa2ea8e945_d"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 33,
+      "label": "招聘管理",
+      "type": false,
+      "children": [
+        {
+          "id": 34,
+          "label": "招聘概述",
+          "type": false,
+          "children": [
+            {
+              "id": 35,
+              "label": "招聘概述",
+              "type": true,
+              "finished": false,
+              "vid": "d6001adfae24d65611f739502131d8c0_d"
+            }
+          ]
+        },
+        {
+          "id": 36,
+          "label": "人员招募",
+          "type": false,
+          "children": [
+            {
+              "id": 37,
+              "label": "人员招募",
+              "type": true,
+              "finished": false,
+              "vid": "d6001adfaefffdea2459aaecf4f96a3d_d"
+            }
+          ]
+        },
+        {
+          "id": 38,
+          "label": "人员选拔",
+          "type": false,
+          "children": [
+            {
+              "id": 39,
+              "label": "人员选拔",
+              "type": true,
+              "finished": false,
+              "vid": "d6001adfaee8fcebb5c09ed31b51ab05_d"
+            }
+          ]
+        },
+        {
+          "id": 40,
+          "label": "人员录用",
+          "type": false,
+          "children": [
+            {
+              "id": 41,
+              "label": "人员录用",
+              "type": true,
+              "finished": false,
+              "vid": "d6001adfaeed89f811116a36990af7bd_d"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 42,
+      "label": "人员素质测评",
+      "type": false,
+      "children": [
+        {
+          "id": 43,
+          "label": "人员素质测评概论",
+          "type": false,
+          "children": [
+            {
+              "id": 44,
+              "label": "人员素质测评概论",
+              "type": true,
+              "finished": false,
+              "vid": "d6001adfae01cbbbc73c5c093ef750ec_d"
+            }
+          ]
+        },
+        {
+          "id": 45,
+          "label": "人员素质测评方法",
+          "type": false,
+          "children": [
+            {
+              "id": 46,
+              "label": "人员素质测评方法",
+              "type": true,
+              "finished": false,
+              "vid": "d6001adfae45ff22f4dd262143901a5e_d"
+            }
+          ]
+        },
+        {
+          "id": 47,
+          "label": "人员素质测评实施",
+          "type": false,
+          "children": [
+            {
+              "id": 48,
+              "label": "人员素质测评实施",
+              "type": true,
+              "finished": false,
+              "vid": "d6001adfae4fa635398a0d5e05735ad4_d"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 49,
+      "label": "员工培训",
+      "type": false,
+      "children": [
+        {
+          "id": 50,
+          "label": "培训概述",
+          "type": false,
+          "children": [
+            {
+              "id": 51,
+              "label": "培训概述",
+              "type": true,
+              "finished": false,
+              "vid": "d6001adfaef63178be7eae365e7758a6_d"
+            }
+          ]
+        },
+        {
+          "id": 52,
+          "label": "员工培训的内容和步骤",
+          "type": false,
+          "children": [
+            {
+              "id": 53,
+              "label": "员工培训的内容和步骤",
+              "type": true,
+              "finished": false,
+              "vid": "d6001adfaec3ac93c62d059f078fa27f_d"
+            }
+          ]
+        },
+        {
+          "id": 54,
+          "label": "员工培训的方法",
+          "type": false,
+          "children": [
+            {
+              "id": 55,
+              "label": "员工培训的方法",
+              "type": true,
+              "finished": false,
+              "vid": "d6001adfaed3d6c1a1d58c2ea5fb9331_d"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 56,
+      "label": "绩效管理",
+      "type": false,
+      "children": [
+        {
+          "id": 57,
+          "label": "绩效管理概述",
+          "type": false,
+          "children": [
+            {
+              "id": 58,
+              "label": "绩效的含义与特点，绩效管理",
+              "type": true,
+              "finished": false,
+              "vid": "d6001adfae0c2b8734181a0ada6e04b5_d"
+            },
+            {
+              "id": 59,
+              "label": "绩效管理体系的含义与内容",
+              "type": true,
+              "finished": false,
+              "vid": "d6001adfae36e8cf70d582e2bb3587c6_d"
+            }
+          ]
+        },
+        {
+          "id": 60,
+          "label": "绩效计划",
+          "type": false,
+          "children": [
+            {
+              "id": 61,
+              "label": "绩效计划的含义与作用",
+              "type": true,
+              "finished": false,
+              "vid": "d6001adfae16ffea901118bbf28dceb3_d"
+            },
+            {
+              "id": 62,
+              "label": "绩效计划的主要内容",
+              "type": true,
+              "finished": false,
+              "vid": "d6001adfae412dd60b49e4bd3b13f353_d"
+            },
+            {
+              "id": 63,
+              "label": "绩效计划的主要工具",
+              "type": true,
+              "finished": false,
+              "vid": "d6001adfaeee3c12c91b843007cc291f_d"
+            },
+            {
+              "id": 64,
+              "label": "绩效沟通",
+              "type": true,
+              "finished": false,
+              "vid": "d6001adfae45e694746c6afc6a00807e_d"
+            }
+          ]
+        },
+        {
+          "id": 65,
+          "label": "绩效考核",
+          "type": false,
+          "children": [
+            {
+              "id": 66,
+              "label": "绩效考核的含义与作用",
+              "type": true,
+              "finished": false,
+              "vid": "d6001adfaec18d06b5e086bab4fba785_d"
+            },
+            {
+              "id": 67,
+              "label": "绩效考核的流程",
+              "type": true,
+              "finished": false,
+              "vid": "d6001adfae2a29ddd89838ee530ff067_d"
+            },
+            {
+              "id": 68,
+              "label": "绩效考核体系",
+              "type": true,
+              "finished": false,
+              "vid": "d6001adfaec5f9ec501cb87120e19546_d"
+            },
+            {
+              "id": 69,
+              "label": "绩效考核中常见的误区",
+              "type": true,
+              "finished": false,
+              "vid": "d6001adfaea6a845534b2509b6c31349_d"
+            }
+          ]
+        },
+        {
+          "id": 70,
+          "label": "绩效反馈",
+          "type": false,
+          "children": [
+            {
+              "id": 71,
+              "label": "绩效反馈的含义",
+              "type": true,
+              "finished": false,
+              "vid": "d6001adfaebf9e32894f92c192226d69_d"
+            },
+            {
+              "id": 72,
+              "label": "绩效反馈面谈",
+              "type": true,
+              "finished": false,
+              "vid": "d6001adfae80d41cfb5dd80f75f26936_d"
+            },
+            {
+              "id": 73,
+              "label": "绩效改进",
+              "type": true,
+              "finished": false,
+              "vid": "d6001adfae4277f0c11f939b0eaf423d_d"
+            },
+            {
+              "id": 74,
+              "label": "绩效考核结果的应用",
+              "type": true,
+              "finished": false,
+              "vid": "d6001adfae36269a70c10a727b655fe8_d"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 75,
+      "label": "薪酬管理",
+      "type": false,
+      "children": [
+        {
+          "id": 76,
+          "label": "薪酬概述",
+          "type": false,
+          "children": [
+            {
+              "id": 77,
+              "label": "薪酬的概述",
+              "type": true,
+              "finished": false,
+              "vid": "d6001adfae159356c2b0acb91a936b7f_d"
+            },
+            {
+              "id": 78,
+              "label": "薪酬的分类与构成",
+              "type": true,
+              "finished": false,
+              "vid": "d6001adfaec340589fe7c0e01669b9ff_d"
+            },
+            {
+              "id": 79,
+              "label": "薪酬的功能",
+              "type": true,
+              "finished": false,
+              "vid": "d6001adfae0742d02f55415703a60d5a_d"
+            }
+          ]
+        },
+        {
+          "id": 80,
+          "label": "薪酬水平和结构",
+          "type": false,
+          "children": [
+            {
+              "id": 81,
+              "label": "薪酬水平",
+              "type": true,
+              "finished": false,
+              "vid": "d6001adfaeb0a39c3960fa5358c6a903_d"
+            },
+            {
+              "id": 82,
+              "label": "薪酬结构",
+              "type": true,
+              "finished": false,
+              "vid": "d6001adfaee8709612c0171df0f6fa15_d"
+            }
+          ]
+        },
+        {
+          "id": 83,
+          "label": "薪酬设计",
+          "type": false,
+          "children": [
+            {
+              "id": 84,
+              "label": "薪酬设计的原则",
+              "type": true,
+              "finished": false,
+              "vid": "d6001adfae34c3f91943521cc2bbcf5f_d"
+            },
+            {
+              "id": 85,
+              "label": "薪酬设计的基本流程",
+              "type": true,
+              "finished": false,
+              "vid": "d6001adfae62eb0e8291d054cbcb78f9_d"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 86,
+      "label": "职业生涯管理",
+      "type": false,
+      "children": [
+        {
+          "id": 87,
+          "label": "职业生涯管理概述",
+          "type": false,
+          "children": [
+            {
+              "id": 88,
+              "label": "职业生涯管理概述",
+              "type": true,
+              "finished": false,
+              "vid": "d6001adfae6ad7f044ac836af51c524b_d"
+            }
+          ]
+        },
+        {
+          "id": 89,
+          "label": "职业生涯管理理论",
+          "type": false,
+          "children": [
+            {
+              "id": 90,
+              "label": "职业生涯管理理论",
+              "type": true,
+              "finished": false,
+              "vid": "d6001adfae6bf6a105e908001dbcdac2_d"
+            }
+          ]
+        },
+        {
+          "id": 91,
+          "label": "员工职业生涯规划",
+          "type": false,
+          "children": [
+            {
+              "id": 92,
+              "label": "员工职业生涯规划",
+              "type": true,
+              "finished": false,
+              "vid": "d6001adfaec9603844792971e631be13_d"
+            }
+          ]
+        },
+        {
+          "id": 93,
+          "label": "组织职业生涯设计",
+          "type": false,
+          "children": [
+            {
+              "id": 94,
+              "label": "组织职业生涯设计",
+              "type": true,
+              "finished": false,
+              "vid": "d6001adfae58b0eaaff17b17d2568f6e_d"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 95,
+      "label": "考试分析",
+      "type": false,
+      "children": [
+        {
+          "id": 96,
+          "label": "考试分析",
+          "type": false,
+          "children": [
+            {
+              "id": 97,
+              "label": "考试分析",
+              "type": true,
+              "finished": false,
+              "vid": "d6001adfae3189afb193ad5d559dcb80_d"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

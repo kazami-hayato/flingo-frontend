@@ -1,7 +1,7 @@
 <template>
   <el-form>
     <el-form-item label="用户名">
-      <el-input v-model.trim="user.username"/>
+      <el-input v-model.trim="user.username" disabled/>
     </el-form-item>
     <el-form-item label="真实姓名">
       <el-input v-model.trim="user.real_name"/>
@@ -34,6 +34,8 @@
 </template>
 
 <script>
+  import {updateAdminsSystem} from '@/api/system_apis'
+
   export default {
     data() {
       return {
@@ -49,12 +51,15 @@
     },
     methods: {
       submit() {
-        if (this.confirm_pwd === this.password && this.origin_pwd === this.user.password)
-          this.$message({
-            message: '更新成功',
-            type: 'success',
-            duration: 5 * 1000
+        if (this.confirm_pwd === this.password && this.origin_pwd === this.user.password) {
+          updateAdminsSystem(this.user).then(() => {
+            this.$message({
+              message: '更新成功',
+              type: 'success',
+              duration: 5 * 1000
+            })
           })
+        }
       }
     }
   }

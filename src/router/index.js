@@ -238,14 +238,48 @@ export const asyncRoutes = [
       meta: {title: 'IP管理', icon: 'z_ip', roles: ['main_school', 'sub_school']}
     }]
   },
+  {
+    path: '/settingCenter',
+    component: Layout,
+    redirect: '/settingCenter/detail',
+    alwaysShow: true, // will always show the root menu
+    name: 'Setting',
+    meta: {
+      title: '设置',
+      icon: 'z_settings',
+      roles: ['main_school', 'sub_school']
+    },
+    children: [
+      {
+        path: 'detail',
+        component: () => import('@/views/admin/setting/adminManage'),
+        name: 'Detail',
+        meta: {
+          title: '管理员管理',
+          roles: ['main_school', 'sub_school'] // or you can only set roles in sub nav
+        }
+      },
+      {
+        path: 'lookup',
+        component: () => import('@/views/admin/setting/lookup'),
+        name: 'Lookup',
+        meta: {
+          title: '查看密码',
+          roles: ['main_school', 'sub_school']
+          // if do not set roles, means: this page does not require permission
+        }
+      }
+      ,
+    ]
+  },
 
 
   //系统管理员
 
   {
-    path:'/allSchool',
-    component:Layout,
-    children:[
+    path: '/allSchool',
+    component: Layout,
+    children: [
       {
         path: 'index',
         component: () => import('@/views/system/allschool'),
@@ -274,7 +308,17 @@ export const asyncRoutes = [
           title: '课程仓库',
           roles: ['system'] // or you can only set roles in sub nav
         }
-      }, {
+      },
+      {
+        path: 'sales',
+        component: () => import('@/views/system/courseCenter/salesManage'),
+        name: 'SalesManage',
+        meta: {
+          title: '销量',
+          roles: ['system'] // or you can only set roles in sub nav
+        }
+      },
+      {
         path: 'courseCatalog/:course_id(\\d+)',
         component: () => import('@/views/system/courseCenter/courseCatalog'),
         hidden: true,
@@ -320,9 +364,9 @@ export const asyncRoutes = [
     ]
   },
   {
-    path:'/tagCenter',
-    component:Layout,
-    redirect:'/tagCenter/tag_manage',
+    path: '/tagCenter',
+    component: Layout,
+    redirect: '/tagCenter/tag_manage',
     alwaysShow: true, // will always show the root menu
     name: 'tagCenter',
     meta: {
@@ -351,35 +395,34 @@ export const asyncRoutes = [
       },
     ]
   },
-
   {
-    path: '/setting',
+    path: '/settingCenter',
     component: Layout,
-    redirect: '/setting/detail',
+    redirect: '/settingCenter/detail',
     alwaysShow: true, // will always show the root menu
-    name: 'Setting',
+    name: 'SettingCenter',
     meta: {
-      title: '设置',
+      title: '设置中心',
       icon: 'z_settings',
-      roles: ['system', 'main_school', 'sub_school']
+      roles: ['system']
     },
     children: [
       {
-        path: 'detail',
-        component: () => import('@/views/admin/setting/adminManage'),
-        name: 'Detail',
+        path: 'detailCenter',
+        component: () => import('@/views/system/settingCenter/adminManage'),
+        name: 'AdminManage',
         meta: {
           title: '管理员管理',
-          roles: ['system', 'main_school', 'sub_school'] // or you can only set roles in sub nav
+          roles: ['system'] // or you can only set roles in sub nav
         }
       },
       {
         path: 'lookup',
-        component: () => import('@/views/admin/setting/lookup'),
+        component: () => import('@/views/system/settingCenter/lookup'),
         name: 'Lookup',
         meta: {
           title: '查看密码',
-          roles: ['system', 'main_school', 'sub_school']
+          roles: ['system']
           // if do not set roles, means: this page does not require permission
         }
       }

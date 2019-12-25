@@ -222,7 +222,7 @@
       getCourses() {
         getSystemCoursesByQuery(this.courseQuery).then(response => {
           this.courseInfo = response.data
-          this.total = response.total
+          this.course_total = response.total
         })
       },
       handleSearch() {

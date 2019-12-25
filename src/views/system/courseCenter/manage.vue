@@ -75,10 +75,10 @@
                   <el-form-item label="教材名" required>
                     <el-input v-model="row.material_name" style="width: 200px"/>
                   </el-form-item>
-                  <el-form-item label="视频时长" required>
+                  <el-form-item label="精讲时间" required>
                     <el-input v-model="row.norm_duration" style="width: 200px"/>
                   </el-form-item>
-                  <el-form-item label="视频数" required>
+                  <el-form-item label="精讲课程数" required>
                     <el-input v-model="row.norm_sum" style="width: 200px"/>
                   </el-form-item>
                   <el-form-item label="问题数" required>
@@ -118,7 +118,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="创建时间" width="150px" align="center">
+      <el-table-column label="创建时间" width="250px" align="center">
         <template slot-scope="{row}">
           <span>{{ row.create_time | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
         </template>
@@ -128,7 +128,8 @@
           <span>{{ row.update_time | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="课时数" prop="norm_duration"/>
+      <el-table-column label="精讲课程数" prop="norm_sum" align="center"/>
+      <el-table-column label="精讲时间" prop="norm_duration" align="center"/>
       <el-table-column label="入库状态">
         <template slot-scope="{row}">
           <el-tag v-if="row.is_shift===0">未入库</el-tag>
@@ -216,6 +217,7 @@
         console.log(this.tempCourse)
         createSystemCourse(this.tempCourse).then(res => {
           this.getList()
+          this.dialogVisible=false
         })
       },
       shiftSelected() {

@@ -1,5 +1,5 @@
 import request from '@/utils/request'
-
+//课程中心
 export function getSystemCoursesByQuery(data) {
   return request({
     url: '/apis/v1/system/courses',
@@ -7,7 +7,7 @@ export function getSystemCoursesByQuery(data) {
     params: data
   })
 }
-
+//包括目录树更新
 export function modifySystemCourseById(data) {
   return request({
     url: '/apis/v1/system/courses',
@@ -23,6 +23,19 @@ export function createSystemCourse(data) {
     data: data
   })
 }
+
+export function getCoursesSale(data) {
+  return request({
+    url: '/apis/v1/system/sales',
+    method: 'get',
+    params: data
+  })
+}
+
+
+
+
+
 
 export function getCatalogTreeById(data) {
 
@@ -81,6 +94,15 @@ export function modifySchools(data) {
 
 }
 
+export function deleteSchools(data) {
+  return request({
+    url: '/apis/v1/system/schools/'+data.school_id,
+    method: 'delete',
+  })
+
+}
+
+
 export function getTests(data) {
   return request({
     url: '/apis/v1/system/tests',
@@ -113,3 +135,69 @@ export function deleteTest(data) {
   })
 
 }
+
+
+export function getAdminsSystem(data){
+  return request({
+    url: '/apis/v1/system/admins',
+    method: 'get',
+    params:data
+  })
+}
+
+export function createAdminsSystem(data){
+  return request({
+    url: '/apis/v1/system/admins',
+    method: 'post',
+    data:data
+  })
+}
+export function updateAdminsSystem(data){
+  return request({
+    url: '/apis/v1/system/admins',
+    method: 'put',
+    data:data
+  })
+}
+
+export function getStudentsSystem(data) {
+  return request({
+    url: '/apis/v1/system/students',
+    method: 'get',
+    params:data
+  })
+}
+
+export function getStudentsSystemByTag(data) {
+  return request({
+    url: '/apis/v1/system/students/tag',
+    method: 'get',
+    params:data
+  })
+}
+
+
+export function createStudentSystem(data) {
+  return request({
+    url: '/apis/v1/system/students',
+    method: 'post',
+    data:data
+  })
+}
+export function updateStudentSystem(data) {
+  return request({
+    url: '/apis/v1/system/students',
+    method: 'put',
+    data:data
+  })
+}
+
+
+export function getPasswordSystem(data) {
+  return request({
+    url: '/apis/v1/system/students/password',
+    method: 'get',
+    params:data
+  })
+}
+

@@ -45,7 +45,7 @@
           prop="tag_overtime">
         </el-table-column>
         <el-table-column
-          label="考期过期时间"
+          label="考期状态"
           align="center">
           <template slot-scope="{row}">
             <el-tag type="warning" v-if="row.active===0">历史考期</el-tag>
@@ -59,21 +59,14 @@
           <template slot-scope="{row}">
             <el-button
               v-if="row.active===1"
-              class="el-icon-upload"
-              size="mini"
-              type="success"
-              @click="dialogVisible=true">&nbsp导入学生信息
-            </el-button>
-            <el-button
-              v-if="row.active===1"
               class="el-icon-edit-outline"
               size="mini"
-              type="warning"
+              type="success"
               @click="editTag(row)">&nbsp修改考期信息
             </el-button>
             <el-button
               size="mini"
-              type="warning"
+              type="success"
               class="el-icon-download"
               @click="handleImportStu(row)">&nbsp导出成绩
             </el-button>
@@ -172,7 +165,7 @@
   import {createTag, deleteTag,modifyTag} from '@/api/system_apis'
   import Pagination from '@/components/Pagination' // secondary package based on el-pagination
   import {mapGetters} from 'vuex'
-  import StuCourseDetail from "../../admin/student/component/StuCourseDetail";
+  import StuCourseDetail from "./component/StuCourseDetail";
 
   export default {
     name: "AllTags",
@@ -185,7 +178,6 @@
         },
         dialogVisible: false,
         fileList: [],
-        fileList1: [],
         total: 0,
         listQuery: {
           limit: 10,
