@@ -679,6 +679,21 @@ export function getMainCourseSale(data) {
   })
 }
 
+// 获取试卷内容
+export function getExamination(data) {
+  return request({
+    url:'/apis/v1/',
+    method:'get',
+    params:data
+  })
+}
+export function saveExamination(data) {
+  return request({
+    url:'/apis/v1',
+    methods:'post',
+    params:data
+  })
+}
 // export function getMainTags() {
 //   return request({
 //     url: '/apis/v1/main/tags',
