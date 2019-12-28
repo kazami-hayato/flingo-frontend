@@ -60,8 +60,8 @@
         label="状态"
         show-overflow-tooltip>
         <template slot-scope="{row}">
-          <el-tag v-if="row.is_forbidden===0">激活</el-tag>
-          <el-tag v-else>禁用</el-tag>
+          <el-tag v-if="row.is_forbidden===0">已激活</el-tag>
+          <el-tag v-else>已禁用</el-tag>
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center" width="230" class-name="small-padding fixed-width">

@@ -8,7 +8,7 @@
           <el-input placeholder="请输入内容" v-model="listQuery.searchText">
             <el-select v-model="listQuery.searchType" slot="prepend" placeholder="请选择"
                        style="width: 130px;background: #1890FF;color: #fff">
-              <el-option label="网校id" value='1'/>
+              <el-option label="网校号" value='1'/>
               <el-option label="网校名" value='2'/>
             </el-select>
             <el-button slot="append" icon="el-icon-search" @click="getList"

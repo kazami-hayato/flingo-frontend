@@ -20,9 +20,9 @@
                      @click="dialogVisible=true">
             创建新课程
           </el-button>
-          <el-button class="filter-item " type="warning" icon="el-icon-arrow-right" @click="shiftSelected">选中入库
+          <el-button class="filter-item " type="info" icon="el-icon-arrow-right" @click="shiftSelected">选中入库
           </el-button>
-          <el-button class="filter-item" type="warning" icon="el-icon-arrow-left" @click="unshiftSelected">选中出库
+          <el-button class="filter-item" type="danger" icon="el-icon-arrow-left" @click="unshiftSelected">选中出库
           </el-button>
 
         </el-col>

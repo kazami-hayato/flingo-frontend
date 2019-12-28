@@ -51,9 +51,9 @@
         </div>
       </el-col>
       <el-col :span="6" class="funtion-panel">
-        <div class="exam-timing">
-          <i class="el-icon-time">考试剩余时间 <span style="color:#5eb95e;font-weight:bold;">{{examTime}}</span> 分钟</i>
-        </div>
+<!--        <div class="exam-timing">-->
+<!--          <i class="el-icon-time">考试剩余时间 <span style="color:#5eb95e;font-weight:bold;">{{examTime}}</span> 分钟</i>-->
+<!--        </div>-->
         <div class="answers-card">
           <div :class="{'answers':true,'answer-stick':isScrollHeightTo}">
             <h3>答题卡</h3>
@@ -62,8 +62,8 @@
             <div class="answer-options">
               <div :class="{'finished':item.myAnswer!==-1,'marked':item.marked === 1,'answer-item':true,'right':isFinished&&(item.myAnswer===item.correctAnswer),'wrong':isFinished&&(item.myAnswer!==item.correctAnswer)}" v-for="(item,index) in examination.questions" :key="index" @click="toQuestion(index)">{{index+1}}</div>
             </div>
-            <el-button type="primary" style="width:100%;margin-bottom:20px;" @click="saveExam" v-show="!isFinished">保存进度</el-button>
-            <el-button type="warning" style="width:100%;margin-bottom:20px;margin-left:0px;" @click="finishExam" v-show="!isFinished">我要交卷</el-button>
+            <el-button type="primary" style="width:100%;margin-bottom:20px;" @click="saveExam" v-show="!isFinished">保存试卷</el-button>
+<!--            <el-button type="warning" style="width:100%;margin-bottom:20px;margin-left:0px;" @click="finishExam" v-show="!isFinished">我要交卷</el-button>-->
             <div class="tips" v-if="!isFinished">
             <span>
               <i class="block finished"></i>
@@ -134,16 +134,18 @@
         totalMinutes:0,
         totalQuestions:0,
         totalScore:0,
-        isFinished:false,
+        isFinished:true,
         intervalFun:null,
         scrollHeight:0,
         isScrollHeightTo:false
       }
     },
     mounted(){
-      this.getExamination()
+      // this.getExamination()
       window.addEventListener('scroll',this.handleScroll,true)
-      this.examinations = examinations
+      this.examination = examinations
+      // console.log(this.examinations)
+     // this.setTiming()
     },
     computed:{
       /**

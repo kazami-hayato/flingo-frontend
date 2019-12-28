@@ -6,8 +6,7 @@
 
           <el-col :span="6">
             <img class="img-circle" style="width: 120px;height: 120px; margin-left: 150px;margin-top: 7px"
-                 src="https://gss0.bdstatic.com/-4o3dSag_xI4khGkpoWK1HF6hhy/baike/c0%3Dbaike80%2C5%2C5%2C80%2C26/sign=aba70b0cb68f8c54f7decd7d5b404690/b219ebc4b74543a986d0372e1c178a82b801140c.jpg">
-
+                 :src="studentInfo.stu.avatar">
           </el-col>
           <el-col :span="12">
             <p><b>学生姓名：</b>{{studentInfo.stu.real_name}}</p>
