@@ -70,6 +70,13 @@
               class="el-icon-edit"
               size="mini"
               type="success"
+              v-if="row.match_course_id===null"
+              @click="setCourse(row)">&nbsp设置试卷
+            </el-button>
+            <el-button
+              class="el-icon-edit"
+              size="mini"
+              type="success"
               @click="editTest(row)">&nbsp编辑试卷信息
             </el-button>
           </template>
@@ -116,7 +123,7 @@
         </el-footer>
       </el-dialog>
       <el-dialog
-        title="修改试卷面板"
+        title="设置试卷课程"
         :visible.sync="editTestVisible"
         width="40%"
       >
@@ -212,7 +219,9 @@
         this.testVisible = true
         this.tempTest = {}
       },
+      editTest(row) {
 
+      },
       handleCurrentChange(val) {
         if (val !== null) {
           this.tempTest.match_course_id = val.course_id
@@ -254,7 +263,7 @@
       handleUpload(response, file) {
 
       },
-      editTest(row) {
+      setCourse(row) {
         this.tempTest = Object.assign({}, row)
         this.getCourses()
         this.editTestVisible = true
@@ -270,21 +279,24 @@
         })
       },
       handleDelete() {
-        this.$confirm('此操作将永久删除考期, 是否继续?', '提示', {
+        this.$confirm('此操作将删除未匹配课程测试, 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning',
           center: true
         }).then(() => {
           this.multipleSelection.forEach(item => {
-            deleteTest(item).then(() => {
-            })
+            if (item.match_course_id === null)
+              deleteTest(item).then(() => {
+                this.getList()
+                this.$message({
+                  type: 'success',
+                  message: '删除成功!'
+                });
+              })
           })
-          this.getList()
-          this.$message({
-            type: 'success',
-            message: '删除成功!'
-          });
+
+
         }).catch(() => {
           this.$message({
             type: 'info',
