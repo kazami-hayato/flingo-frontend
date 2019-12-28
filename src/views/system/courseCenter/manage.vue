@@ -20,10 +20,10 @@
                      @click="dialogVisible=true">
             创建新课程
           </el-button>
-          <el-button class="filter-item " type="info" icon="el-icon-arrow-right" @click="shiftSelected">选中入库
+          <el-button class="filter-item " type="warning" icon="el-icon-arrow-right" @click="shiftSelected">选中入库
           </el-button>
-          <el-button class="filter-item" type="danger" icon="el-icon-arrow-left" @click="unshiftSelected">选中出库
-          </el-button>
+          <!--          <el-button class="filter-item" type="danger" icon="el-icon-arrow-left" @click="unshiftSelected">选中出库-->
+          <!--          </el-button>-->
 
         </el-col>
       </el-row>
@@ -42,7 +42,7 @@
           <el-card style="max-height: 1300px">
             <el-container>
               <el-aside style="background-color: rgb(238, 241, 246);width: 320px">
-                <img style="width: 250px" :src="row.material_cover">
+                <img style="width: 250px" :src="row.material_cover" alt="cover">
                 <el-upload
                   :data="row"
                   ref="upload"
@@ -59,7 +59,7 @@
                 </el-upload>
               </el-aside>
               <el-main>
-                <el-form :model="row" label-width="80px" :label-position="'right'">
+                <el-form :model="row" label-width="120px" :label-position="'right'">
                   <el-form-item label="课程号" required>
                     <el-input v-model="row.course_id" style="width: 200px" disabled/>
                   </el-form-item>
@@ -85,7 +85,7 @@
                     <el-input v-model="row.que_sum" style="width: 200px"/>
                   </el-form-item>
                   <el-form-item label="是否入库" required>
-                    <el-select v-model="row.is_shift" placeholder="请选择">
+                    <el-select v-model="row.is_shift" placeholder="请选择" disabled>
                       <el-option
                         v-for="item in [{label:'未入库',value:0},{label:'已入库',value:1}]"
                         :key="item.value"
@@ -132,8 +132,8 @@
       <el-table-column label="精讲时间" prop="norm_duration" align="center"/>
       <el-table-column label="入库状态">
         <template slot-scope="{row}">
-          <el-tag v-if="row.is_shift===0">未入库</el-tag>
-          <el-tag v-else>已入库</el-tag>
+          <el-tag v-if="row.is_shift===0||row.is_shift===null" type="warning">未入库</el-tag>
+          <el-tag v-else type="success">已入库</el-tag>
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center" minWidth="200" class-name="small-padding fixed-width">
@@ -217,15 +217,36 @@
         console.log(this.tempCourse)
         createSystemCourse(this.tempCourse).then(res => {
           this.getList()
-          this.dialogVisible=false
+          this.dialogVisible = false
         })
       },
       shiftSelected() {
+        let illegalCourses = []
         this.chosenList.forEach(course => {
-          course.is_shift = 1
-          modifySystemCourseById(course).then(() => {
-          })
+          if (course.catalogtree === null || course.course_name === null ||
+            course.norm_sum === null || course.que_sum === null || course.norm_duration === null)
+            illegalCourses.push(course.course_name)
         })
+        console.log(illegalCourses)
+        if (illegalCourses.length > 0)
+          this.$notify({
+            title: '错误',
+            message: '以下课程:' + illegalCourses.toString() + '（名称|目录|精讲课程数|精讲时间|问题数）为空，无法入库，请重新输入',
+            type: 'error',
+            duration: 1000
+          })
+        else
+          this.chosenList.forEach(course => {
+            course.is_shift = 1
+            modifySystemCourseById(course).then(() => {
+              this.$notify({
+                title: '成功',
+                message: '课程' + course.course_name + '入库成功',
+                type: 'success',
+                duration: 1000
+              })
+            })
+          })
       },
       unshiftSelected() {
         console.log(this.chosenList)

@@ -91,35 +91,18 @@
         <el-form-item label="输入管理员姓名">
           <el-input v-model="tempAdmin.real_name"/>
         </el-form-item>
-        <el-row style="margin-bottom: 25px">
-          <label style="margin-left: 80px">主校名称</label>
-          <el-select v-model="tempAdmin.main_school" placeholder="请选择" style="margin-left: 15px">
-            <el-option
-              v-for="item in MainschoolOptions"
-              :key="item"
-              :label="item"
-              :value="item">
-            </el-option>
-          </el-select>
-        </el-row>
-
-        <el-row style="margin-bottom: 25px">
-          <label style="margin-left: 80px">所属分校</label>
-          <el-select v-model="tempAdmin.sub_school" placeholder="请选择" style="margin-left: 15px">
-            <el-option
-              v-for="item in SubschoolOptions"
-              :key="item"
-              :label="item"
-              :value="item">
-            </el-option>
-          </el-select>
-        </el-row>
-
-        <el-form-item label="输入管理员密码">
+        <el-form-item label="输入主校名称">
+          <el-input v-model="tempAdmin.main_school"/>
+        </el-form-item>
+        <el-form-item label="输入分校名称">
+          <el-input v-model="tempAdmin.sub_school"/>
+        </el-form-item>
+        <el-form-item label="输入密码">
           <el-input v-model="tempAdmin.password"/>
         </el-form-item>
-
-
+        <el-form-item label="输入分校名称">
+          <el-input type="password" v-model="tempAdmin.password_confirm"/>
+        </el-form-item>
         <el-row>
           <label style="margin-left: 65px">管理员类型</label>
           <el-select v-model="tempAdmin.user_type" placeholder="请选择" style="margin-left: 15px">
@@ -142,7 +125,7 @@
 
 <script>
   // import {getAdmins, deleteAdmin, addAdmin, updateAdmin} from '@/api/apis'
-  import {getAdminsSystem,createAdminsSystem,updateAdminsSystem} from "@/api/system_apis"
+  import {getAdminsSystem, createAdminsSystem, updateAdminsSystem} from "@/api/system_apis"
   import Pagination from '@/components/Pagination'
   import {Current} from "@/utils/time"; // secondary package based on el-pagination
 
@@ -206,13 +189,33 @@
         this.SubschoolOptions = [...new Set(this.listData.map(item => item.sub_school))]
       },
       createAdmin() {
-        this.dialogVisible = false
         if (this.tempAdmin.user_type === 2) {
           this.tempAdmin.sub_school = this.tempAdmin.main_school
+        } else if (this.tempAdmin === 1) {
+          this.tempAdmin.main_school = ''
+          this.tempAdmin.sub_school = ''
         }
-        createAdminsSystem(this.tempAdmin).then(() => {
-          this.getList()
-        })
+        let information = ''
+        if (this.tempAdmin.password === this.tempAdmin.password_confirm)
+          createAdminsSystem(this.tempAdmin).then(response => {
+            if(response.data!==1)
+              this.$notify({
+                title: '错误',
+                message: response.data,
+                type: 'error',
+                duration: 2000
+              })
+            this.getList()
+            this.dialogVisible = false
+          })
+        else {
+          this.$notify({
+            title: '警告',
+            message: '两次输入密码不一致',
+            type: 'warning',
+            duration: 2000
+          })
+        }
       },
       activeThis(row) {
         row.is_forbidden = 0

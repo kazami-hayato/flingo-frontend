@@ -36,22 +36,22 @@
           <el-button type="text" size="large" @click="addVid(node,data)">
           设置Vid
           </el-button>
-            <!--<span v-show="!data.isTitle">-->
-              <!--<el-upload style="display: inline-block;" :auto-upload="false" ref="video"-->
-                         <!--:file-list="fileList" :show-file-list="false" action="/dev-api/api/v1/shift/courses/video"-->
-                         <!--accept="video/mp4"-->
-                         <!--:on-change="addFile" :on-progress="progress" :on-success="finish" :on-error="handleError">-->
-              <!--<el-button type="text" size="mini">选取视频</el-button>-->
-              <!--<span style="font-size: 12px">(mp4文件,不超过{{maxSize}}mb)</span>-->
-            <!--</el-upload>-->
-            <!--<el-button type="text" size="mini" @click="uploadVideo(data)">上传</el-button>-->
-            <!--<div style="width: 100px;display: inline-block;font-size: 11px;" v-show="data.uploading">-->
-              <!--<el-progress :percentage="percentage" :text-inside="true" :stroke-width="12"/>-->
-            <!--</div>-->
-            <!--<div style="width: 100px;display: inline-block;font-size: 11px;" v-if="data.status">-->
-              <!--已上传-->
-            <!--</div>-->
-            <!--</span>-->
+          <!--<span v-show="!data.isTitle">-->
+          <!--<el-upload style="display: inline-block;" :auto-upload="false" ref="video"-->
+          <!--:file-list="fileList" :show-file-list="false" action="/dev-api/api/v1/shift/courses/video"-->
+          <!--accept="video/mp4"-->
+          <!--:on-change="addFile" :on-progress="progress" :on-success="finish" :on-error="handleError">-->
+          <!--<el-button type="text" size="mini">选取视频</el-button>-->
+          <!--<span style="font-size: 12px">(mp4文件,不超过{{maxSize}}mb)</span>-->
+          <!--</el-upload>-->
+          <!--<el-button type="text" size="mini" @click="uploadVideo(data)">上传</el-button>-->
+          <!--<div style="width: 100px;display: inline-block;font-size: 11px;" v-show="data.uploading">-->
+          <!--<el-progress :percentage="percentage" :text-inside="true" :stroke-width="12"/>-->
+          <!--</div>-->
+          <!--<div style="width: 100px;display: inline-block;font-size: 11px;" v-if="data.status">-->
+          <!--已上传-->
+          <!--</div>-->
+          <!--</span>-->
         </span>
       </span>
           </el-tree>
@@ -66,7 +66,7 @@
 </template>
 <script>
   // import {uploadCourseCatalog,getCourseCatalog} from '../../api/school-course'
-  import {getCatalogTreeById,modifySystemCourseById} from '@/api/system_apis'
+  import {getCatalogTreeById, modifySystemCourseById} from '@/api/system_apis'
 
   export default {
     data() {
@@ -79,7 +79,7 @@
         tempData: {},
         course_id: undefined,
         course: {},
-        current_id:0
+        current_id: 0
       }
     },
     created() {
@@ -94,10 +94,9 @@
       getCatalog() {
         getCatalogTreeById({course_id: this.course_id}).then(response => {
           this.course = response.data
-          console.log(JSON.parse(this.course.catalogtree))
           this.data = JSON.parse(this.course.catalogtree).catalogtree
           this.getPlayList(this.data)
-         // console.log(this.current_id)
+          // console.log(this.current_id)
         }).catch(error => {
           console.log(error)
         })
@@ -105,11 +104,11 @@
       /**
        *  深度遍历获取id
        * */
-      getPlayList(catalog){
-        for(let i=0;i<catalog.length;i++){
-          if(catalog[i].id > this.current_id){
+      getPlayList(catalog) {
+        for (let i = 0; i < catalog.length; i++) {
+          if (catalog[i].id > this.current_id) {
             this.current_id = catalog[i].id
-          }else if(catalog[i].hasOwnProperty('children')){
+          } else if (catalog[i].hasOwnProperty('children')) {
             this.getPlayList(catalog[i]['children'])
           }
         }
@@ -119,20 +118,28 @@
       */
       updateCatalog() {
         console.log(this.data);
-        this.course.catalogtree = JSON.stringify({"catalogtree":this.data})
-        modifySystemCourseById(this.course).then(res => {
-          console.log(res)
+        this.course.catalogtree = JSON.stringify({"catalogtree": this.data})
+        if (this.course.is_shift !== 1)
+          modifySystemCourseById(this.course).then(res => {
+            console.log(res)
+            this.$notify({
+              title: '成功',
+              message: '更新成功',
+              type: 'success'
+            });
+          }).catch(error => {
+            this.$notify.error({
+              title: '错误',
+              message: '保存出错'
+            });
+          })
+        else {
           this.$notify({
-            title: '成功',
-            message: '更新成功',
-            type: 'success'
+            title: '失败',
+            message: '课程已经入库，无法更改',
+            type: 'error'
           });
-        }).catch(error => {
-          this.$notify.error({
-            title: '错误',
-            message: '保存出错'
-          });
-        })
+        }
       },
       /*
       *
@@ -140,7 +147,7 @@
       */
       append(data) {
         console.log(data)
-        const newChild = {id:  ++this.current_id, label: '新目录', children: [], status: false}
+        const newChild = {id: ++this.current_id, label: '新目录', children: [], status: false}
         if (!data.children) {
           this.$set(data, 'children', [])
         }
@@ -254,16 +261,16 @@
           type: 'error'
         });
       },
-      addVid(node,data){
-        console.log(node,data)
+      addVid(node, data) {
+        console.log(node, data)
         this.$prompt('请输入该课程对应的Vid', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
-          inputValue:data.vid?data.vid:''
-        }).then(({ value }) => {
-          data.vid  = value
+          inputValue: data.vid ? data.vid : ''
+        }).then(({value}) => {
+          data.vid = value
           this.type = true
-            this.$message({
+          this.$message({
             type: 'success',
             message: '设置成功!'
           });
