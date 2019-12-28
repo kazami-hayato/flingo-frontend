@@ -261,7 +261,10 @@
 
       },
       viewTest(row) {
-
+        this.$router.push({
+          name: 'TestInfo',
+          params: {test_id: row.test_id}
+        })
       },
       handleEdit() {
         modifyTest(this.tempTest).then(() => {
