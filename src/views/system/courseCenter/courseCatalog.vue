@@ -5,7 +5,7 @@
         <el-card>
           <el-button type="primary" @click="appendMain" icon="el-icon-plus">添加大章节</el-button>
           <el-tree
-            :data="data"
+            :data="CatalogData"
             :show-checkbox="false"
             node-key="id"
             default-expand-all
@@ -33,25 +33,21 @@
             @click="() => remove(node, data)">
             删除该目录
           </el-button>
-          <el-button type="text" size="large" @click="addVid(node,data)">
-          设置Vid
-          </el-button>
-            <!--<span v-show="!data.isTitle">-->
-              <!--<el-upload style="display: inline-block;" :auto-upload="false" ref="video"-->
-                         <!--:file-list="fileList" :show-file-list="false" action="/dev-api/api/v1/shift/courses/video"-->
-                         <!--accept="video/mp4"-->
-                         <!--:on-change="addFile" :on-progress="progress" :on-success="finish" :on-error="handleError">-->
-              <!--<el-button type="text" size="mini">选取视频</el-button>-->
-              <!--<span style="font-size: 12px">(mp4文件,不超过{{maxSize}}mb)</span>-->
-            <!--</el-upload>-->
-            <!--<el-button type="text" size="mini" @click="uploadVideo(data)">上传</el-button>-->
-            <!--<div style="width: 100px;display: inline-block;font-size: 11px;" v-show="data.uploading">-->
-              <!--<el-progress :percentage="percentage" :text-inside="true" :stroke-width="12"/>-->
-            <!--</div>-->
-            <!--<div style="width: 100px;display: inline-block;font-size: 11px;" v-if="data.status">-->
-              <!--已上传-->
-            <!--</div>-->
-            <!--</span>-->
+          <!--<el-button type="text" size="large" @click="addVid(node,data)">-->
+          <!--设置Vid-->
+          <!--</el-button>-->
+            <span v-show="!data.isTitle" style="position: relative;padding-left: 2px;">
+              <el-upload type="file" style="display: inline-block;"
+                          :on-change="addFile"
+                          action="" :auto-upload="false" accept="video/mp4"
+                         :multiple="false" :limit=1
+                           >
+                <el-button type="text">选择视频</el-button>
+              </el-upload>
+              <el-button type="text"  @click="uploadFile(data)">视频上传 </el-button>
+              <span style="font-size: 14px;padding-left: 5px;" v-if="!data.type">{{loading===0?'':loading}}</span>
+              <span style="font-size: 14px;padding-left: 5px;" v-else>完成</span>
+            </span>
         </span>
       </span>
           </el-tree>
@@ -65,46 +61,58 @@
   </div>
 </template>
 <script>
-  // import {uploadCourseCatalog,getCourseCatalog} from '../../api/school-course'
   import {getCatalogTreeById,modifySystemCourseById} from '@/api/system_apis'
-
+  import PlvVideoUpload from '@polyv/vod-upload-js-sdk'
+  import md5 from 'js-md5'
   export default {
     data() {
-
       return {
-        data: [],
+        CatalogData: [],
         fileList: [], // 上传文件列表
         maxSize: 500, // 上传文件限制大小，单位mb
         percentage: 0, // 上传进度
         tempData: {},
         course_id: undefined,
         course: {},
-        current_id:0
+        current_id:0,
+        user_id:"d6001adfae",
+        secretkey:"00X97pOUEx",
+        write_token:"7cae507f-22d6-4720-af10-7d618e6a3634",
+        videoUpload:null,
+        ptime:0,
+        loading:0
       }
     },
     created() {
 
       this.course_id = this.$route.params.course_id;
-      this.getCatalog()
+      this.getCatalog();
+      // 初始化保利威视uploader
+      this.videoUpload = new PlvVideoUpload({
+        events: {
+          Error: (err) => {  // 错误事件回调
+            this.$message.error(err||'上传失败')
+          },
+          UploadComplete: () => {
+            this.$message.success("上传成功！")
+          }  // 全部上传任务完成回调
+        }
+      });
     },
     methods: {
-      /*
-      * 获取courseid对应的目录
-      */
+      // 获取当前目录树
       getCatalog() {
         getCatalogTreeById({course_id: this.course_id}).then(response => {
           this.course = response.data
-          console.log(JSON.parse(this.course.catalogtree))
-          this.data = JSON.parse(this.course.catalogtree).catalogtree
-          this.getPlayList(this.data)
-         // console.log(this.current_id)
+          if(response.data.catalogtree !== null){
+            console.log(JSON.parse(this.course.catalogtree))
+            this.CatalogData = JSON.parse(this.course.catalogtree).catalogtree
+            this.getPlayList(this.CatalogData)
+          }
         }).catch(error => {
           console.log(error)
         })
       },
-      /**
-       *  深度遍历获取id
-       * */
       getPlayList(catalog){
         for(let i=0;i<catalog.length;i++){
           if(catalog[i].id > this.current_id){
@@ -114,12 +122,10 @@
           }
         }
       },
-      /*
-      * 保存新目录
-      */
+      // 更新目录树
       updateCatalog() {
-        console.log(this.data);
-        this.course.catalogtree = JSON.stringify({"catalogtree":this.data})
+        console.log(this.CatalogData);
+        this.course.catalogtree = JSON.stringify({"catalogtree":this.CatalogData})
         modifySystemCourseById(this.course).then(res => {
           console.log(res)
           this.$notify({
@@ -134,21 +140,16 @@
           });
         })
       },
-      /*
-      *
-      * 添加 子目录
-      */
+      // 添加新的子目录
       append(data) {
         console.log(data)
-        const newChild = {id:  ++this.current_id, label: '新目录', children: [], status: false}
+        const newChild = {id:  ++this.current_id, label: '新目录', type: false}
         if (!data.children) {
           this.$set(data, 'children', [])
         }
         data.children.push(newChild)
       },
-      /*
-      * 删除指定目录
-      */
+      //删除目录
       remove(node, data) {
         this.$confirm('确认删除该目录？', '删除提示', {
           confirmButtonText: '确认',
@@ -167,9 +168,7 @@
           return;
         })
       },
-      /*
-      * 编辑目录名
-      */
+      //编辑目录
       edit(node, data) {
         this.$prompt('设置目录名', '设置', {
           confirmButtonText: '确认',
@@ -182,19 +181,14 @@
           });
         })
       },
-      /*
-       * 添加新大章节
-       */
+      // 添加大目录
       appendMain() {
         const newChild = {id: ++this.current_id, label: '新目录', children: [], isTitle: true};
-        console.log(this.data)
-        this.data.push(newChild)
+        console.log(this.CatalogData)
+        this.CatalogData.push(newChild)
       },
-      /*
-       * 选取文件
-       */
+      // 添加文件
       addFile(file, filelist) {
-        console.log("on change...")
         if (file.size > this.maxSize * 1024 * 1024) {
           this.$notify.error({
             title: '错误',
@@ -204,56 +198,7 @@
         }
         this.fileList = filelist
       },
-      /*
-      * 进度条
-       */
-      progress(event, file, fileList) {
-        console.log(event);
-        this.percentage = Math.floor(event.percent)
-      },
-      /*
-      * 点击上传
-       */
-      uploadVideo(data) {
-        if (this.fileList.length !== 0) {
-          data.uploading = true;
-          this.tempData = data;
-          this.$refs.video.submit()
-        } else {
-          this.$notify({
-            title: '失败',
-            message: '请先选取要上传的文件',
-            type: 'error'
-          });
-        }
-      },
-      /*
-      * 上传成功
-       */
-      finish(response, file, fileList) {
-        this.percentage = 100;
-        this.tempData.status = true;
-        setTimeout(() => {
-          delete this.tempData.uploading;
-          this.percentage = 0;
-        }, 1000);
-        this.$notify({
-          title: '成功',
-          message: '上传成功！',
-          type: 'error'
-        });
-      },
-      /*
-      * 处理出错
-       */
-      handleError(err, file, fileList) {
-        delete this.tempData.uploading
-        this.$notify({
-          title: '出错',
-          message: '上传出错！',
-          type: 'error'
-        });
-      },
+      //设置vid
       addVid(node,data){
         console.log(node,data)
         this.$prompt('请输入该课程对应的Vid', '提示', {
@@ -274,6 +219,78 @@
             message: '取消输入'
           });
         });
+      },
+      /**
+       *  上传文件
+       * @param file
+       * @param fileList
+       */
+      uploadFile(data){
+        console.log(this.fileList)
+        let _this = this
+        let file = this.fileList[0]
+        if (file.size > this.maxSize * 1024 * 1024) {
+          this.$notify.error({
+            title: '错误',
+            message: '超出文件上传大小限制'
+          });
+          return;
+        }
+        let file_temp = {
+          title:'',
+          desc: '',  // 描述
+          cataid: '',  // 上传分类目录ID
+          tag: '',  // 标签
+          luping: 0,  // 是否开启视频课件优化处理，对于上传录屏类视频清晰度有所优化：0为不开启，1为开启
+          keepsource: 0  //
+        };
+        let uploadManager = this.videoUpload.addFile(
+          file.raw,
+          {
+            FileStarted: function(uploadInfo) { // 文件开始上传回调
+              console.log("文件上传开始: " + uploadInfo.fileData.title);
+            },
+            FileProgress: function(uploadInfo) { // 文件上传过程返回上传进度信息回调
+              console.log("文件上传中: " + (uploadInfo.progress * 100).toFixed(2) + '%');
+              _this.loading = (uploadInfo.progress * 100).toFixed(2) + '%'
+            },
+            FileStopped: function(uploadInfo) { // 文件暂停上传回调
+              console.log("文件上传停止: " + uploadInfo.fileData.title);
+            },
+            FileSucceed: function(uploadInfo) { // 文件上传成功回调
+              console.log(uploadInfo);
+              data.vid = uploadInfo.fileData.vid
+              data.type = true
+              _this.loading = 0
+            },
+            FileFailed: function(uploadInfo) { // 文件上传失败回调
+              console.log("文件上传失败: " + uploadInfo.fileData.title);
+            }
+          },
+          file_temp
+        );
+        _this.updateUpload()
+        _this.videoUpload.resumeFile(uploadManager.id)
+      },
+      /**
+       * 更新uploader
+       */
+      updateUpload(){
+        this.ptime = new Date().getTime();
+        this.videoUpload.updateUserData({
+          userid:this.user_id,
+          ptime:this.ptime,
+          sign:md5(this.secretkey+this.ptime),
+          hash:md5(this.ptime+this.write_token)
+        })
+      },
+      /**
+       *  删除文件回调
+       * @param file
+       * @param fileList
+       */
+      removeVid(file,fileList){
+        console.log(this.videoUpload)
       }
     }
   }
