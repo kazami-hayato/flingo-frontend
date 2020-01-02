@@ -31,7 +31,7 @@
         <el-table-column
           label="试卷名"
           align="center"
-          prop="test_title">
+          prop="exam_title">
         </el-table-column>
 
         <el-table-column
@@ -39,7 +39,7 @@
           align="center"
         >
           <template slot-scope="{row}">
-            {{test_type[row.test_no]}}
+            {{test_type[row.exam_type]}}
           </template>
         </el-table-column>
         <el-table-column
@@ -73,11 +73,14 @@
               v-if="row.match_course_id===null"
               @click="setCourse(row)">&nbsp设置试卷
             </el-button>
+
             <el-button
               class="el-icon-edit"
               size="mini"
               type="success"
-              @click="editTest(row)">&nbsp编辑试卷信息
+              v-else
+              disabled
+              @click="editTest(row)">&nbsp设置试卷
             </el-button>
           </template>
         </el-table-column>
@@ -90,9 +93,9 @@
         :visible.sync="testVisible"
         width="40%"
       >
-        <el-form :model="tempTest" label-width="140px" :label-position="'right'">
+        <el-form :model="tempExam" label-width="140px" :label-position="'right'">
           <el-form-item label="试卷名" required>
-            <el-input v-model="tempTest.test_title" style="width: 200px"/>
+            <el-input v-model="tempExam.exam_title" style="width: 200px"/>
           </el-form-item>
           <el-form-item label="试卷内容" required>
             <el-upload
@@ -105,7 +108,7 @@
             </el-upload>
           </el-form-item>
           <el-form-item label="试卷类型" required>
-            <el-select v-model="tempTest.test_no" placeholder="请选择">
+            <el-select v-model="tempExam.exam_type" placeholder="请选择">
               <el-option
                 v-for="item in [1,2,3,4,5]"
                 :key="item"
@@ -127,10 +130,10 @@
         :visible.sync="editTestVisible"
         width="40%"
       >
-        <el-form :model="tempTest" label-width="140px" :label-position="'center'">
+        <el-form :model="tempExam" label-width="140px" :label-position="'center'">
           <el-form-item label="选中课程信息">
-            <span>课程号：{{tempTest.match_course_id}}</span>
-            <span style="margin-left: 5px">课程名：{{tempTest.course_name}}</span>
+            <span>课程号：{{tempExam.match_course_id}}</span>
+            <span style="margin-left: 5px">课程名：{{tempExam.course_name}}</span>
           </el-form-item>
           <el-table
             ref="courseTable"
@@ -168,13 +171,13 @@
 
 <script>
   import {parseTime} from '@/utils/index.js'
-  import {createTest, deleteTest, modifyTest, getTests, getSystemCoursesByQuery} from '@/api/system_apis'
+  import {createExam, deleteExam, modifyExam, getExams, getSystemCoursesByQuery} from '@/api/system_apis'
   import Pagination from '@/components/Pagination' // secondary package based on el-pagination
   import {mapGetters} from 'vuex'
   import StuCourseDetail from "../../admin/student/component/StuCourseDetail";
 
   export default {
-    name: "TestRepo",
+    name: "ExamRepo",
     components: {StuCourseDetail, Pagination},
     data() {
       return {
@@ -188,7 +191,7 @@
         ],
         editTestVisible: false,
         testVisible: false,
-        tempTest: {},
+        tempExam: {},
         dialogVisible: false,
         fileList: [],
         total: 0,
@@ -217,15 +220,15 @@
     methods: {
       openCreateTest() {
         this.testVisible = true
-        this.tempTest = {}
+        this.tempExam = {}
       },
       editTest(row) {
 
       },
       handleCurrentChange(val) {
         if (val !== null) {
-          this.tempTest.match_course_id = val.course_id
-          this.tempTest.course_name = val.course_name
+          this.tempExam.match_course_id = val.course_id
+          this.tempExam.course_name = val.course_name
         }
       },
       getCourses() {
@@ -238,11 +241,11 @@
         this.getList()
       },
       handleQuizUpload(response, file) {
-        this.tempTest.content = response.data
+        this.tempExam.exam_content = response.data
       },
       handleCreateTest() {
 
-        createTest(this.tempTest).then(response => {
+        createExam(this.tempExam).then(response => {
           if (response.data === 1)
             this.$notify({
               title: '成功',
@@ -264,19 +267,19 @@
 
       },
       setCourse(row) {
-        this.tempTest = Object.assign({}, row)
+        this.tempExam = Object.assign({}, row)
         this.getCourses()
         this.editTestVisible = true
 
       },
       viewTest(row) {
         this.$router.push({
-          name: 'TestInfo',
-          params: {test_id: row.test_id}
+          name: 'ExamInfo',
+          params: {examination_id: row.examination_id}
         })
       },
       handleEdit() {
-        modifyTest(this.tempTest).then(() => {
+        modifyExam(this.tempExam).then(() => {
           this.editTestVisible = false
           this.getList()
         })
@@ -290,7 +293,7 @@
         }).then(() => {
           this.multipleSelection.forEach(item => {
             if (item.match_course_id === null)
-              deleteTest(item).then(() => {
+              deleteExam(item).then(() => {
                 this.getList()
                 this.$message({
                   type: 'success',
@@ -308,17 +311,12 @@
         });
 
       },
-      handleImportStu(row) {
-        //导入学生信息到该考期
-      },
-      handleImportCourse(row) {
 
-      },
       handleSelectionChange(val) {
         this.multipleSelection = val;
       },
       getList() {
-        getTests(this.listQuery).then(response => {
+        getExams(this.listQuery).then(response => {
           this.tableData = response.data
           this.total = response.total
         })

@@ -494,59 +494,48 @@ export function getShiftCourseById(data) {
     url: '/apis/v1/shift/courses/' + data.course_id,
     method: 'get',
   })
-  const response = {
-    code: 20000,
-    data: {
-      id: 1,
-      course_id: '121',
-      course_name: '高等数学',
-      course_brief: '简介',
-      update_time: '2019-12-11 16:44:55',
-      material_name: '教材名',
-      norm_duration: 12,
-      norm_num: 22,
-      norm_price: 799,
-      cross_price: 199,
-      sales: 12,
-      is_valid: 0 | 1,
-    }
-  }
 }
 
 
 export function shiftCourse(data) {
-  /*  data = {
-      course_id: 121,
-      norm_price: 799,
-      cross_price: 199,
-      sub_school: '鄂州大学'
-    }*/
   return request({
     url: '/apis/v1/shift/courses',
     method: 'post',
     data: data
   })
-  const response = {
-    code: 20000,
-    data: '上架成功'
-  }
 }
 
 export function unshiftCourse(data) {
-  /*  data = {
-      course_id: 121
-    }*/
   return request({
     url: '/apis/v1/shift/courses/' + data.course_id,
     method: 'delete',
   })
-  const response = {
-    code: 20000,
-    data: '下架成功'
-  }
 }
 
 export function updateShiftCourse(data) {
+  return request({
+    url: '/apis/v1/sales/update',
+    method: 'put',
+    data: data
+  })
+}
+
+export function validCourse(data) {
+  return request({
+    url: '/apis/v1/valid/courses',
+    method: 'post',
+    data: data
+  })
+}
+
+export function unvalidCourse(data) {
+  return request({
+    url: '/apis/v1/valid/courses/' + data.course_id,
+    method: 'delete',
+  })
+}
+
+export function updateValidCourse(data) {
   return request({
     url: '/apis/v1/sales/update',
     method: 'put',

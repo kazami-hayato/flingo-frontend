@@ -103,34 +103,42 @@ export function deleteSchools(data) {
 }
 
 
-export function getTests(data) {
+export function getExams(data) {
   return request({
-    url: '/apis/v1/system/tests',
+    url: '/apis/v1/system/exams',
     method: 'get',
     params: data
   })
-
 }
-export function createTest(data) {
+
+export function getExamById(data) {
   return request({
-    url: '/apis/v1/system/tests',
+    url: '/apis/v1/system/exams/'+data.examination_id,
+    method: 'get',
+    // params: data
+  })
+}
+
+export function createExam(data) {
+  return request({
+    url: '/apis/v1/system/exams',
     method: 'post',
     data: data
   })
 
 }
-export function modifyTest(data) {
+export function modifyExam(data) {
   return request({
-    url: '/apis/v1/system/tests',
+    url: '/apis/v1/system/exams',
     method: 'put',
     data: data
   })
 
 }
 
-export function deleteTest(data) {
+export function deleteExam(data) {
   return request({
-    url: '/apis/v1/system/tests/'+data.test_id,
+    url: '/apis/v1/system/exams/'+data.examination_id,
     method: 'delete',
   })
 

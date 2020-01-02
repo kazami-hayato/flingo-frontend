@@ -212,7 +212,7 @@ export const asyncRoutes = [
         name: 'Info',
         meta: {
           title: '课程信息',
-          roles: ['main_school', 'sub_school'] // or you can only set roles in sub nav
+          roles: ['main_school'] // or you can only set roles in sub nav
         }
       },
       {
@@ -224,7 +224,16 @@ export const asyncRoutes = [
           // if do not set roles, means: this page does not require permission
           roles: ['main_school', 'sub_school'] // or you can only set roles in sub nav
         }
-      }
+      },
+      {
+        path: 'SubCourseInfo',
+        component: () => import('@/views/admin/course/SubCourseInfo'),
+        name: 'SubCourseInfo',
+        meta: {
+          title: '课程信息',
+          roles: ['sub_school'] // or you can only set roles in sub nav
+        }
+      },
     ]
   },
 
@@ -332,11 +341,11 @@ export const asyncRoutes = [
   },
 
   {
-    path: '/testCenter',
+    path: '/examCenter',
     component: Layout,
-    redirect: '/testCenter/testRepo',
+    redirect: '/examCenter/testRepo',
     alwaysShow: true, // will always show the root menu
-    name: 'TestCenter',
+    name: 'ExamCenter',
     meta: {
       title: '试卷中心',
       icon: 'z_test',
@@ -344,18 +353,18 @@ export const asyncRoutes = [
     },
     children: [
       {
-        path: 'testRepo',
-        component: () => import('@/views/system/testCenter/testRepo'),
-        name: 'TestRepo',
+        path: 'examRepo',
+        component: () => import('@/views/system/examCenter/examRepo'),
+        name: 'ExamRepo',
         meta: {
           title: '试卷库',
           roles: ['system'] // or you can only set roles in sub nav
         }
       }, {
-        path: 'testRepo/:test_id(\\d+)',
-        component: () => import('@/views/system/testCenter/testInfo'),
+        path: 'examRepo/:examination_id(\\d+)',
+        component: () => import('@/views/system/examCenter/examInfo'),
         hidden: true,
-        name: 'TestInfo',
+        name: 'ExamInfo',
         meta: {
           title: '考卷详细',
           roles: ['system']

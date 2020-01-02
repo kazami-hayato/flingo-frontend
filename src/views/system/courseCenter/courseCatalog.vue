@@ -36,25 +36,6 @@
           <el-button type="text" size="large" @click="addVid(node,data)">
           设置Vid
           </el-button>
-          <!--<span v-show="!data.isTitle">-->
-          <!--<el-upload style="display: inline-block;" :auto-upload="false" ref="video"-->
-          <!--:file-list="fileList" :show-file-list="false" action="/dev-api/api/v1/shift/courses/video"-->
-          <!--accept="video/mp4"-->
-          <!--:on-change="addFile" :on-progress="progress" :on-success="finish" :on-error="handleError">-->
-          <!--<el-button type="text" size="mini">选取视频</el-button>-->
-          <!--<span style="font-size: 12px">(mp4文件,不超过{{maxSize}}mb)</span>-->
-          <!--</el-upload>-->
-          <!--<el-button type="text" size="mini" @click="uploadVideo(data)">上传</el-button>-->
-          <!--<div style="width: 100px;display: inline-block;font-size: 11px;" v-show="data.uploading">-->
-          <!--<el-progress :percentage="percentage" :text-inside="true" :stroke-width="12"/>-->
-          <!--</div>-->
-          <!--<div style="width: 100px;display: inline-block;font-size: 11px;" v-if="data.status">-->
-          <!--已上传-->
-          <!--</div>-->
-          <!--</span>-->
-          <!--<el-button type="text" size="large" @click="addVid(node,data)">-->
-          <!--设置Vid-->
-          <!--</el-button>-->
             <span v-show="!data.isTitle" style="position: relative;padding-left: 2px;">
               <el-upload type="file" style="display: inline-block;"
                          :on-change="addFile"
@@ -80,7 +61,6 @@
   </div>
 </template>
 <script>
-  // import {uploadCourseCatalog,getCourseCatalog} from '../../api/school-course'
   import {getCatalogTreeById, modifySystemCourseById} from '@/api/system_apis'
   import PlvVideoUpload from '@polyv/vod-upload-js-sdk'
   import md5 from 'js-md5'
@@ -150,9 +130,9 @@
       },
       // 更新目录树
       updateCatalog() {
-        console.log(this.data);
-        this.course.catalogtree = JSON.stringify({"catalogtree": this.data})
-        if (this.course.is_shift !== 1)
+        console.log(this.CatalogData);
+        this.course.catalogtree = JSON.stringify({"catalogtree": this.CatalogData})
+        if (this.course.is_shift !== 1) {
           modifySystemCourseById(this.course).then(res => {
             console.log(res)
             this.$notify({
@@ -166,6 +146,7 @@
               message: '保存出错'
             });
           })
+        }
         else {
           console.log(this.CatalogData);
           this.course.catalogtree = JSON.stringify({"catalogtree": this.CatalogData})
@@ -182,13 +163,12 @@
       },
       // 添加新的子目录
       append(data) {
-        console.log(data)
-        // const newChild = {id: ++this.current_id, label: '新目录', children: [], status: false}
         const newChild = {id: ++this.current_id, label: '新目录', type: false}
         if (!data.children) {
           this.$set(data, 'children', [])
         }
         data.children.push(newChild)
+        console.log(this.CatalogData)
       },
       //删除目录
       remove(node, data) {
@@ -238,56 +218,6 @@
           return;
         }
         this.fileList = filelist
-      },
-      /*
-      * 进度条
-       */
-      progress(event, file, fileList) {
-        console.log(event);
-        this.percentage = Math.floor(event.percent)
-      },
-      /*
-      * 点击上传
-       */
-      uploadVideo(data) {
-        if (this.fileList.length !== 0) {
-          data.uploading = true;
-          this.tempData = data;
-          this.$refs.video.submit()
-        } else {
-          this.$notify({
-            title: '失败',
-            message: '请先选取要上传的文件',
-            type: 'error'
-          });
-        }
-      },
-      /*
-      * 上传成功
-       */
-      finish(response, file, fileList) {
-        this.percentage = 100;
-        this.tempData.status = true;
-        setTimeout(() => {
-          delete this.tempData.uploading;
-          this.percentage = 0;
-        }, 1000);
-        this.$notify({
-          title: '成功',
-          message: '上传成功！',
-          type: 'error'
-        });
-      },
-      /*
-      * 处理出错
-       */
-      handleError(err, file, fileList) {
-        delete this.tempData.uploading
-        this.$notify({
-          title: '出错',
-          message: '上传出错！',
-          type: 'error'
-        });
       },
       //设置vid
       addVid(node, data) {
