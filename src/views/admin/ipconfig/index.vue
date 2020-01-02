@@ -4,29 +4,28 @@
     <div class="filter-container">
       <el-row>
         <el-col :span="2">
-          <el-button style="margin-left: 10px;" type="primary" icon="el-icon-edit"
+          <el-button  type="primary" size="medium" icon="el-icon-edit"
                      @click="dialogVisible = true">新增IP
           </el-button>
         </el-col>
-        <el-col :span="2">
+        <el-col :span="3">
           <el-button
             class="el-icon-upload"
             size="medium"
-            type="info"
+            type="primary"
             @click="uploadVisible=true">&nbsp导入学生信息
           </el-button>
         </el-col>
-        <el-col :span="2">
-          <el-button style="margin-left: 30px" type="success" class="el-icon-service"
+        <el-col :span="3">
+          <el-button type="success" class="el-icon-service"
                      @click="deleteChosen">&nbsp启动访问
           </el-button>
         </el-col>
-        <el-col :span="2">
-          <el-button style="margin-left: 30px;" type="danger" class="el-icon-circle-close"
+        <el-col :span="3">
+          <el-button  type="danger" class="el-icon-circle-close"
                      @click="deleteChosen">&nbsp停止访问
           </el-button>
         </el-col>
-
       </el-row>
     </div>
     <el-table

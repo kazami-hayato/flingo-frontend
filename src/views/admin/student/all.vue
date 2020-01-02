@@ -4,9 +4,9 @@
       <el-row>
         <el-col :span="16">
           <el-row type="flex" justify="start">
-            <el-input placeholder="请输入内容" v-model="listQuery.searchText" style="max-width: 400px">
+            <el-input placeholder="请输入内容" v-model="listQuery.searchText" style="max-width: 300px">
               <el-select v-model="listQuery.searchType" slot="prepend" placeholder="请选择"
-                         style="min-width: 130px; background: #1890FF;color: #fff">
+                         style="min-width: 120px; background: #1890FF;color: #fff">
                 <el-option label="考号/用户名" value='1'/>
                 <el-option label="身份证" value='2'/>
               </el-select>
@@ -14,7 +14,7 @@
                          style="background: #1890FF;color: #fff;border-radius: 0"/>
             </el-input>
 
-            <el-select v-model="sMainSchool" placeholder="主校选择" clearable style="margin-left: 5px;min-width: 150px">
+            <el-select v-model="sMainSchool" placeholder="主校选择" clearable style="margin-left: 5px;min-width: 100px">
               <el-option
                 v-for="item in MainschoolOptions"
                 :key="item"
@@ -22,7 +22,7 @@
                 :value="item">
               </el-option>
             </el-select>
-            <el-select v-model="sSubSchool" placeholder="分校选择" clearable style="margin-left: 5px;min-width: 150px">
+            <el-select v-model="sSubSchool" placeholder="分校选择" clearable style="margin-left: 5px;min-width: 100px">
               <el-option
                 v-for="item in SubschoolOptions"
                 :key="item"
