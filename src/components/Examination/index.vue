@@ -1,41 +1,68 @@
 <template>
   <div class="examination">
+    <el-form :model="examination" label-width="80px">
     <div class="exam-info">
-      <div class="exam-title">
+      <div class="exam-title" v-if="!isEditable">
         <div class="exam-detail">
           <h1>{{examination.examTitle}}</h1>
           <p>答题时间：{{examination.totalMinutes}}分钟&emsp;&emsp;总题数：{{examination.totalQuestions}}题&emsp;&emsp;总分：{{examination.totalScore}}分&emsp;&emsp;</p>
         </div>
+      </div>
+      <div class="exam-title"  v-else>
+        <div class="exam-detail">
+        <el-form-item label="试卷名称">
+          <el-input v-model="examination.examTitle"></el-input>
+        </el-form-item>
+        </div>
+      </div>
+      <div class="edit" v-show="!showAnswerPanel">
+        <el-button type="primary" icon="el-icon-edit" @click="edit">{{isEditable?'保存试卷':'试卷编辑'}}</el-button>
       </div>
     </div>
     <el-row type="flex" class="detail-panel">
       <el-col :span="17" class="question-panel">
 
         <div class="practice-item" v-for="(item,index) in examination.questions" :key="index">
-          <div class="practice-item-header">
+          <div class="practice-item-header" v-if="!isEditable">
             <span class="practice-item-num">{{index+1}}</span>
             <span class="practice-item-title">
                         <span>{{item.type === 1?'【单选】':'【多选】'}}</span>{{item.questionInfo}}
                     </span>
           </div>
+          <div  v-else>
+            <span class="practice-item-num"></span>
+            <el-form-item :label="index+1+'.题干'"  label-width="60px">
+              <el-input v-model="item.questionInfo"></el-input>
+            </el-form-item>
+          </div>
           <ul class="practice-item-option" data-exerid="26930886" data-score="2" data-type="xz">
             <li v-for="(answer,answerIndex) in item.answers" :key="answer.label"
                 @click="select(answerIndex,answer,index)">
-              <div style="display:flex">
+              <div style="display:flex" v-if="!isEditable">
                 <div :class="{'selected':item.myAnswer===answer.label,'answer-label':true}">{{answer.label}}</div>
                 {{answer.content}}
               </div>
+              <div v-else>
+                <el-form-item :label="answer.label"  label-width="20px">
+                  <el-input v-model="answer.content"></el-input>
+                </el-form-item>
+              </div>
             </li>
           </ul>
-          <div class="practice-item-operate am-cf">
-            <el-button type="primary" @click="mark(index)">{{item.marked===1?'取消标记':'标记此题'}}</el-button>
-          </div>
-          <div class="practice-item-result" v-show="isFinished">
+          <el-form-item label="正确答案"  label-width="80px" v-show="isEditable">
+            <el-select v-model="item.correctAnswer">
+              <el-option v-for="option in ['A','B','C','D']" :label="option" :key="option" :value="option"></el-option>
+            </el-select>
+          </el-form-item>
+          <!--<div class="practice-item-operate am-cf">-->
+            <!--<el-button type="primary" @click="mark(index)">{{item.marked===1?'取消标记':'标记此题'}}</el-button>-->
+          <!--</div>-->
+          <div class="practice-item-result" v-show="showAnswerPanel">
             <div class="practice-item-answer-right" v-if="item.myAnswer===item.correctAnswer">
               <i class="icon-right"/>您<span>答对</span>了
             </div>
             <div class="practice-item-answer-wrong" v-else-if="item.myAnswer===-1">
-              <!--              <i class="icon-wrong"/>您<span>答错</span>了-->
+
             </div>
             <div class="practice-item-answer-wrong" v-else>
               <i class="icon-wrong"/>您<span>答错</span>了
@@ -44,51 +71,23 @@
               <p>
                 <span class="symbol">【结果】</span>正确答案是：<span class="answer">{{item.correctAnswer}}</span>
               </p>
-              <!-- <p>
-                  <span class="symbol">【解析】</span>
-              </p> -->
             </div>
-            <!-- <div class="practice-item-count">
-
-                <span>平均正确率70%</span>
-            </div> -->
           </div>
         </div>
       </el-col>
       <el-col :span="6" class="funtion-panel" v-if="showAnswerPanel">
-        <!--        <div class="exam-timing">-->
-        <!--          <i class="el-icon-time">考试剩余时间 <span style="color:#5eb95e;font-weight:bold;">{{examTime}}</span> 分钟</i>-->
-        <!--        </div>-->
         <div class="answers-card">
           <div :class="{'answers':true,'answer-stick':isScrollHeightTo}">
             <h3>答题卡</h3>
-            <p style="color:red;font-size:21px;text-align:center;" v-show="isFinished">{{'得分：'+score+'分'}}</p>
+            <p style="color:red;font-size:21px;text-align:center;" v-show="showAnswerPanel">{{'得分：'+score+'分'}}</p>
             <p>点击图标跳转到对应的题目</p>
             <div class="answer-options">
               <div
-                :class="{'finished':item.myAnswer!==-1,'marked':item.marked === 1,'answer-item':true,'right':isFinished&&(item.myAnswer===item.correctAnswer),'wrong':isFinished&&(item.myAnswer!==item.correctAnswer)}"
+                :class="{'finished':item.myAnswer!==-1,'marked':item.marked === 1,'answer-item':true,'right':showAnswerPanel&&(item.myAnswer===item.correctAnswer),'wrong':showAnswerPanel&&(item.myAnswer!==item.correctAnswer)}"
                 v-for="(item,index) in examination.questions" :key="index" @click="toQuestion(index)">{{index+1}}
               </div>
             </div>
-            <el-button type="primary" style="width:100%;margin-bottom:20px;" @click="saveExam" v-show="!isFinished">
-              保存试卷
-            </el-button>
-            <!--            <el-button type="warning" style="width:100%;margin-bottom:20px;margin-left:0px;" @click="finishExam" v-show="!isFinished">我要交卷</el-button>-->
-            <div class="tips" v-if="!isFinished">
-            <span>
-              <i class="block finished"/>
-              已完成
-            </span>
-              <span>
-              <i class="block marked"/>
-              已标记
-            </span>
-              <span>
-              <i class="block unfinished"/>
-              未完成
-            </span>
-            </div>
-            <div class="tips" v-else>
+            <div class="tips">
             <span>
               <i class="block right"/>
               正确
@@ -97,20 +96,16 @@
               <i class="block wrong"/>
               错误
             </span>
-              <!-- <span>
-                <i class="block unfinished"></i>
-                未完成
-              </span> -->
             </div>
           </div>
         </div>
       </el-col>
     </el-row>
+    </el-form>
   </div>
 </template>
 
 <script>
-  import examinations from './examination'
   import {getExamById} from '@/api/system_apis'
 
   export default {
@@ -119,18 +114,14 @@
         type: Boolean,
         default: true
       },
-      showAnswerPanel: {
+      showAnswerPanel: { // 显示学生试卷 或 可编辑试卷
         type: Boolean,
-        default: false
+        default: true
       },
       examId: {
         type: Number,
         default: 0
       }
-      // examination: {
-      //   type: Object,
-      //   default: examinations,
-      // }
     },
     data() {
       return {
@@ -144,17 +135,14 @@
         isFinished: this.showAnswer,
         intervalFun: null,
         scrollHeight: 0,
-        isScrollHeightTo: false
+        isScrollHeightTo: false,
+        label_position:'left',
+        isEditable:false
       }
     },
     mounted() {
-      // this.getExamination()
       window.addEventListener('scroll', this.handleScroll, true)
-      // this.examination = examinations
       this.getExamination()
-      // this.examination
-      // console.log(this.examinations)
-      // this.setTiming()
     },
     computed: {
       /**
@@ -307,6 +295,24 @@
         else
           this.isScrollHeightTo = false
         //console.log(card)
+      },
+      /**
+       *  试卷编辑点击事件
+       */
+      edit(){
+        if(this.isEditable){ // 保存试卷
+           this.updateExamination().then(res => { // 保存成功
+             this.$message.success("保存成功！")
+             this.isEditable = !this.isEditable
+           }).catch(error => {
+             this.$message.error("保存失败！")
+           })
+        }else{ // 编辑试卷
+          this.isEditable = !this.isEditable
+        }
+      },
+      updateExamination(){
+          // 更新请求
       }
     }
   }
@@ -322,17 +328,16 @@
       background-color: #fff;
       padding: 5px 30px 5px 30px;
       border: 2px solid #e6e6e6;
-      height: 77px;
+      min-height: 77px;
       display: flex;
       justify-content: space-between;
 
       .exam-title {
-        float: left;
+        width: 100%;
 
         .exam-detail {
           display: inline-block;
           vertical-align: middle;
-
           h1 {
             font-size: 16px;
           }
@@ -343,7 +348,10 @@
           }
         }
       }
-
+      .edit{
+        height: 100%;
+        line-height: 60px;
+      }
       .goback {
         line-height: 77px;
         display: flex;
@@ -491,10 +499,7 @@
         }
 
         .answers-card {
-          // height: 540px;
           margin: 0px;
-          margin-top: 20px;
-
           .answers {
             padding: 10px 20px;
             background-color: #fff;

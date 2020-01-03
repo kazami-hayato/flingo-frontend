@@ -89,3 +89,7 @@
 .el-upload-list{
   display: inline-block;
 }
+.el-tabs--left, .el-tabs--right {
+  overflow: hidden;
+  width: 100%;
+}
