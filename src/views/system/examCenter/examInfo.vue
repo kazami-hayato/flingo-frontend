@@ -1,5 +1,5 @@
 <template>
-  <Examination/>
+  <Examination :examId="examination_id"/>
 </template>
 
 <script>
@@ -16,18 +16,9 @@
       }
     },
     created() {
-      this.examination_id = this.$route.params.examination_id
+      this.examination_id = parseInt(this.$route.params.examination_id)
       console.log(this.$route.params.examination_id)
-      this.getExamInfo()
     },
-    methods: {
-      getExamInfo() {
-        getExamById({examination_id: this.examination_id}).then(response => {
-          this.exam_content = JSON.parse(response.data.exam_content)
-          console.log(this.exam_content)
-        })
-      }
-    }
   }
 </script>
 

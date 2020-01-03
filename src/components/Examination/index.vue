@@ -34,6 +34,9 @@
             <div class="practice-item-answer-right" v-if="item.myAnswer===item.correctAnswer">
               <i class="icon-right"/>您<span>答对</span>了
             </div>
+            <div class="practice-item-answer-wrong" v-else-if="item.myAnswer===-1">
+              <!--              <i class="icon-wrong"/>您<span>答错</span>了-->
+            </div>
             <div class="practice-item-answer-wrong" v-else>
               <i class="icon-wrong"/>您<span>答错</span>了
             </div>
@@ -52,7 +55,7 @@
           </div>
         </div>
       </el-col>
-      <el-col :span="6" class="funtion-panel">
+      <el-col :span="6" class="funtion-panel" v-if="showAnswerPanel">
         <!--        <div class="exam-timing">-->
         <!--          <i class="el-icon-time">考试剩余时间 <span style="color:#5eb95e;font-weight:bold;">{{examTime}}</span> 分钟</i>-->
         <!--        </div>-->
@@ -108,41 +111,37 @@
 
 <script>
   import examinations from './examination'
+  import {getExamById} from '@/api/system_apis'
 
   export default {
+    props: {
+      showAnswer: {
+        type: Boolean,
+        default: true
+      },
+      showAnswerPanel: {
+        type: Boolean,
+        default: false
+      },
+      examId: {
+        type: Number,
+        default: 0
+      }
+      // examination: {
+      //   type: Object,
+      //   default: examinations,
+      // }
+    },
     data() {
       return {
         examination: {},
-        questions: [
-          {
-            type: 0,
-            questionInfo: '通过各种有关的事体来传达礼仪信息的媒体是（）',
-            answers: [
-              {label: 'A', content: '物体礼仪媒体'},
-              {label: 'B', content: '事体礼仪媒体'},
-              {label: 'C', content: '形体礼仪媒体'},
-              {label: 'D', content: '神体礼仪媒体'},
-            ],
-            questionId: '3534634634634'
-          },
-          {
-            type: 0,
-            questionInfo: '通过各种有关的事体来传达礼仪信息的媒体是（）',
-            answers: [
-              {label: 'A', content: '物体礼仪媒体'},
-              {label: 'B', content: '事体礼仪媒体'},
-              {label: 'C', content: '形体礼仪媒体'},
-              {label: 'D', content: '神体礼仪媒体'},
-            ],
-            questionId: '35346346fsdf34634'
-          },
-        ],
+        questions: [],
         examTime: '90:00',
         examTitle: '',
         totalMinutes: 0,
         totalQuestions: 0,
         totalScore: 0,
-        isFinished: true,
+        isFinished: this.showAnswer,
         intervalFun: null,
         scrollHeight: 0,
         isScrollHeightTo: false
@@ -151,7 +150,9 @@
     mounted() {
       // this.getExamination()
       window.addEventListener('scroll', this.handleScroll, true)
-      this.examination = examinations
+      // this.examination = examinations
+      this.getExamination()
+      // this.examination
       // console.log(this.examinations)
       // this.setTiming()
     },
@@ -163,7 +164,7 @@
        */
       score() {
         let temp = 0;
-        this.questions.forEach(item => {
+        this.examination.questions.forEach(item => {
           if (item.myAnswer === item.correctAnswer) {
             temp++
           }
@@ -221,8 +222,18 @@
         }, 1000)
       },
       getExamination() {
-        getExamination({data: {'examId': '842378523642', 'examinationId': 'r34534534'}}).then(res => {
-          this.examination = res.data
+        getExamById({examination_id: this.examId}).then(response => {
+          console.log(response)
+          let questions = JSON.parse(response.data.exam_content)
+          this.examination = Object.assign({},
+            {
+              questions: questions,
+              examTitle: response.data.exam_title,
+              totalQuestions: questions.length,
+              totalMinutes: 90,
+              totalScore: 100
+            }
+          )
           this.setTiming()
           // this.questions = res.data.questions
           // this.examTitle = res.data.examTitle

@@ -2,28 +2,37 @@
 
   <div class="app-container">
     <div class="filter-container">
-      <el-row>
+      <el-row type="flex">
         <el-col :span="2">
-          <el-button  type="primary" size="medium" icon="el-icon-edit"
-                     @click="dialogVisible = true">新增IP
+          <el-button
+            type="primary"
+            size="medium"
+            class="el-icon-edit"
+            @click="dialogVisible = true">&nbsp新增IP
           </el-button>
         </el-col>
-        <el-col :span="3">
+        <el-col :span="2">
           <el-button
             class="el-icon-upload"
             size="medium"
             type="primary"
-            @click="uploadVisible=true">&nbsp导入学生信息
+            @click="uploadVisible=true">&nbsp导入IP
           </el-button>
         </el-col>
-        <el-col :span="3">
-          <el-button type="success" class="el-icon-service"
-                     @click="deleteChosen">&nbsp启动访问
+        <el-col :span="2">
+          <el-button
+            type="success"
+            size="medium"
+            class="el-icon-service"
+            @click="startChosen">&nbsp启动IP
           </el-button>
         </el-col>
-        <el-col :span="3">
-          <el-button  type="danger" class="el-icon-circle-close"
-                     @click="deleteChosen">&nbsp停止访问
+        <el-col :span="2">
+          <el-button
+            type="danger"
+            size="medium"
+            class="el-icon-circle-close"
+            @click="deleteChosen">&nbsp停止IP
           </el-button>
         </el-col>
       </el-row>
@@ -66,8 +75,8 @@
         align="center"
         min-width="120">
         <template slot-scope="{row}">
-          <el-tag style="margin-left: 5px;border-radius: 0" v-if="row.is_allowed===0">未开启</el-tag>
-          <el-tag style="margin-left: 5px;border-radius: 0" v-else>已经开启</el-tag>
+          <el-tag type="danger" style="margin-left: 5px;border-radius: 0" v-if="row.is_allowed===0">未开启</el-tag>
+          <el-tag type="success" style="margin-left: 5px;border-radius: 0" v-else>已经开启</el-tag>
         </template>
       </el-table-column>
       <el-table-column
@@ -131,7 +140,7 @@
 </template>
 
 <script>
-  import {addIP, getIPS, removeIP} from '@/api/apis'
+  import {addIP, getIPS, removeIP,startIP,forbidIP} from '@/api/apis'
   import {Current} from '@/utils/time'
   import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
@@ -185,7 +194,14 @@
       },
       deleteChosen() {
         this.chosenList.forEach(item => {
-          removeIP({ip_id: item}).then(() => {
+          forbidIP({ip_id: item}).then(() => {
+            this.getList()
+          })
+        })
+      },
+      startChosen() {
+        this.chosenList.forEach(item => {
+          startIP({ip_id: item}).then(() => {
             this.getList()
           })
         })

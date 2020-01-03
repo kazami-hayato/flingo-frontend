@@ -565,31 +565,29 @@ export function getIPS(data) {
 }
 
 export function addIP(data) {
-  /*  data = {
-      ip:'192.168.1.1',
-      add_date:'2019-11-12 15:33:11',
-      operator:'xxx'
-    }*/
   return request({
     url: '/apis/v1/ips',
     method: 'post',
     data: data
   })
 }
-
-export function removeIP(data) {
-  /*  data = {
-      ip_id:11,
-      ip:'192.166.12.11'
-    }*/
+export function startIP(data) {
+  return request({
+    url: '/apis/v1/ips/' + data.ip_id,
+    method: 'put',
+  })
+}
+export function forbidIP(data) {
   return request({
     url: '/apis/v1/ips/' + data.ip_id,
     method: 'delete',
   })
-  const response = {
-    code: 20000,
-    data: '添加成功'
-  }
+}
+export function removeIP(data) {
+  return request({
+    url: '/apis/v1/ips/' + data.ip_id,
+    method: 'delete',
+  })
 }
 
 /*

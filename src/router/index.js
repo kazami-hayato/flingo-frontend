@@ -81,6 +81,18 @@ export const constantRoutes = [
       }
     ]
   },
+  {
+    path: '/studyCatch',
+    component: Layout,
+    children: [
+      {
+        path: 'studyCatch',
+        component: () => import('@/views/Catch'),
+        name: 'Dashboard',
+        meta: {title: '抓拍', icon: 'z_photo', affix: true}
+      }
+    ]
+  },
 
   {
     path: '/profile',

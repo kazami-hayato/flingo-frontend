@@ -1,36 +1,418 @@
 [
   {
-    "type": 1,
-    "questionInfo": "",
-    "questionId": 0,
     "marked": 0,
+    "questionId": 0,
     "answers": [
       {
         "label": "A",
-        "content": ""
+        "content": "典章制度"
       },
       {
         "label": "B",
-        "content": ""
+        "content": "礼节仪式"
       },
       {
         "label": "C",
-        "content": ""
+        "content": "唐朝"
       },
       {
         "label": "D",
-        "content": ""
+        "content": "宋朝"
       }
     ],
-    "correctAnswer": [
-      "A"
+    "myAnswer": -1,
+    "type": 1,
+    "questionInfo": "宋玉《登徒子好色赋》：“傅粉则太白，施朱则太赤”是说那个朝代（）",
+    "correctAnswer": "A"
+  },
+  {
+    "marked": 0,
+    "questionId": 1,
+    "answers": [
+      {
+        "label": "A",
+        "content": "典章制度"
+      },
+      {
+        "label": "B",
+        "content": "礼节仪式"
+      },
+      {
+        "label": "C",
+        "content": "道德规范"
+      },
+      {
+        "label": "D",
+        "content": "规章制度"
+      }
     ],
-    "myAnswer": [
-      "A",
-      "B",
-      "C",
-      "D",
-      -1
-    ]
+    "myAnswer": -1,
+    "type": 1,
+    "questionInfo": "我国古代礼仪的三层基本含义不包括（）",
+    "correctAnswer": "D"
+  },
+  {
+    "marked": 0,
+    "questionId": 2,
+    "answers": [
+      {
+        "label": "A",
+        "content": "个人礼仪"
+      },
+      {
+        "label": "B",
+        "content": "公关礼仪"
+      },
+      {
+        "label": "C",
+        "content": "书写礼仪"
+      },
+      {
+        "label": "D",
+        "content": "接待礼仪"
+      }
+    ],
+    "myAnswer": -1,
+    "type": 1,
+    "questionInfo": "（）是一切礼仪的基础，是实施个人礼仪的第一步",
+    "correctAnswer": "A"
+  },
+  {
+    "marked": 0,
+    "questionId": 3,
+    "answers": [
+      {
+        "label": "A",
+        "content": "1cm"
+      },
+      {
+        "label": "B",
+        "content": "2cm"
+      },
+      {
+        "label": "C",
+        "content": "1.5cm"
+      },
+      {
+        "label": "D",
+        "content": "4cm"
+      }
+    ],
+    "myAnswer": -1,
+    "type": 1,
+    "questionInfo": "西装的袖长达到手腕为宜，衬衫的袖长应比上衣袖口长（）",
+    "correctAnswer": "C"
+  },
+  {
+    "marked": 0,
+    "questionId": 4,
+    "answers": [
+      {
+        "label": "A",
+        "content": "诚实守信"
+      },
+      {
+        "label": "B",
+        "content": "注重沟通"
+      },
+      {
+        "label": "C",
+        "content": "尊重风俗"
+      },
+      {
+        "label": "D",
+        "content": "维护形象"
+      }
+    ],
+    "myAnswer": -1,
+    "type": 1,
+    "questionInfo": "交际原则核心问题中，尊重及满足相互间获得尊重的需求首要原则是（）",
+    "correctAnswer": "A"
+  },
+  {
+    "marked": 0,
+    "questionId": 5,
+    "answers": [
+      {
+        "label": "A",
+        "content": "上午8点"
+      },
+      {
+        "label": "B",
+        "content": "中午12点"
+      },
+      {
+        "label": "C",
+        "content": "上午10点"
+      },
+      {
+        "label": "D",
+        "content": "下午5点"
+      }
+    ],
+    "myAnswer": -1,
+    "type": 1,
+    "questionInfo": "在做客到他人房间或者住所拜访时应提前安排时间，最佳时间时（）",
+    "correctAnswer": "C"
+  },
+  {
+    "marked": 0,
+    "questionId": 6,
+    "answers": [
+      {
+        "label": "A",
+        "content": "内容"
+      },
+      {
+        "label": "B",
+        "content": "情感"
+      },
+      {
+        "label": "C",
+        "content": "声音"
+      },
+      {
+        "label": "D",
+        "content": "手势"
+      }
+    ],
+    "myAnswer": -1,
+    "type": 1,
+    "questionInfo": "通话者的（）态度和使用的言语被人们称做“电话三要素”。",
+    "correctAnswer": "C"
+  },
+  {
+    "marked": 0,
+    "questionId": 7,
+    "answers": [
+      {
+        "label": "A",
+        "content": "烟、酒"
+      },
+      {
+        "label": "B",
+        "content": "书画"
+      },
+      {
+        "label": "C",
+        "content": "纪念章"
+      },
+      {
+        "label": "D",
+        "content": "产品模型"
+      }
+    ],
+    "myAnswer": -1,
+    "type": 1,
+    "questionInfo": "下列哪些是不允许正式赠予的（）",
+    "correctAnswer": "A"
+  },
+  {
+    "marked": 0,
+    "questionId": 8,
+    "answers": [
+      {
+        "label": "A",
+        "content": "仪容仪表"
+      },
+      {
+        "label": "B",
+        "content": "服饰打扮"
+      },
+      {
+        "label": "C",
+        "content": "气质"
+      },
+      {
+        "label": "D",
+        "content": "仪态"
+      }
+    ],
+    "myAnswer": -1,
+    "type": 1,
+    "questionInfo": "礼仪是一个人性格、（）、文化程度、道德修养的外化。",
+    "correctAnswer": "C"
+  },
+  {
+    "marked": 0,
+    "questionId": 9,
+    "answers": [
+      {
+        "label": "A",
+        "content": "双眉到鼻尖的三角区域内"
+      },
+      {
+        "label": "B",
+        "content": "上半身"
+      },
+      {
+        "label": "C",
+        "content": "胸部"
+      },
+      {
+        "label": "D",
+        "content": "眼睛"
+      }
+    ],
+    "myAnswer": -1,
+    "type": 1,
+    "questionInfo": "在社交场合初次见面或与人交谈时，双方应该注视对方的（）才不算失礼。",
+    "correctAnswer": "A"
+  },
+  {
+    "marked": 0,
+    "questionId": 10,
+    "answers": [
+      {
+        "label": "A",
+        "content": "尊者优先了解情况"
+      },
+      {
+        "label": "B",
+        "content": "先将女士介绍给男士"
+      },
+      {
+        "label": "C",
+        "content": "先将职位低的介绍给职位高的   "
+      },
+      {
+        "label": "D",
+        "content": "先将年轻的介绍给年长的"
+      }
+    ],
+    "myAnswer": -1,
+    "type": 1,
+    "questionInfo": "居中介绍中哪项规则是错误的（）",
+    "correctAnswer": "B"
+  },
+  {
+    "marked": 0,
+    "questionId": 11,
+    "answers": [
+      {
+        "label": "A",
+        "content": "“给予”"
+      },
+      {
+        "label": "B",
+        "content": "“提供”   "
+      },
+      {
+        "label": "C",
+        "content": "“介绍”"
+      },
+      {
+        "label": "D",
+        "content": "“坦诚相待”"
+      }
+    ],
+    "myAnswer": -1,
+    "type": 1,
+    "questionInfo": "中国人同西方人都是好客的，中国人的待客之道是“给予”，西方人的待客之道是（ ）",
+    "correctAnswer": "B"
+  },
+  {
+    "marked": 0,
+    "questionId": 12,
+    "answers": [
+      {
+        "label": "A",
+        "content": "圣纪节"
+      },
+      {
+        "label": "B",
+        "content": "开斋节"
+      },
+      {
+        "label": "C",
+        "content": "成道节"
+      },
+      {
+        "label": "D",
+        "content": "谢肉节"
+      }
+    ],
+    "myAnswer": -1,
+    "type": 1,
+    "questionInfo": "下列属于基督教节日的是()。",
+    "correctAnswer": "D"
+  },
+  {
+    "marked": 0,
+    "questionId": 13,
+    "answers": [
+      {
+        "label": "A",
+        "content": "大师"
+      },
+      {
+        "label": "B",
+        "content": "三藏法师"
+      },
+      {
+        "label": "C",
+        "content": "经师 "
+      },
+      {
+        "label": "D",
+        "content": "论师"
+      }
+    ],
+    "myAnswer": -1,
+    "type": 1,
+    "questionInfo": "在佛教中精通经藏或善于诵读经文的僧人称为()。",
+    "correctAnswer": "C"
+  },
+  {
+    "marked": 0,
+    "questionId": 14,
+    "answers": [
+      {
+        "label": "A",
+        "content": "歌墟节"
+      },
+      {
+        "label": "B",
+        "content": "三月街"
+      },
+      {
+        "label": "C",
+        "content": "火把节"
+      },
+      {
+        "label": "D",
+        "content": "泼水节"
+      }
+    ],
+    "myAnswer": -1,
+    "type": 1,
+    "questionInfo": "属于壮族的节日是（ ）。",
+    "correctAnswer": "A"
+  },
+  {
+    "marked": 0,
+    "questionId": 15,
+    "answers": [
+      {
+        "label": "A",
+        "content": "餐桌上"
+      },
+      {
+        "label": "B",
+        "content": "餐巾上"
+      },
+      {
+        "label": "C",
+        "content": "菜单上"
+      },
+      {
+        "label": "D",
+        "content": "食盘上"
+      }
+    ],
+    "myAnswer": -1,
+    "type": 1,
+    "questionInfo": "西餐中表示这一道菜不用了，应该将刀、叉放在（） 。",
+    "correctAnswer": "D"
   }
 ]
