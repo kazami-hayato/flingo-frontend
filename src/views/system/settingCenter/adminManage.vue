@@ -100,7 +100,7 @@
         <el-form-item label="输入密码">
           <el-input v-model="tempAdmin.password"/>
         </el-form-item>
-        <el-form-item label="输入分校名称">
+        <el-form-item label="重新输入密码">
           <el-input type="password" v-model="tempAdmin.password_confirm"/>
         </el-form-item>
         <el-row>

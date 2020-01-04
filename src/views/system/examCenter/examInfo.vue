@@ -1,5 +1,5 @@
 <template>
-  <Examination :examId="examination_id"/>
+  <Examination :examId="examination_id" />
 </template>
 
 <script>
