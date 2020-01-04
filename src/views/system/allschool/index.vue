@@ -261,7 +261,7 @@
               type: 'error'
             });
           this.getList()
-          this.tempSchool = []
+          this.tempSchool = {}
         })
         this.dialogVisible = false
 
