@@ -135,7 +135,7 @@
       },
       openCatch(row) {
         this.$router.push({
-          name: 'Examination',
+          name: 'StudyCatch',
           params: {exam_id: row.exam_id, course_id: row.course_id}
         })
       },
