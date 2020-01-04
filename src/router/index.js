@@ -82,14 +82,30 @@ export const constantRoutes = [
     ]
   },
   {
-    path: '/studyCatch',
+    path: '/catch',
     component: Layout,
+    // hidden:true,
     children: [
       {
-        path: 'studyCatch',
-        component: () => import('@/views/Catch'),
-        name: 'Dashboard',
-        meta: {title: '抓拍', icon: 'z_photo', affix: true}
+        path: ':exam_id(\\d+)/:course_id(\\d+)',
+        component: () => import('@/views/catch'),
+        name: 'StudyCatch',
+        hidden:true,
+        meta: {title: '抓拍', noCache: true}
+      }
+    ]
+  },
+  {
+    path: '/examination',
+    component: Layout,
+    // hidden:true,
+    children: [
+      {
+        path: ':exam_id(\\d+)/:course_id(\\d+)/:exam_type(\\d+)',
+        component: () => import('@/views/examination'),
+        name: 'Examination',
+        hidden:true,
+        meta: {title: '抓拍', noCache: true}
       }
     ]
   },

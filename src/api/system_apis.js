@@ -1,4 +1,5 @@
 import request from '@/utils/request'
+
 //课程中心
 export function getSystemCoursesByQuery(data) {
   return request({
@@ -7,6 +8,7 @@ export function getSystemCoursesByQuery(data) {
     params: data
   })
 }
+
 //包括目录树更新
 export function modifySystemCourseById(data) {
   return request({
@@ -31,10 +33,6 @@ export function getCoursesSale(data) {
     params: data
   })
 }
-
-
-
-
 
 
 export function getCatalogTreeById(data) {
@@ -96,7 +94,7 @@ export function modifySchools(data) {
 
 export function deleteSchools(data) {
   return request({
-    url: '/apis/v1/system/schools/'+data.school_id,
+    url: '/apis/v1/system/schools/' + data.school_id,
     method: 'delete',
   })
 
@@ -113,7 +111,7 @@ export function getExams(data) {
 
 export function getExamById(data) {
   return request({
-    url: '/apis/v1/system/exams/'+data.examination_id,
+    url: '/apis/v1/system/exams/' + data.examination_id,
     method: 'get',
     // params: data
   })
@@ -127,6 +125,7 @@ export function createExam(data) {
   })
 
 }
+
 export function modifyExam(data) {
   return request({
     url: '/apis/v1/system/exams',
@@ -138,33 +137,34 @@ export function modifyExam(data) {
 
 export function deleteExam(data) {
   return request({
-    url: '/apis/v1/system/exams/'+data.examination_id,
+    url: '/apis/v1/system/exams/' + data.examination_id,
     method: 'delete',
   })
 
 }
 
 
-export function getAdminsSystem(data){
+export function getAdminsSystem(data) {
   return request({
     url: '/apis/v1/system/admins',
     method: 'get',
-    params:data
+    params: data
   })
 }
 
-export function createAdminsSystem(data){
+export function createAdminsSystem(data) {
   return request({
     url: '/apis/v1/system/admins',
     method: 'post',
-    data:data
+    data: data
   })
 }
-export function updateAdminsSystem(data){
+
+export function updateAdminsSystem(data) {
   return request({
     url: '/apis/v1/system/admins',
     method: 'put',
-    data:data
+    data: data
   })
 }
 
@@ -172,7 +172,7 @@ export function getStudentsSystem(data) {
   return request({
     url: '/apis/v1/system/students',
     method: 'get',
-    params:data
+    params: data
   })
 }
 
@@ -180,7 +180,7 @@ export function getStudentsSystemByTag(data) {
   return request({
     url: '/apis/v1/system/students/tag',
     method: 'get',
-    params:data
+    params: data
   })
 }
 
@@ -189,14 +189,15 @@ export function createStudentSystem(data) {
   return request({
     url: '/apis/v1/system/students',
     method: 'post',
-    data:data
+    data: data
   })
 }
+
 export function updateStudentSystem(data) {
   return request({
     url: '/apis/v1/system/students',
     method: 'put',
-    data:data
+    data: data
   })
 }
 
@@ -205,7 +206,19 @@ export function getPasswordSystem(data) {
   return request({
     url: '/apis/v1/system/students/password',
     method: 'get',
-    params:data
+    params: data
   })
 }
 
+export function getStudyCatch(data) {
+  return request({
+    url:'apis/v1/system/students/catch',
+    params:data
+  })
+}
+export function getStuExamByParams(data) {
+  return request({
+    url:'apis/v1/system/students/examination',
+    params:data
+  })
+}

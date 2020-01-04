@@ -130,7 +130,7 @@
   import {parseTime} from '@/utils'
   import Pagination from '@/components/Pagination' // secondary package based on el-pagination
   // import XLSX from 'xlsx'
-  import StudentDetail from "../../admin/student/component/StudentDetail";
+  import StudentDetail from "./component/StudentDetail";
 
   export default {
     name: 'TagInfo',
