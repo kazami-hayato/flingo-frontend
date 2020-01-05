@@ -212,13 +212,30 @@ export function getPasswordSystem(data) {
 
 export function getStudyCatch(data) {
   return request({
-    url:'apis/v1/system/students/catch',
-    params:data
+    url: '/apis/v1/system/students/catch',
+    params: data
   })
 }
+
 export function getStuExamByParams(data) {
   return request({
-    url:'apis/v1/system/students/examination',
-    params:data
+    url: '/apis/v1/system/students/examination',
+    params: data
+  })
+}
+
+export function getCurrentReport(data) {
+  return request({
+    url: '/apis/v1/static/down_current',
+    params: data,
+    returnType: 'arraybuffer'
+  })
+}
+
+export function getHistoryReport(data) {
+  return request({
+    url: '/apis/v1/static/down_history',
+    params: data,
+    returnType: 'arraybuffer'
   })
 }

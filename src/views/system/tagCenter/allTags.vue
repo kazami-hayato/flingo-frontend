@@ -68,7 +68,7 @@
               size="mini"
               type="success"
               class="el-icon-download"
-              @click="handleImportStu(row)">&nbsp导出成绩
+              @click="handleExport(row)">&nbsp导出成绩
             </el-button>
           </template>
         </el-table-column>
@@ -113,7 +113,7 @@
       >
         <el-form :model="tempTag" label-width="140px" :label-position="'right'">
           <el-form-item label="考期名" required>
-            <el-input v-model="tempTag.tag_name" style="width: 200px" />
+            <el-input v-model="tempTag.tag_name" style="width: 200px"/>
           </el-form-item>
           <el-form-item label="考期结束时间" required>
             <el-date-picker
@@ -162,20 +162,27 @@
 
 <script>
   import {getTags} from '@/api/apis'
-  import {createTag, deleteTag,modifyTag} from '@/api/system_apis'
+  import {createTag, getHistoryReport, deleteTag, modifyTag} from '@/api/system_apis'
   import Pagination from '@/components/Pagination' // secondary package based on el-pagination
   import {mapGetters} from 'vuex'
+  import {FileSaver, saveAs} from 'file-saver'
   import StuCourseDetail from "./component/StuCourseDetail";
+  import axios from 'axios'
+
 
   export default {
     name: "AllTags",
     components: {StuCourseDetail, Pagination},
     data() {
       return {
-        editTagVisible:false,
-        tagVisible: false,
-        tempTag: {
+        reportQuery: {
+          main_school: '',
+          sub_school: '',
+          tag: '',
         },
+        editTagVisible: false,
+        tagVisible: false,
+        tempTag: {},
         dialogVisible: false,
         fileList: [],
         total: 0,
@@ -195,20 +202,20 @@
         console.log(this.tempTag)
         createTag(this.tempTag).then(() => {
           this.getList()
-          this.tagVisible=false
+          this.tagVisible = false
         })
       },
       handleUpload(response, file) {
 
       },
-      editTag(row){
-        this.editTagVisible=true
-        this.tempTag=row
+      editTag(row) {
+        this.editTagVisible = true
+        this.tempTag = row
       },
-      handleEdit(){
-        modifyTag(this.tempTag).then(()=>{
-          this.editTagVisible=false
-          this.tempTag={}
+      handleEdit() {
+        modifyTag(this.tempTag).then(() => {
+          this.editTagVisible = false
+          this.tempTag = {}
           this.getList()
         })
       },
@@ -236,12 +243,22 @@
         });
 
       },
-      handleImportStu(row) {
-        //导入学生信息到该考期
+      handleExport(row) {
+        this.reportQuery.tag = row.tag_name
+        const filename=this.reportQuery.main_school+'_'+this.reportQuery.sub_school+'_'
+          +this.reportQuery.tag+'_学生成绩表.xls'
+        axios({
+          url: '/apis/v1/static/down_history',
+          method: 'get',
+          params: this.reportQuery,
+          responseType: 'blob'     //接收类型设置，否者返回字符型
+        })
+          .then(res => {
+            console.log(res)//定义文件名等相关信息
+            saveAs(res.data,filename)
+          })
       },
-      handleImportCourse(row) {
 
-      },
       handleSelectionChange(val) {
         this.multipleSelection = val;
       },

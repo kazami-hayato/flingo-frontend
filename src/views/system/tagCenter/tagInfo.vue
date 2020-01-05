@@ -13,10 +13,10 @@
         </el-col>
         <el-col :span="8">
           <el-row type="flex" justify="end">
-            <el-button class="filter-item" type="success" icon="el-icon-download"
-                       @click="handleExport">
-              导出学生信息
-            </el-button>
+            <!--            <el-button class="filter-item" type="success" icon="el-icon-download"-->
+            <!--                       @click="handleExport">-->
+            <!--              导出学生信息-->
+            <!--            </el-button>-->
             <el-button class="filter-item" type="success" icon="el-icon-download"
                        @click="handleExport">
               导出成绩
@@ -125,19 +125,25 @@
 
 <script>
 
-  import {getStudentsSystem, createStudentSystem, updateStudentSystem} from '@/api/system_apis'
+  import {getStudentsSystem, createStudentSystem, updateStudentSystem, getCurrentReport} from '@/api/system_apis'
 
   import {parseTime} from '@/utils'
   import Pagination from '@/components/Pagination' // secondary package based on el-pagination
   // import XLSX from 'xlsx'
   import StudentDetail from "./component/StudentDetail";
+  import {saveAs} from 'file-saver'
+  import axios from 'axios'
 
   export default {
     name: 'TagInfo',
     components: {StudentDetail, Pagination},
     data() {
       return {
-        //
+
+        reportQuery: {
+          main_school: '',
+          sub_school: '',
+        },
         tableKey: 0,
         //学生表
         list: [],
@@ -195,7 +201,7 @@
         return '';
       },
       //请求数据
-      handleSearch(){
+      handleSearch() {
         this.getList()
       },
       getList() {
@@ -269,6 +275,18 @@
       }
       ,
       handleExport() {
+        const filename = this.reportQuery.main_school + '_' + this.reportQuery.sub_school + '_'
+          + this.reportQuery.tag + '_学生成绩表.xls'
+        axios({
+          url: '/apis/v1/static/down_current',
+          method: 'get',
+          params: this.reportQuery,
+          responseType: 'blob'     //接收类型设置，否者返回字符型
+        })
+          .then(res => {
+            console.log(res)//定义文件名等相关信息
+            saveAs(res.data, filename)
+          })
       }
     },
   }

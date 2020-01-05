@@ -64,7 +64,7 @@
               size="mini"
               type="warning"
               class="el-icon-download"
-              @click="handleImportStu(row)">&nbsp导出成绩
+              @click="handleExport(row)">&nbsp导出成绩
             </el-button>
           </template>
         </el-table-column>
@@ -111,12 +111,19 @@
   import Pagination from '@/components/Pagination' // secondary package based on el-pagination
   import {mapGetters} from 'vuex'
   import StuCourseDetail from "./component/StuCourseDetail";
+  import axios from 'axios'
+  import {saveAs} from "file-saver";
 
   export default {
     name: "tag",
     components: {StuCourseDetail, Pagination},
     data() {
       return {
+        reportQuery: {
+          main_school: this.$store.state.user.main_school,
+          sub_school: this.$store.state.user.sub_school,
+          tag: '',
+        },
         dialogVisible: false,
         fileList: [],
         fileList1: [],
@@ -150,7 +157,22 @@
           this.tableData = response.data
           this.total = response.total
         })
-      }
+      },
+      handleExport(row) {
+        this.reportQuery.tag = row.tag_name
+        const filename=this.reportQuery.main_school+'_'+this.reportQuery.sub_school+'_'
+          +this.reportQuery.tag+'_学生成绩表.xls'
+        axios({
+          url: '/apis/v1/static/down_history',
+          method: 'get',
+          params: this.reportQuery,
+          responseType: 'blob'     //接收类型设置，否者返回字符型
+        })
+          .then(res => {
+            console.log(res)//定义文件名等相关信息
+            saveAs(res.data,filename)
+          })
+      },
     }
   }
 </script>

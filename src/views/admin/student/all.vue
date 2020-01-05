@@ -37,10 +37,10 @@
         </el-col>
         <el-col :span="8">
           <el-row type="flex" justify="end">
-            <el-button class="filter-item" type="warning" icon="el-icon-download"
-                       @click="handleExport">
-              导出学生信息
-            </el-button>
+<!--            <el-button class="filter-item" type="warning" icon="el-icon-download"-->
+<!--                       @click="handleExport">-->
+<!--              导出学生信息-->
+<!--            </el-button>-->
             <el-button class="filter-item" type="warning" icon="el-icon-download"
                        @click="handleExport">
               导出成绩
@@ -212,12 +212,19 @@
   import Pagination from '@/components/Pagination' // secondary package based on el-pagination
   // import XLSX from 'xlsx'
   import StudentDetail from "./component/StudentDetail";
+  import axios from "axios";
+  import {saveAs} from "file-saver";
 
   export default {
     name: 'all',
     components: {StudentDetail, Pagination},
     data() {
       return {
+        reportQuery: {
+          main_school: this.$store.state.user.main_school,
+          sub_school: this.$store.state.user.sub_school,
+          tag: '',
+        },
         //
         tableKey: 0,
         //学生表
@@ -489,17 +496,18 @@
         this.getList()
       },
       handleExport() {
-        import('@/vendor/Export2Excel').then(excel => {
-          const tHeader = ['ID', '准考证号', '分校名', '性别', '姓名', '手机', '身份证号', '注册日期']
-          const filterVal = ['id', 'exam_id', 'sub_school', 'tag', 'student_name', 'phone', 'id_card', 'register_date']
-          const data = this.formatJson(filterVal, this.list)
-          excel.export_json_to_excel({
-            header: tHeader,
-            data,
-            filename: 'student'
-          })
-          // this.downloadLoading = false
+        const filename=this.reportQuery.main_school+'_'+this.reportQuery.sub_school+'_'
+          +this.reportQuery.tag+'_学生成绩表.xls'
+        axios({
+          url: '/apis/v1/static/down_history',
+          method: 'get',
+          params: this.reportQuery,
+          responseType: 'blob'     //接收类型设置，否者返回字符型
         })
+          .then(res => {
+            console.log(res)//定义文件名等相关信息
+            saveAs(res.data,filename)
+          })
       },
       formatJson(filterVal, jsonData) {
         return jsonData.map(v => filterVal.map(j => {
