@@ -151,12 +151,29 @@
       :visible.sync="dialogVisible"
       width="40%"
     >
-      <span>输入新课程号</span>
-      <el-input style="margin-top: 12px" placeholder="请输入内容" v-model="tempCourse.course_id"/>
-      <span slot="footer" class="dialog-footer">
+      <el-form ref="tempCourse" label-width="100px" :rules="rules" :model="tempCourse">
+        <el-form-item label="输入课程号" prop="title">
+          <el-input v-model="tempCourse.course_id"/>
+        </el-form-item>
+        <el-form-item label="输入课程名" prop="title">
+          <el-input v-model="tempCourse.course_name"/>
+        </el-form-item>
+        <el-form-item label="输入精讲时间" prop="title">
+          <el-input v-model="tempCourse.norm_duration"/>
+        </el-form-item>
+        <el-form-item label="输入精讲课程数" prop="title">
+          <el-input v-model="tempCourse.norm_sum"/>
+        </el-form-item>
+        <el-form-item label="输入精讲价格" prop="title">
+          <el-input v-model="tempCourse.norm_price"/>
+        </el-form-item>
+        <el-form-item label="输入问题总数" prop="title">
+          <el-input v-model="tempCourse.que_sum"/>
+        </el-form-item>
+      </el-form>
     <el-button @click="dialogVisible = false">取 消</el-button>
     <el-button type="primary" @click="createCourse">确 定</el-button>
-  </span>
+
     </el-dialog>
 
 
@@ -164,7 +181,7 @@
 </template>
 
 <script>
-  import {getSystemCoursesByQuery, modifySystemCourseById, createSystemCourse} from '@/api/system_apis'
+  import {getSystemCoursesByQuery,publishSystemCourseById, modifySystemCourseById, createSystemCourse} from '@/api/system_apis'
   import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
   export default {
@@ -238,7 +255,7 @@
         else
           this.chosenList.forEach(course => {
             course.is_shift = 1
-            modifySystemCourseById(course).then(() => {
+            publishSystemCourseById(course).then(() => {
               this.$notify({
                 title: '成功',
                 message: '课程' + course.course_name + '入库成功',

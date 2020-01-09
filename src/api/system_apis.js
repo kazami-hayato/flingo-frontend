@@ -18,6 +18,14 @@ export function modifySystemCourseById(data) {
   })
 }
 
+export function publishSystemCourseById(data) {
+  return request({
+    url: '/apis/v1/system/courses/publish',
+    method: 'post',
+    data: data
+  })
+}
+
 export function createSystemCourse(data) {
   return request({
     url: '/apis/v1/system/courses',

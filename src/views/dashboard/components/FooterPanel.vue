@@ -1,7 +1,7 @@
 <template>
   <el-row :gutter="40" class="panel-group">
     <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
-      <div class="card-panel" @click="handleClick('students')">
+      <div class="card-panel">
         <div class="card-panel-icon-wrapper icon-people">
           <svg-icon icon-class="z_ipc" class-name="card-panel-icon"/>
         </div>
@@ -9,12 +9,12 @@
           <div class="card-panel-text">
             当前IP
           </div>
-          <div class="card-panel-text">{{footParams.cur_ip}}</div>
+          <el-tag type="success">{{footParams.cur_ip}}</el-tag>
         </div>
       </div>
     </el-col>
     <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
-      <div class="card-panel" @click="handleClick('courses')">
+      <div class="card-panel">
         <div class="card-panel-icon-wrapper icon-message">
           <svg-icon icon-class="z_ipc" class-name="card-panel-icon"/>
         </div>
@@ -22,14 +22,14 @@
           <div class="card-panel-text">
             上次登录IP
           </div>
-          <div class="card-panel-text">
+          <el-tag type="success">
             {{footParams.prev_ip}}
-          </div>
+          </el-tag>
         </div>
       </div>
     </el-col>
     <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
-      <div class="card-panel" @click="handleClick('school_nums')">
+      <div class="card-panel">
         <div class="card-panel-icon-wrapper icon-money">
           <svg-icon icon-class="z_time" class-name="card-panel-icon"/>
         </div>
@@ -37,14 +37,16 @@
           <div class="card-panel-text">
             上次登录时间
           </div>
-          <div class="card-panel-text">
-            {{footParams.prev_time}}
-          </div>
+          <el-tag type="success">{{footParams.prev_time}}</el-tag>
+
+          <!--          <div class="card-panel-text">-->
+          <!--            {{footParams.prev_time | parseTime('{y}-{m}-{d} {h}:{i}')}}-->
+          <!--          </div>-->
         </div>
       </div>
     </el-col>
     <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
-      <div class="card-panel" @click="handleClick('sales')">
+      <div class="card-panel">
         <div class="card-panel-icon-wrapper icon-shopping">
           <svg-icon icon-class="z_admin" class-name="card-panel-icon"/>
         </div>
@@ -52,9 +54,15 @@
           <div class="card-panel-text">
             当前用户类型
           </div>
-          <div class="card-panel-text">
-            {{footParams.admin_type}}
-          </div>
+          <el-tag type="success" v-if="footParams.admin_type===1">
+            系统管理员
+          </el-tag>
+          <el-tag type="success" v-else-if="footParams.admin_type===2">
+            主校管理员
+          </el-tag>
+          <el-tag type="success" v-else>
+            分校管理员
+          </el-tag>
         </div>
       </div>
     </el-col>
@@ -62,19 +70,22 @@
 </template>
 
 <script>
-    import CountTo from 'vue-count-to'
+  import CountTo from 'vue-count-to'
+  import {parseTime} from '@/utils'
 
-    export default {
-        components: {
-            CountTo
-        },
-        props: ['footParams'],
-        methods: {
-            handleClick(choice) {
-                console.log(choice)
-            }
-        }
+  export default {
+    components: {
+      CountTo
+    },
+    props: {
+      footParams: {
+        type: Object
+      }
+    },
+    created() {
+      console.log(this.footParams.prev_time.toString())
     }
+  }
 </script>
 
 <style lang="scss" scoped>

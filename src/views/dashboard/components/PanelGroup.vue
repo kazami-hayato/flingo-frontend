@@ -1,7 +1,7 @@
 <template>
   <el-row :gutter="40" class="panel-group">
     <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
-      <div class="card-panel" @click="handleClick('students')">
+      <div class="card-panel" >
         <div class="card-panel-icon-wrapper icon-people">
           <svg-icon icon-class="peoples" class-name="card-panel-icon"/>
         </div>
@@ -14,7 +14,7 @@
       </div>
     </el-col>
     <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
-      <div class="card-panel" @click="handleClick('courses')">
+      <div class="card-panel" >
         <div class="card-panel-icon-wrapper icon-message">
           <svg-icon icon-class="education" class-name="card-panel-icon"/>
         </div>
@@ -27,7 +27,7 @@
       </div>
     </el-col>
     <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
-      <div class="card-panel" @click="handleClick('school_nums')">
+      <div class="card-panel" >
         <div class="card-panel-icon-wrapper icon-money">
           <svg-icon icon-class="star" class-name="card-panel-icon"/>
         </div>
@@ -40,7 +40,7 @@
       </div>
     </el-col>
     <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
-      <div class="card-panel" @click="handleClick('sales')">
+      <div class="card-panel" >
         <div class="card-panel-icon-wrapper icon-shopping">
           <svg-icon icon-class="shopping" class-name="card-panel-icon"/>
         </div>
@@ -67,7 +67,7 @@
             handleClick(choice) {
                 console.log(choice)
             }
-        }
+        },
     }
 </script>
 

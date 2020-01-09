@@ -6,8 +6,24 @@
 
     <div class="user-profile">
       <div class="box-center">
-        <pan-thumb :image="user.avatar" :height="'100px'" :width="'100px'" :hoverable="false">
-          <div>你好,{{user.real_name}}</div>
+        <my-upload
+          field="File"
+          @crop-success="cropSuccess"
+          @crop-upload-success="cropUploadSuccess"
+          @crop-upload-fail="cropUploadFail"
+          v-model="uploadVisible"
+          :width="300"
+          :height="300"
+          :name="'File'"
+          url="/apis/v1/static/file"
+          img-format="png"/>
+        <!--        <img :src="user.avatar">-->
+        <pan-thumb :image="user.avatar" :height="'120px'" :width="'120px'" :hoverable="true">
+          <el-button class="uploadBtn el-icon-upload" type="warning" size="mini" @click="uploadVisible=true">
+            <p>
+              &nbsp你好,{{user.real_name}}
+            </p>
+          </el-button>
         </pan-thumb>
       </div>
       <div class="box-center">
@@ -21,7 +37,9 @@
       <div class="user-education user-bio-section">
         <div class="user-bio-section-header">
           <svg-icon icon-class="education"/>
-          <span>所属机构</span></div>
+          <span>所属机构</span>
+
+        </div>
         <div class="user-bio-section-body">
           <div class="text-muted" v-if="user.main_school!==user.sub_school">
             <span>{{user.main_school}}</span>
@@ -36,28 +54,87 @@
         </div>
       </div>
     </div>
+
   </el-card>
+
 </template>
 
 <script>
   import PanThumb from '@/components/PanThumb'
   import myUpload from 'vue-image-crop-upload'
+  import {updateAdminsSystem} from '@/api/system_apis'
+
 
   export default {
-    components: {PanThumb,myUpload},
+    components: {PanThumb, myUpload},
     data() {
       return {
-        user: {}
+        user: {},
+        uploadVisible: false
       }
     },
     created() {
       this.user = Object.assign({}, this.$store.state.user)
       this.user.role = this.user.roles[0]
+    },
+    methods: {
+      toggleShow() {
+        this.show = !this.show;
+      },
+      /**
+       * crop success
+       *
+       * [param] imgDataUrl
+       * [param] field
+       */
+      cropSuccess(imgDataUrl, field) {
+        console.log('-------- crop success --------');
+        this.imgDataUrl = imgDataUrl;
+      },
+      /**
+       * upload success
+       *
+       * [param] jsonData  server api return data, already json encode
+       * [param] field
+       */
+      cropUploadSuccess(jsonData, field) {
+        console.log('-------- upload success --------');
+        this.user.avatar = '/cdn/' + jsonData.data
+        updateAdminsSystem(this.user).then(() => {
+          this.$message({
+            message: '上传头像成功',
+            type: 'success',
+            duration: 1000
+          })
+        })
+        console.log(this.user);
+        console.log('field: ' + field);
+      },
+      /**
+       * upload fail
+       *
+       * [param] status    server api return error status, like 500
+       * [param] field
+       */
+      cropUploadFail(status, field) {
+        console.log('-------- upload fail --------');
+        console.log(status);
+        console.log('field: ' + field);
+      }
     }
   }
 </script>
 
 <style lang="scss" scoped>
+  .uploadBtn {
+    width: 120px;
+    font-size: large;
+    height: 120px;
+    border-radius: 100px;
+    margin-left: -20px;
+    margin-top: -20px;
+  }
+
   .box-center {
     margin: 0 auto;
     display: table;

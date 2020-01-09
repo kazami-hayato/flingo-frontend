@@ -36,16 +36,16 @@
     data() {
       return {
         panelParams: {
-          students: 3200,
-          courses: 1200,
-          school_nums: 12,
-          sales: 4300,
+          students: undefined,
+          courses: undefined,
+          school_nums: undefined,
+          sales: undefined,
         },
         footParams: {
-          cur_ip: '172.168.1.2',
-          prev_ip: '172.168.2.3',
-          prev_time: '2019-12-2 16:44:22',
-          admin_type: '主校管理员',
+          cur_ip: undefined,
+          prev_ip: undefined,
+          prev_time: 'undefined',
+          admin_type: undefined,
         },
         courseData: [],
       }
@@ -60,17 +60,15 @@
         getDashData().then(response => {
           const data = response.data
           this.courseData = data.courses
-
+          console.log(data)
           this.panelParams.students = data.student_num
           this.panelParams.courses = data.course_num
           this.panelParams.school_nums = data.school_num
           this.panelParams.sales = data.sales
-
+          this.footParams.prev_time = data.prev_time
           this.footParams.cur_ip = data.cur_ip
           this.footParams.prev_ip = data.prev_ip
           this.footParams.admin_type = data.admin_type
-          this.footParams.prev_time = data.prev_time
-
         })
       },
       // handleSetLineChartData(type) {

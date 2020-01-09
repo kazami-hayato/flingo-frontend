@@ -149,14 +149,17 @@
       :visible.sync="dialogVisible"
       width="30%"
       :before-close="handleClose">
-      <el-form ref="IPForm" label-width="100px">
-        <el-form-item label="输入网校名">
+      <el-form ref="tempSchool" label-width="100px" :rules="rules" :model="tempSchool">
+        <el-form-item label="输入网校名" prop="title">
           <el-input v-model="tempSchool.title"/>
         </el-form-item>
-        <el-form-item label="输入主校名">
+        <el-form-item label="是否是主校" prop="is_main">
+          <el-switch v-model="tempSchool.is_main"></el-switch>
+        </el-form-item>
+        <el-form-item label="输入主校名" prop="main_school">
           <el-input v-model="tempSchool.main_school"/>
         </el-form-item>
-        <el-form-item label="输入分校名">
+        <el-form-item label="输入分校名" prop="sub_school" v-if="!tempSchool.is_main">
           <el-input v-model="tempSchool.sub_school"/>
         </el-form-item>
       </el-form>
@@ -183,6 +186,7 @@
         dialogVisible: false,
         chosenList: [],
         tempSchool: {
+          is_main:false,
           main_school: '',
           sub_school: '',
           title: '',
@@ -196,6 +200,12 @@
           web_brief: '',
           address: ''
         },
+        rules: {
+          title: [{required: true, message: '请输入网校名称', trigger: 'blur'}],
+          main_school: [{required: true, message: '请输入所属主校', trigger: 'blur'}],
+          sub_school: [{required: true, message: '请输入所属分校', trigger: 'blur'}]
+        }
+        ,
         listQuery: {
           limit: 10,
           page: 1,
@@ -247,23 +257,37 @@
         })
       },
       confirmAdd() {
-        createSchool(this.tempSchool).then(response => {
-          if (response.data === 1)
-            this.$notify({
-              title: '成功',
-              message: '添加成功',
-              type: 'success'
-            });
-          else
-            this.$notify({
-              title: '失败',
-              message: '已存在',
-              type: 'error'
-            });
-          this.getList()
-          this.tempSchool = {}
-        })
-        this.dialogVisible = false
+        this.$refs['tempSchool'].validate((valid) => {
+          if (valid) {
+            if(this.tempSchool.is_main)
+              this.tempSchool.sub_school=this.tempSchool.main_school
+            createSchool(this.tempSchool).then(response => {
+              if (response.data === 1)
+                this.$notify({
+                  title: '成功',
+                  message: '添加成功',
+                  type: 'success'
+                });
+              else
+                this.$notify({
+                  title: '失败',
+                  message: '已存在',
+                  type: 'error'
+                });
+              this.getList()
+              this.tempSchool = {}
+            })
+            this.dialogVisible = false
+          } else {
+            this.$message({
+              message: '不能为空',
+              type: 'error',
+              duration: 1000
+            })
+            return false;
+          }
+        });
+
 
       },
 
