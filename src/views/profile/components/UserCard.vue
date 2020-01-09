@@ -27,44 +27,24 @@
             <span>{{user.main_school}}</span>
             <span>&nbsp{{user.sub_school}}</span>
           </div>
+          <div class="text-muted" v-else-if="user.main_school===''">
+            <span>管理后台系统</span>
+          </div>
           <div class="text-muted" v-else>
             <span>{{user.main_school}}</span>
           </div>
         </div>
       </div>
-
-<!--      <div class="user-skills user-bio-section">-->
-<!--        <div class="user-bio-section-header">-->
-<!--          <svg-icon icon-class="skill"/>-->
-<!--          <span>Skills</span></div>-->
-<!--        <div class="user-bio-section-body">-->
-<!--          <div class="progress-item">-->
-<!--            <span>Vue</span>-->
-<!--            <el-progress :percentage="70"/>-->
-<!--          </div>-->
-<!--          <div class="progress-item">-->
-<!--            <span>JavaScript</span>-->
-<!--            <el-progress :percentage="18"/>-->
-<!--          </div>-->
-<!--          <div class="progress-item">-->
-<!--            <span>Css</span>-->
-<!--            <el-progress :percentage="12"/>-->
-<!--          </div>-->
-<!--          <div class="progress-item">-->
-<!--            <span>ESLint</span>-->
-<!--            <el-progress :percentage="100" status="success"/>-->
-<!--          </div>-->
-<!--        </div>-->
-<!--      </div>-->
     </div>
   </el-card>
 </template>
 
 <script>
   import PanThumb from '@/components/PanThumb'
+  import myUpload from 'vue-image-crop-upload'
 
   export default {
-    components: {PanThumb},
+    components: {PanThumb,myUpload},
     data() {
       return {
         user: {}

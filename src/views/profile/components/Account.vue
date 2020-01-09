@@ -59,6 +59,12 @@
               duration: 5 * 1000
             })
           })
+        } else {
+          this.$message({
+            message: '输入密码错误或者两次输入不一致',
+            type: 'error',
+            duration: 1000
+          })
         }
       }
     }
