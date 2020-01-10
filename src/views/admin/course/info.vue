@@ -41,14 +41,14 @@
           <span>{{ row.course_name }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="课程简介" width="250px" align="center">
+      <el-table-column label="课程简介" width="200px" align="center">
         <template slot-scope="{row}">
           <span>{{ row.course_brief}}</span>
         </template>
       </el-table-column>
-      <el-table-column label="更新时间" width="200px" align="center">
+      <el-table-column label="创建时间" width="140px" align="center">
         <template slot-scope="{row}">
-          <span>{{ row.update_time | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
+          <span>{{ row.create_time | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
         </template>
       </el-table-column>
       <el-table-column label="教材名称" width="200px" align="center">
@@ -73,12 +73,12 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="操作" align="center" minWidth="300" class-name="small-padding fixed-width">
+      <el-table-column label="操作" align="center" minWidth="200px" class-name="small-padding fixed-width">
         <template slot-scope="{row}">
-          <el-button size="medium" type="info" @click="lookDetail(row)">
-            查看详情
+          <el-button size="medium" type="primary" @click="lookDetail(row)">
+            查看目录
           </el-button>
-          <el-button v-if="row.is_main!==1" type="primary" size="medium" @click="shiftTheCourse(row)">
+          <el-button v-if="row.is_main!==1" type="success" size="medium" @click="shiftTheCourse(row)">
             上架课程
           </el-button>
 
@@ -196,11 +196,17 @@
 
       },
       unshiftTheCourse(row) {
+        row.main_school = this.listQuery.main_school
+        row.sub_school = this.listQuery.sub_school
         unshiftCourse(row).then(() => {
         })
         this.getList()
       },
       lookDetail(row) {
+        this.$router.push({
+          name: 'SetCatalog',
+          params: {course_id: row.course_id}
+        })
       }
     }
   }

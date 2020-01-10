@@ -66,8 +66,8 @@
         label="状态"
         show-overflow-tooltip>
         <template slot-scope="{row}">
-          <el-tag v-if="row.is_forbidden===0">激活</el-tag>
-          <el-tag v-else>禁用</el-tag>
+          <el-tag v-if="row.is_forbidden===0" type="success">激活</el-tag>
+          <el-tag v-else type="danger">禁用</el-tag>
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center" width="230" class-name="small-padding fixed-width">
@@ -75,7 +75,7 @@
           <el-button type="success" size="medium" v-if="row.is_forbidden!==0" @click="activeThis(row)">
             激活账号
           </el-button>
-          <el-button type="warning" size="medium" v-else @click="forbidThis(row)">
+          <el-button type="danger" size="medium" v-else @click="forbidThis(row)">
             禁用账号
           </el-button>
         </template>

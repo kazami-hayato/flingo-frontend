@@ -18,22 +18,25 @@
       style="width: 100% ;padding: 20px"
       fit
       @selection-change="handleSelectionChange">
-      <el-table-column
-        type="selection"
-        width="55">
-      </el-table-column>
+<!--      <el-table-column-->
+<!--        type="selection"-->
+<!--        width="55">-->
+<!--      </el-table-column>-->
       <el-table-column
         type="index"
         label="序号"
+        align="center"
         min-width="120">
       </el-table-column>
       <el-table-column
         prop="username"
         label="用户名"
+        align="center"
         min-width="120">
       </el-table-column>
       <el-table-column
         label="类别"
+        align="center"
         min-width="120">
         <template slot-scope="{row}">
           <div v-if="row.user_type===1">系统管理员</div>
@@ -44,24 +47,28 @@
       <el-table-column
         prop="main_school"
         label="主校名"
+        align="center"
         min-width="120">
       </el-table-column>
       <el-table-column
         prop="sub_school"
         label="分校名"
+        align="center"
         min-width="120">
       </el-table-column>
       <el-table-column
         prop="register_date"
         label="注册日期"
+        align="center"
         show-overflow-tooltip>
       </el-table-column>
       <el-table-column
         label="状态"
+        align="center"
         show-overflow-tooltip>
         <template slot-scope="{row}">
-          <el-tag v-if="row.is_forbidden===0">已激活</el-tag>
-          <el-tag v-else>已禁用</el-tag>
+          <el-tag type="success" v-if="row.is_forbidden===0">已激活</el-tag>
+          <el-tag type="danger" v-else>已禁用</el-tag>
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center" width="230" class-name="small-padding fixed-width">
@@ -69,7 +76,7 @@
           <el-button type="success" size="medium" v-if="row.is_forbidden!==0" @click="activeThis(row)">
             激活账号
           </el-button>
-          <el-button type="warning" size="medium" v-else @click="forbidThis(row)">
+          <el-button type="danger" size="medium" v-else @click="forbidThis(row)">
             禁用账号
           </el-button>
         </template>

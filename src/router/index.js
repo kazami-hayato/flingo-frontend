@@ -82,6 +82,16 @@ export const constantRoutes = [
     ]
   },
   {
+    path: '/supervise',
+    component: Layout,
+    children: [{
+      path: 'index',
+      component: () => import('@/views/supervise'),
+      name: 'Supervise',
+      meta: {title: '督学', icon: 'z_zoom'}
+    }]
+  },
+  {
     path: '/catch',
     component: Layout,
     // hidden:true,
@@ -90,7 +100,7 @@ export const constantRoutes = [
         path: ':exam_id(\\d+)/:course_id(\\d+)',
         component: () => import('@/views/catch'),
         name: 'StudyCatch',
-        hidden:true,
+        hidden: true,
         meta: {title: '抓拍', noCache: true}
       }
     ]
@@ -104,7 +114,7 @@ export const constantRoutes = [
         path: ':exam_id(\\d+)/:course_id(\\d+)/:exam_type(\\d+)',
         component: () => import('@/views/examination'),
         name: 'Examination',
-        hidden:true,
+        hidden: true,
         meta: {title: '抓拍', noCache: true}
       }
     ]
@@ -262,6 +272,16 @@ export const asyncRoutes = [
           roles: ['sub_school'] // or you can only set roles in sub nav
         }
       },
+      {
+        path: 'courseCatalog/:course_id(\\d+)',
+        component: () => import('@/views/system/courseCenter/courseCatalog'),
+        hidden: true,
+        name: 'SetCatalog',
+        meta: {
+          title: '设置目录',
+          roles: ['main_school', 'sub_school']
+        }
+      }
     ]
   },
 

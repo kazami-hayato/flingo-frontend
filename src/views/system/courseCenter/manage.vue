@@ -3,14 +3,14 @@
     <div class="filter-container">
 
       <el-row type="flex" justify="space-between">
-        <el-col :span="6">
+        <el-col :span="4">
 
           <el-input placeholder="请输入内容" v-model="courseQuery.searchText">
-            <el-select v-model="courseQuery.searchType" slot="prepend" placeholder="请选择"
-                       style="width: 130px;background: #1890FF;color: #fff">
-              <el-option label="课程号" value='1'/>
-              <el-option label="课程名" value='2'/>
-            </el-select>
+<!--            <el-select v-model="courseQuery.searchType" slot="prepend" placeholder="请选择"-->
+<!--                       style="width: 130px;background: #1890FF;color: #fff">-->
+<!--              <el-option label="课程号" value='1'/>-->
+<!--              <el-option label="课程名" value='2'/>-->
+<!--            </el-select>-->
             <el-button slot="append" icon="el-icon-search" @click="handleSearch"
                        style="background: #1890FF;color: #fff;border-radius: 0"/>
           </el-input>
@@ -151,28 +151,28 @@
       :visible.sync="dialogVisible"
       width="40%"
     >
-      <el-form ref="tempCourse" label-width="100px" :rules="rules" :model="tempCourse">
-        <el-form-item label="输入课程号" prop="title">
+      <el-form ref="tempCourse" label-width="120px" :rules="rules" :model="tempCourse">
+        <el-form-item label="输入课程号" prop="course_id">
           <el-input v-model="tempCourse.course_id"/>
         </el-form-item>
-        <el-form-item label="输入课程名" prop="title">
+        <el-form-item label="输入课程名" prop="course_name">
           <el-input v-model="tempCourse.course_name"/>
         </el-form-item>
-        <el-form-item label="输入精讲时间" prop="title">
+        <el-form-item label="输入精讲时间" prop="norm_duration">
           <el-input v-model="tempCourse.norm_duration"/>
         </el-form-item>
-        <el-form-item label="输入精讲课程数" prop="title">
+        <el-form-item label="输入精讲课程数" prop="norm_sum">
           <el-input v-model="tempCourse.norm_sum"/>
         </el-form-item>
-        <el-form-item label="输入精讲价格" prop="title">
+        <el-form-item label="输入精讲价格" prop="norm_price">
           <el-input v-model="tempCourse.norm_price"/>
         </el-form-item>
-        <el-form-item label="输入问题总数" prop="title">
+        <el-form-item label="输入问题总数" prop="que_sum">
           <el-input v-model="tempCourse.que_sum"/>
         </el-form-item>
       </el-form>
-    <el-button @click="dialogVisible = false">取 消</el-button>
-    <el-button type="primary" @click="createCourse">确 定</el-button>
+      <el-button @click="dialogVisible = false">取 消</el-button>
+      <el-button type="primary" @click="createCourse">确 定</el-button>
 
     </el-dialog>
 
@@ -181,7 +181,12 @@
 </template>
 
 <script>
-  import {getSystemCoursesByQuery,publishSystemCourseById, modifySystemCourseById, createSystemCourse} from '@/api/system_apis'
+  import {
+    getSystemCoursesByQuery,
+    publishSystemCourseById,
+    modifySystemCourseById,
+    createSystemCourse
+  } from '@/api/system_apis'
   import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
   export default {
@@ -189,6 +194,14 @@
     components: {Pagination},
     data() {
       return {
+        rules: {
+          course_id: [{required: true, message: '请输入课程号', trigger: 'blur'}],
+          course_name: [{required: true, message: '请输入课程名', trigger: 'blur'}],
+          norm_duration: [{required: true, message: '请输入课程学习时长', trigger: 'blur'}],
+          norm_sum: [{required: true, message: '请输入精讲课程数', trigger: 'blur'}],
+          norm_price: [{required: true, message: '请输入精讲价格', trigger: 'blur'}],
+          que_sum: [{required: true, message: '请输入测验问题数', trigger: 'blur'}]
+        },
         tempCourse: {},
         dialogVisible: false,
         fileList: [],
@@ -232,9 +245,19 @@
       },
       createCourse() {
         console.log(this.tempCourse)
-        createSystemCourse(this.tempCourse).then(res => {
-          this.getList()
-          this.dialogVisible = false
+        this.$refs['tempCourse'].validate((valid) => {
+          if (valid) {
+            createSystemCourse(this.tempCourse).then(res => {
+              this.getList()
+              this.dialogVisible = false
+            })
+          } else {
+            this.$message({
+              message: '字段不能为空',
+              type: 'error',
+              duration: 1000
+            })
+          }
         })
       },
       shiftSelected() {
@@ -264,7 +287,8 @@
               })
             })
           })
-      },
+      }
+      ,
       unshiftSelected() {
         console.log(this.chosenList)
         this.chosenList.forEach(course => {
@@ -272,7 +296,8 @@
           modifySystemCourseById(course).then(() => {
           })
         })
-      },
+      }
+      ,
 
       handleModify(row) {
         modifySystemCourseById(row).then(() => {
@@ -283,10 +308,12 @@
             duration: 1000
           })
         })
-      },
+      }
+      ,
       handleUpload(response, file) {
         this.$refs.upload.$props.data.material_cover = '/cdn/' + response.data
-      },
+      }
+      ,
 
       /*
       * 跳转时携带courseid

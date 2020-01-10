@@ -509,6 +509,7 @@ export function unshiftCourse(data) {
   return request({
     url: '/apis/v1/shift/courses/' + data.course_id,
     method: 'delete',
+    data:data
   })
 }
 

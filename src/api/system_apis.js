@@ -184,6 +184,14 @@ export function getStudentsSystem(data) {
   })
 }
 
+export function getSupervise(data) {
+  return request({
+    url: '/apis/v1/system/supervise/students',
+    method: 'get',
+    params: data
+  })
+}
+
 export function getStudentsSystemByTag(data) {
   return request({
     url: '/apis/v1/system/students/tag',
