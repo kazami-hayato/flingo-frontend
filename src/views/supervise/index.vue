@@ -1,6 +1,35 @@
 <template>
 
   <div class="app-container">
+    <div class="filter-container">
+      <aside style="text-align: center">
+        默认两个星期未学习标红，一个星期未学习标黄
+      </aside>
+      <el-row type="flex" class="row-bg" justify="space-between">
+        <el-col :span="4">
+          <el-input v-model="start_date" placeholder="起始天数"/>
+        </el-col>
+        <el-col :span="4">
+          <el-input v-model="end_date" placeholder="截止天数"/>
+        </el-col>
+        <el-col>
+          <el-button style="margin-left: 10px;" type="primary" icon="el-icon-view"
+                     @click="filterStudent">过滤
+          </el-button>
+        </el-col>
+        <el-col :span="4" align="right">
+          <el-input v-model="start_span" placeholder="标黄"/>
+        </el-col>
+        <el-col :span="4">
+          <el-input v-model="end_span" placeholder="标绿"/>
+        </el-col>
+        <el-col :span="2">
+          <el-button style="margin-left: 10px;" type="primary" icon="el-icon-view"
+                     @click="setSpan">设置
+          </el-button>
+        </el-col>
+      </el-row>
+    </div>
     <!--    <div class="filter-container">-->
     <!--      <el-row type="flex">-->
     <!--        <el-col :span="2">-->
@@ -37,9 +66,7 @@
     <!--        </el-col>-->
     <!--      </el-row>-->
     <!--    </div>-->
-    <aside style="text-align: center">
-      两个星期未学习标红，一个星期未学习标黄
-    </aside>
+
     <el-table
       ref="multipleTable"
       :data="listData"
@@ -100,8 +127,8 @@
         min-width="200"
       >
         <template slot-scope="{row}">
-          <el-tag v-if="row.timespan>=14" type="danger">{{row.timespan}}</el-tag>
-          <el-tag v-else-if="row.timespan>=7&&row.timespan<14" type="warning">{{row.timespan}}</el-tag>
+          <el-tag v-if="row.timespan>=tend_span" type="danger">{{row.timespan}}</el-tag>
+          <el-tag v-else-if="row.timespan>=tstart_span&&row.timespan<tend_span" type="warning">{{row.timespan}}</el-tag>
           <el-tag v-else type="success">{{row.timespan}}</el-tag>
         </template>
       </el-table-column>
@@ -116,19 +143,26 @@
 
 <script>
   import {getSupervise} from '@/api/system_apis'
-  import {Current} from '@/utils/time'
+  import {Current, DatetoString} from '@/utils/time'
   import Pagination from '@/components/Pagination' // secondary package based on el-pagination
-
   export default {
     name: "index",
     components: {Pagination},
     data() {
       return {
+        start_span: 7,
+        end_span: 14,
+        tstart_span: 7,
+        tend_span: 14,
+        start_date: null,
+        end_date: null,
         main_school: this.$store.state.user.main_school,
         sub_school: this.$store.state.user.sub_school,
         listQuery: {
           limit: 10,
           page: 1,
+          start_date: '',
+          end_date: '',
           main_school: '',
           sub_school: ''
           // operator:
@@ -141,6 +175,55 @@
       this.getList()
     },
     methods: {
+      setSpan() {
+        if (this.start_span === null || this.end_span === null)
+          this.$message({
+            message: '输入不能为空',
+            type: "error",
+            duration: 1000
+          })
+        else {
+          let ss = Number(this.start_span)
+          let se = Number(this.end_span)
+          if (ss > se)
+            this.$message({
+              message: '标黄不能比标红大',
+              type: "error",
+              duration: 1000
+            })
+          else {
+            this.tstart_span = ss
+            this.tend_span = se
+          }
+        }
+      },
+      filterStudent() {
+
+        if (this.start_date === null || this.end_date === null)
+          this.$message({
+            message: '输入不能为空',
+            type: "error",
+            duration: 1000
+          })
+        else {
+          this.start_date = Number(this.start_date)
+          this.end_date = Number(this.end_date)
+          if (this.start_date > this.end_date)
+            this.$message({
+              message: '起始时间不能大于截止时间',
+              type: 'error',
+              duration: 1000
+            })
+          else {
+            this.listQuery.end_date = DatetoString(
+              new Date(Date.now() - 24 * 60 * 60 * 1000 * this.start_date))
+            this.listQuery.start_date = DatetoString(
+              new Date(Date.now() - 24 * 60 * 60 * 1000 * this.end_date))
+            this.getList()
+          }
+        }
+        // this.getList()
+      },
       getList() {
         if (this.main_school !== '') this.listQuery.main_school = this.main_school
         if (this.sub_school !== '') this.listQuery.sub_school = this.sub_school
