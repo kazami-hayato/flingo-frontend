@@ -128,7 +128,7 @@
           <span>{{ row.update_time | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="精讲课程数" prop="norm_sum" align="center"/>
+      <el-table-column label="精讲课程数" prop="norm_sum" align="center" min-width="150"/>
       <el-table-column label="精讲时间" prop="norm_duration" align="center"/>
       <el-table-column label="入库状态">
         <template slot-scope="{row}">

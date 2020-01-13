@@ -3,10 +3,14 @@
   <div class="app-container">
     <div class="filter-container">
       <el-row type="flex" class="row-bg" justify="space-between">
-
         <el-col>
           <el-button style="margin-left: 10px;" type="primary" icon="el-icon-edit"
                      @click="openCreateDialog">新增管理员
+          </el-button>
+        </el-col>
+        <el-col align="right">
+          <el-button type="success" @click="passwordVisible=true">
+            查询管理员密码
           </el-button>
         </el-col>
       </el-row>
@@ -18,10 +22,10 @@
       style="width: 100% ;padding: 20px"
       fit
       @selection-change="handleSelectionChange">
-<!--      <el-table-column-->
-<!--        type="selection"-->
-<!--        width="55">-->
-<!--      </el-table-column>-->
+      <!--      <el-table-column-->
+      <!--        type="selection"-->
+      <!--        width="55">-->
+      <!--      </el-table-column>-->
       <el-table-column
         type="index"
         label="序号"
@@ -98,21 +102,8 @@
         <el-form-item label="输入管理员姓名">
           <el-input v-model="tempAdmin.real_name"/>
         </el-form-item>
-        <el-form-item label="输入主校名称">
-          <el-input v-model="tempAdmin.main_school"/>
-        </el-form-item>
-        <el-form-item label="输入分校名称">
-          <el-input v-model="tempAdmin.sub_school"/>
-        </el-form-item>
-        <el-form-item label="输入密码">
-          <el-input v-model="tempAdmin.password"/>
-        </el-form-item>
-        <el-form-item label="重新输入密码">
-          <el-input type="password" v-model="tempAdmin.password_confirm"/>
-        </el-form-item>
-        <el-row>
-          <label style="margin-left: 65px">管理员类型</label>
-          <el-select v-model="tempAdmin.user_type" placeholder="请选择" style="margin-left: 15px">
+        <el-form-item label="管理员类型">
+          <el-select v-model="tempAdmin.user_type" placeholder="请选择">
             <el-option
               v-for="item in userOptions"
               :key="item.value"
@@ -120,19 +111,43 @@
               :value="item.value">
             </el-option>
           </el-select>
-        </el-row>
+        </el-form-item>
+        <el-form-item label="输入主校名称" v-if="tempAdmin.user_type>=2">
+          <el-input v-model="tempAdmin.main_school"/>
+        </el-form-item>
+        <el-form-item label="输入分校名称" v-if="tempAdmin.user_type==3">
+          <el-input v-model="tempAdmin.sub_school" />
+        </el-form-item>
+        <el-form-item label="输入密码">
+          <el-input v-model="tempAdmin.password"/>
+        </el-form-item>
+        <el-form-item label="重新输入密码">
+          <el-input type="password" v-model="tempAdmin.password_confirm"/>
+        </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
     <el-button @click="dialogVisible = false">取 消</el-button>
     <el-button type="primary" @click="createAdmin">确 定</el-button>
   </span>
     </el-dialog>
+
+    <el-dialog :visible.sync="passwordVisible"
+               title="找回密码" width="40%"
+    >
+      <el-input placeholder="请输入内容" v-model="adminQuery.username">
+        <el-button slot="append" icon="el-icon-search" @click="searchAdminPwd"
+                   style="background: #1890FF;color: #fff;border-radius: 0"/>
+      </el-input>
+      <div style="margin-top: 20px">
+        <span>密码是：{{searchPassword}}</span>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
   // import {getAdmins, deleteAdmin, addAdmin, updateAdmin} from '@/api/apis'
-  import {getAdminsSystem, createAdminsSystem, updateAdminsSystem} from "@/api/system_apis"
+  import {getAdminsSystem, getAdminPwd, createAdminsSystem, updateAdminsSystem} from "@/api/system_apis"
   import Pagination from '@/components/Pagination'
   import {Current} from "@/utils/time"; // secondary package based on el-pagination
 
@@ -141,6 +156,13 @@
     components: {Pagination},
     data() {
       return {
+        searchPassword: '',
+        passwordVisible: false,
+        adminQuery: {
+          username: '',
+          main_school: this.$store.state.user.main_school,
+          sub_school: this.$store.state.user.sub_school
+        },
         SubschoolOptions: new Set(),
         MainschoolOptions: new Set(),
         userOptions: [],
@@ -198,14 +220,14 @@
       createAdmin() {
         if (this.tempAdmin.user_type === 2) {
           this.tempAdmin.sub_school = this.tempAdmin.main_school
-        } else if (this.tempAdmin === 1) {
+        } else if (this.tempAdmin.user_type === 1) {
           this.tempAdmin.main_school = ''
           this.tempAdmin.sub_school = ''
         }
         let information = ''
         if (this.tempAdmin.password === this.tempAdmin.password_confirm)
           createAdminsSystem(this.tempAdmin).then(response => {
-            if(response.data!==1)
+            if (response.data !== 1)
               this.$notify({
                 title: '错误',
                 message: response.data,
@@ -235,6 +257,11 @@
         row.is_forbidden = 1
         updateAdminsSystem(row).then(() => {
           this.getList()
+        })
+      },
+      searchAdminPwd() {
+        getAdminPwd(this.adminQuery).then(res => {
+          this.searchPassword = res.data
         })
       }
     }

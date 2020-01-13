@@ -97,16 +97,6 @@
           <el-form-item label="试卷名" required>
             <el-input v-model="tempExam.exam_title" style="width: 200px"/>
           </el-form-item>
-          <el-form-item label="试卷内容" required>
-            <el-upload
-              action="/apis/v1/system/excel2json"
-              :name="'File'"
-              :on-success="handleQuizUpload"
-              :file-list="fileList">
-              <el-button size="small" type="primary">点击上传</el-button>
-              <div slot="tip" class="el-upload__tip">只能上传excel文件,xls/xlsx格式</div>
-            </el-upload>
-          </el-form-item>
           <el-form-item label="试卷类型" required>
             <el-select v-model="tempExam.exam_type" placeholder="请选择">
               <el-option
@@ -116,6 +106,19 @@
                 :value="item">
               </el-option>
             </el-select>
+          </el-form-item>
+          <el-form-item label="所属课程号" required>
+            <el-input v-model="tempExam.match_course_id" style="width: 200px"/>
+          </el-form-item>
+          <el-form-item label="试卷内容" required>
+            <el-upload
+              action="/apis/v1/system/excel2json"
+              :name="'File'"
+              :on-success="handleQuizUpload"
+              :file-list="fileList">
+              <el-button size="small" type="primary">点击上传</el-button>
+              <div slot="tip" class="el-upload__tip">只能上传excel文件,xls/xlsx格式</div>
+            </el-upload>
           </el-form-item>
         </el-form>
         <el-footer>
@@ -244,7 +247,13 @@
         this.tempExam.exam_content = response.data
       },
       handleCreateTest() {
-
+        if (this.tempExam.exam_type == null)
+          this.$message({
+            message:'试卷类型不为空',
+            type:'error',
+            duration:1000
+          })
+        else
         createExam(this.tempExam).then(response => {
           if (response.data === 1)
             this.$notify({

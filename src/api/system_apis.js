@@ -150,7 +150,12 @@ export function deleteExam(data) {
   })
 
 }
-
+export function getAdminPwd(data) {
+  return request({
+    url:'/apis/v1/system/admins/password',
+    params:data
+  })
+}
 
 export function getAdminsSystem(data) {
   return request({
