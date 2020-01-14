@@ -61,6 +61,14 @@
             </el-button>
 
             <el-button
+              v-if="row.active===1"
+              class="el-icon-upload"
+              size="mini"
+              type="primary"
+              @click="courseVisible=true">&nbsp导入选课信息
+            </el-button>
+
+            <el-button
               size="mini"
               type="warning"
               class="el-icon-download"
@@ -88,7 +96,7 @@
               :on-success="handleUpload"
               :file-list="fileList"
               :limit="1"
-              action="/apis/v1/static/file">
+              action="/apis/v1/static/upstu">
               <i class="el-icon-upload"/>
               <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
             </el-upload>
@@ -102,6 +110,36 @@
         </el-container>
       </el-dialog>
 
+      <el-dialog
+        title="导入选课信息面板"
+        :visible.sync="courseVisible"
+        width="30%"
+      >
+        <el-container>
+          <el-header>
+            <el-button type="success" size="mini" class="el-icon-download">下载模板</el-button>
+          </el-header>
+          <el-main>
+            <el-upload
+              class="upload-demo"
+              drag
+              :name="'File'"
+              :on-success="handleUpload"
+              :file-list="fileList"
+              :limit="1"
+              action="/apis/v1/static/upstucourse">
+              <i class="el-icon-upload"/>
+              <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+            </el-upload>
+          </el-main>
+          <el-footer >
+            <el-row type="flex" class="row-bg" justify="end">
+              <el-button @click="courseVisible = false">取 消</el-button>
+              <el-button type="primary" @click="courseVisible = false">确 定</el-button>
+            </el-row>
+          </el-footer>
+        </el-container>
+      </el-dialog>
     </el-main>
   </el-container>
 </template>
@@ -133,7 +171,8 @@
           page: 0
         },
         multipleSelection: [],
-        tableData: []
+        tableData: [],
+        courseVisible:false
       }
     },
     created() {
