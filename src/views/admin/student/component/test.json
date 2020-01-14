@@ -1,0 +1,39 @@
+{
+  "catalogtree": [
+    {
+      "id": 1,
+      "label": "绪论",
+      "children": [
+        {
+          "id": 3,
+          "label": "绪论",
+          "type": true,
+          "vid": "d6001adfae909d047b1706ef73706c35_d",
+          "finished": false
+        }
+      ],
+      "isTitle": true
+    },
+    {
+      "id": 2,
+      "label": "第一章 xxx",
+      "children": [
+        {
+          "id": 4,
+          "label": "第一节 xxx",
+          "type": false,
+          "children": [
+            {
+              "id": 5,
+              "label": "xxx",
+              "type": true,
+              "vid": "d6001adfaefcf293e836dae871fe5fe7_d",
+              "finished": false
+            }
+          ]
+        }
+      ],
+      "isTitle": true
+    }
+  ]
+}
