@@ -229,6 +229,7 @@
         }).then(({value}) => {
           data.vid = value
           this.type = true
+          this.finished = false
           this.$message({
             type: 'success',
             message: '设置成功!'
@@ -283,6 +284,7 @@
               console.log(uploadInfo);
               data.vid = uploadInfo.fileData.vid
               data.type = true
+              data.finished = false
               _this.loading = 0
             },
             FileFailed: function (uploadInfo) { // 文件上传失败回调
