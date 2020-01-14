@@ -9,7 +9,7 @@
           <el-row type="flex" :gutter="20">
             <el-col :span="4" v-for="(item) in catch_imgs.study">
               <el-card shadow="never">
-                <img class="catch-img" :src="'data:image/png;base64,/cdn/'+item">
+                <img class="catch-img" :src="'/cdn/'+item">
                 <div class="catch-detail">
                   <p>抓拍时间：{{item}}</p>
                 </div>
@@ -23,7 +23,7 @@
           <el-row type="flex" :gutter="20">
             <el-col :span="4" v-for="(item) in catch_imgs.phase">
               <el-card shadow="never">
-                <img class="catch-img" :src="'data:image/png;base64,/cdn/'+item">
+                <img class="catch-img" :src="'/cdn/'+item">
                 <div class="catch-detail">
                   <p>抓拍试卷：{{item}}</p>
                 </div>
