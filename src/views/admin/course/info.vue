@@ -73,7 +73,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="操作" align="center" minWidth="200px" class-name="small-padding fixed-width">
+      <el-table-column label="操作" align="center" minWidth="240px" class-name="small-padding fixed-width">
         <template slot-scope="{row}">
           <el-button size="medium" type="primary" @click="lookDetail(row)">
             查看目录

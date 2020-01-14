@@ -82,7 +82,7 @@
       >
         <el-container>
           <el-header>
-            <el-button type="success" size="mini" class="el-icon-download">下载模板</el-button>
+            <el-button type="success" size="mini" class="el-icon-download" @click="downloadStu">下载模板</el-button>
           </el-header>
           <el-main>
             <el-upload
@@ -198,6 +198,9 @@
       this.getList()
     },
     methods: {
+      downloadStu(){
+        window.open('/cdn/stu_template.xls')
+      },
       handleCreateTag() {
         console.log(this.tempTag)
         createTag(this.tempTag).then(() => {
