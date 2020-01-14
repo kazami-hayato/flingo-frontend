@@ -6,7 +6,7 @@
 
           <el-col :span="6">
             <img class="img-circle" style="width: 120px;height: 120px; margin-left: 150px;margin-top: 7px"
-                 :src="studentInfo.stu.avatar" alt="avatar">
+                 :src="'/cdn/'+studentInfo.stu.exam_id+'.jpeg'" alt="avatar">
           </el-col>
           <el-col :span="12">
             <p><b>学生姓名：</b>{{studentInfo.stu.real_name}}</p>

@@ -117,6 +117,19 @@ export function getExams(data) {
   })
 }
 
+export function getOriginExam(data) {
+  const _data={
+    course_id:'22',
+    exam_type:2
+  }
+  return request({
+    url: '/apis/v1/frontend/origin_exam',
+    method: 'get',
+    params: data
+  })
+}
+
+
 export function getExamById(data) {
   return request({
     url: '/apis/v1/system/exams/' + data.examination_id,
