@@ -9,7 +9,7 @@
           <el-row type="flex" :gutter="20">
             <el-col :span="4">
               <el-card shadow="never">
-                <img class="catch-img" :src="'/cdn/photos/'+avatar">
+                <img class="catch-img" :src="'/cdn/photos/'+avatar" style="width: 200px;height: 160px">
               </el-card>
             </el-col>
           </el-row>
