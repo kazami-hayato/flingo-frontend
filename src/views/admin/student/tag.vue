@@ -81,6 +81,7 @@
             </el-button>
             <el-button
               size="mini"
+              v-if="row.active!==1"
               type="warning"
               class="el-icon-download"
               @click="handleExport(row)">&nbsp导出成绩

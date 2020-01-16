@@ -65,6 +65,7 @@
               @click="editTag(row)">&nbsp修改考期信息
             </el-button>
             <el-button
+              v-if="row.active!==1"
               size="mini"
               type="success"
               class="el-icon-download"
