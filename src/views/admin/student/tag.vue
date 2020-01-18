@@ -19,28 +19,32 @@
           align="center"
           type="index">
         </el-table-column>
-        <el-table-column
-          label="考期ID"
-          align="center"
-          prop="tag_id">
-        </el-table-column>
+<!--        <el-table-column-->
+<!--          label="考期ID"-->
+<!--          align="center"-->
+<!--          prop="tag_id">-->
+<!--        </el-table-column>-->
         <el-table-column
           label="考期名"
+          min-width="150"
           align="center"
           prop="tag_name">
         </el-table-column>
         <el-table-column
           label="考期创建时间"
+          min-width="200"
           align="center"
           prop="tag_createtime">
         </el-table-column>
         <el-table-column
           label="考期过期时间"
           align="center"
+          min-width="220"
           prop="tag_overtime">
         </el-table-column>
         <el-table-column
-          label="考期过期时间"
+          label="考期状态"
+          min-width="120"
           align="center">
           <template slot-scope="{row}">
             <el-tag type="warning" v-if="row.active===0" >历史考期</el-tag>
@@ -49,7 +53,7 @@
         </el-table-column>
         <el-table-column
           align="center"
-          min-width="300"
+          min-width="600"
           label="操作">
           <template slot-scope="{row}">
             <el-button
@@ -69,7 +73,15 @@
             </el-button>
 
             <el-button
+              v-if="row.active===1"
+              class="el-icon-upload"
               size="mini"
+              type="primary"
+              @click="zipVisible=true">&nbsp导入学生照片压缩包
+            </el-button>
+            <el-button
+              size="mini"
+              v-if="row.active!==1"
               type="warning"
               class="el-icon-download"
               @click="handleExport(row)">&nbsp导出成绩
@@ -86,7 +98,7 @@
       >
         <el-container>
           <el-header>
-            <el-button type="success" size="mini" class="el-icon-download">下载模板</el-button>
+            <el-button type="success" size="mini" class="el-icon-download" @click="downloadStu">下载模板</el-button>
           </el-header>
           <el-main>
             <el-upload
@@ -117,7 +129,7 @@
       >
         <el-container>
           <el-header>
-            <el-button type="success" size="mini" class="el-icon-download">下载模板</el-button>
+            <el-button type="success" size="mini" class="el-icon-download" @click="downloadStuCourse">下载模板</el-button>
           </el-header>
           <el-main>
             <el-upload
@@ -140,6 +152,34 @@
           </el-footer>
         </el-container>
       </el-dialog>
+      <el-dialog
+        title="导入压缩包面板"
+        :visible.sync="zipVisible"
+        width="30%"
+      >
+        <el-container>
+          <el-main>
+            <el-upload
+              class="upload-demo"
+              drag
+              :name="'File'"
+              :on-success="handleUpload"
+              :file-list="fileList"
+              :limit="1"
+              action="/apis/v1/static/uploadzip">
+              <i class="el-icon-upload"/>
+              <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+            </el-upload>
+          </el-main>
+          <el-footer >
+            <el-row type="flex" class="row-bg" justify="end">
+              <el-button @click="zipVisible = false">取 消</el-button>
+              <el-button type="primary" @click="zipVisible = false">确 定</el-button>
+            </el-row>
+          </el-footer>
+        </el-container>
+      </el-dialog>
+
     </el-main>
   </el-container>
 </template>
@@ -172,13 +212,21 @@
         },
         multipleSelection: [],
         tableData: [],
-        courseVisible:false
+        courseVisible:false,
+        zipVisible:false
+
       }
     },
     created() {
       this.getList()
     },
     methods: {
+      downloadStuCourse(){
+        window.open('/cdn/stucourse_template.xls')
+      },
+      downloadStu(){
+        window.open('/cdn/stu_template.xls')
+      },
       handleUpload(response, file) {
 
       },
