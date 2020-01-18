@@ -252,13 +252,13 @@
         console.log(this.fileList)
         let _this = this
         let file = this.fileList[0]
-        if (file.size > this.maxSize * 1024 * 1024) {
-          this.$notify.error({
-            title: '错误',
-            message: '超出文件上传大小限制'
-          });
-          return;
-        }
+        // if (file.size > this.maxSize * 1024 * 1024) {
+        //   this.$notify.error({
+        //     title: '错误',
+        //     message: '超出文件上传大小限制'
+        //   });
+        //   return;
+        // }
         let file_temp = {
           title: '',
           desc: '',  // 描述
