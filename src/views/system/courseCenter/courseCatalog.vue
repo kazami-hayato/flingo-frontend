@@ -229,6 +229,7 @@
         }).then(({value}) => {
           data.vid = value
           this.type = true
+          this.finished = false
           this.$message({
             type: 'success',
             message: '设置成功!'
@@ -251,13 +252,13 @@
         console.log(this.fileList)
         let _this = this
         let file = this.fileList[0]
-        if (file.size > this.maxSize * 1024 * 1024) {
-          this.$notify.error({
-            title: '错误',
-            message: '超出文件上传大小限制'
-          });
-          return;
-        }
+        // if (file.size > this.maxSize * 1024 * 1024) {
+        //   this.$notify.error({
+        //     title: '错误',
+        //     message: '超出文件上传大小限制'
+        //   });
+        //   return;
+        // }
         let file_temp = {
           title: '',
           desc: '',  // 描述
@@ -283,6 +284,7 @@
               console.log(uploadInfo);
               data.vid = uploadInfo.fileData.vid
               data.type = true
+              data.finished = false
               _this.loading = 0
             },
             FileFailed: function (uploadInfo) { // 文件上传失败回调
