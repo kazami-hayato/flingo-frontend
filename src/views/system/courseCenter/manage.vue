@@ -22,8 +22,8 @@
           </el-button>
           <el-button class="filter-item " type="warning" icon="el-icon-arrow-right" @click="shiftSelected">选中入库
           </el-button>
-          <!--          <el-button class="filter-item" type="danger" icon="el-icon-arrow-left" @click="unshiftSelected">选中出库-->
-          <!--          </el-button>-->
+          <el-button class="filter-item" type="danger" icon="el-icon-minus" @click="deleteChosen">选中删除
+          </el-button>
 
         </el-col>
       </el-row>
@@ -182,6 +182,7 @@
 
 <script>
   import {
+    deleteSystemCourse,
     getSystemCoursesByQuery,
     publishSystemCourseById,
     modifySystemCourseById,
@@ -287,8 +288,26 @@
               })
             })
           })
-      }
-      ,
+      },
+      deleteChosen(){
+        this.chosenList.forEach(course=>{
+          if(course.is_shift===1){
+            this.$notify({
+              type:'error',
+              message:course.course_id+' 课程已上架无法删除'
+            })
+          }else
+            deleteSystemCourse(course).then(()=>{
+              this.$notify({
+                type:'success',
+                message:'删除课程:'+course.course_id
+              })
+              this.getList()
+            })
+        })
+
+
+      },
       unshiftSelected() {
         console.log(this.chosenList)
         this.chosenList.forEach(course => {

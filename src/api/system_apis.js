@@ -33,6 +33,12 @@ export function createSystemCourse(data) {
     data: data
   })
 }
+export function deleteSystemCourse(data) {
+  return request({
+    url: '/apis/v1/system/courses/'+data.course_id,
+    method: 'delete',
+  })
+}
 
 export function getCoursesSale(data) {
   return request({
