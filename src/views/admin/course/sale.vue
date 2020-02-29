@@ -70,14 +70,14 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="课程状态" width="150px" align="center">
+      <el-table-column label="课程状态" width="150px" align="center" v-if="user_type<=2">
         <template slot-scope="{row}">
           <el-tag v-if="row.is_valid===1" type="success">分校可见</el-tag>
           <el-tag v-if="row.is_valid===0" type="info">分校不可见</el-tag>
         </template>
       </el-table-column>
 
-      <el-table-column label="操作" align="center" minWidth="200" class-name="small-padding fixed-width">
+      <el-table-column label="操作" align="center" minWidth="200" class-name="small-padding fixed-width"  v-if="user_type<=2">
         <template slot-scope="{row}">
           <!--          <el-button type="info" size="medium" @click="makeValid(row)">-->
           <!--            查看目录-->
@@ -136,7 +136,8 @@
         },
         total: 5,
         chosenList: [],
-        list: []
+        list: [],
+        user_type:this.$store.state.user.user_type
       }
     },
     created() {

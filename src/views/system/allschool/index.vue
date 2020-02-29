@@ -134,6 +134,15 @@
         min-width="120">
       </el-table-column>
       <el-table-column
+        align="center"
+        label="学校类别"
+        min-width="120">
+        <template slot-scope="{row}">
+            <div v-if="row.main_school===row.sub_school">主校</div>
+          <div v-else>分校</div>
+        </template>
+      </el-table-column>
+      <el-table-column
         prop="hotline"
         align="center"
         label="咨询热线"
@@ -181,6 +190,13 @@
     name: "index",
     components: {Pagination},
     data() {
+      let checkSub = (rule, value, callback) => {
+        if (value === this.tempSchool.main_school) {
+          callback(new Error('分校名不能等于主校'));
+        }else {
+          callback();
+        }
+      };
       return {
         fileList: [],
         dialogVisible: false,
@@ -200,10 +216,11 @@
           web_brief: '',
           address: ''
         },
+
         rules: {
           title: [{required: true, message: '请输入网校名称', trigger: 'blur'}],
           main_school: [{required: true, message: '请输入所属主校', trigger: 'blur'}],
-          sub_school: [{required: true, message: '请输入所属分校', trigger: 'blur'}]
+          sub_school: [{validator:checkSub,required: true, trigger: 'blur'}]
         }
         ,
         listQuery: {

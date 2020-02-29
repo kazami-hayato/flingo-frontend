@@ -313,7 +313,7 @@ export const asyncRoutes = [
         name: 'Detail',
         meta: {
           title: '管理员管理',
-          roles: ['main_school', 'sub_school'] // or you can only set roles in sub nav
+          roles: ['main_school'] // or you can only set roles in sub nav
         }
       },
       {

@@ -83,6 +83,20 @@ export function getSchools(data) {
   })
 }
 
+export function getMainSchools() {
+  return request({
+    url: '/apis/v1/system/main_schools',
+    method: 'get',
+  })
+}
+export function getSubSchools(data) {
+  return request({
+    url: '/apis/v1/system/sub_schools',
+    method: 'get',
+    params:data
+  })
+}
+
 export function createSchool(data) {
   return request({
     url: '/apis/v1/system/schools',

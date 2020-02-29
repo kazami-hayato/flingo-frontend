@@ -90,16 +90,22 @@
       :visible.sync="dialogVisible"
       width="30%"
       :before-close="handleClose">
-      <el-form ref="IPForm" label-width="150px">
-        <el-form-item label="输入管理员登录名">
+      <el-form ref="tempAdmin" :model="tempAdmin" label-width="150px" :rules="rules">
+        <el-form-item label="输入管理员登录名" prop="username">
           <el-input v-model="tempAdmin.username"/>
         </el-form-item>
-        <el-form-item label="输入管理员姓名">
+        <el-form-item label="输入管理员姓名" prop="real_name">
           <el-input v-model="tempAdmin.real_name"/>
         </el-form-item>
-        <el-row style="margin-bottom: 25px">
-          <label style="margin-left: 80px">所属分校</label>
-          <el-select v-model="tempAdmin.sub_school" placeholder="请选择" style="margin-left: 15px">
+        <el-form-item label="是否分校管理员" prop="is_sub">
+          <el-switch
+            v-model="tempAdmin.is_sub"
+            active-color="#13ce66"
+            inactive-color="#ff4949">
+          </el-switch>
+        </el-form-item>
+        <el-form-item  label="选择分校" v-if="tempAdmin.is_sub===true" prop="sub_school">
+          <el-select v-model="tempAdmin.sub_school" placeholder="请选择" >
             <el-option
               v-for="item in SubschoolOptions"
               :key="item"
@@ -107,28 +113,16 @@
               :value="item">
             </el-option>
           </el-select>
-        </el-row>
+        </el-form-item>
 
-        <el-form-item label="输入管理员密码">
+        <el-form-item label="输入管理员密码" prop="password">
           <el-input v-model="tempAdmin.password"/>
         </el-form-item>
 
-
-        <el-row>
-          <label style="margin-left: 65px">管理员类型</label>
-          <el-select v-model="tempAdmin.user_type" placeholder="请选择" style="margin-left: 15px">
-            <el-option
-              v-for="item in userOptions"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value">
-            </el-option>
-          </el-select>
-        </el-row>
       </el-form>
       <span slot="footer" class="dialog-footer">
     <el-button @click="dialogVisible = false">取 消</el-button>
-    <el-button type="primary" @click="createAdmin">确 定</el-button>
+    <el-button type="primary" @click="createAdmin('tempAdmin')">确 定</el-button>
   </span>
     </el-dialog>
   </div>
@@ -136,6 +130,7 @@
 
 <script>
   import {getAdmins, deleteAdmin, addAdmin, updateAdmin} from '@/api/apis'
+  import {getSubSchools} from '@/api/system_apis'
   import Pagination from '@/components/Pagination'
   import {Current} from "@/utils/time"; // secondary package based on el-pagination
 
@@ -144,12 +139,20 @@
     components: {Pagination},
     data() {
       return {
-        SubschoolOptions: new Set(),
+        rules:{
+          username:[{required: true, message: '请输入', trigger: 'blur'}],
+          real_name:[{required: true, message: '请输入', trigger: 'blur'}],
+          sub_school:[{required: true, message: '请输入', trigger: 'blur'}],
+          password:[{required: true, message: '请输入', trigger: 'blur'}],
+        },
+        SubschoolOptions: [],
         userOptions: [],
         dialogVisible: false,
         tempAdmin: {
           main_school: this.$store.state.user.main_school,
-          register_date: Current()
+          register_date: Current(),
+          user_type: 2,
+          is_sub: true
         },
         chosenList: [],
         listQuery: {
@@ -161,16 +164,10 @@
         listData: [],
         total: 0,
 
+
       }
     },
     created() {
-      let user_type = this.$store.state.user.user_type
-      this.userOptions.push({label: '分校管理员', value: 3})
-      if (user_type <= 2) {
-        this.userOptions.push({label: '主校管理员', value: 2})
-      } else if (user_type <= 1) {
-        this.userOptions.push({label: '系统管理员', value: 1})
-      }
       this.getList()
     },
     methods: {
@@ -207,26 +204,45 @@
       openCreateDialog() {
         this.dialogVisible = true
 
-        this.SubschoolOptions = [...new Set(this.listData.map(item => item.sub_school))];
-        console.log(this.SubschoolOptions)
+        getSubSchools({main_school: this.$store.state.user.main_school}).then(response => {
+          this.SubschoolOptions = response.data
+        })
+        // this.SubschoolOptions = [...new Set(this.listData.map(item => item.sub_school))];
+        // console.log(this.SubschoolOptions)
+        //
+        // let temp = []
+        // this.SubschoolOptions.forEach(item => {
+        //   if (item !== this.listQuery.main_school) {
+        //     temp.push(item)
+        //   }
+        // })
+        // this.SubschoolOptions = temp
+        // console.log(this.SubschoolOptions)
+      },
+      createAdmin(formName) {
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            this.dialogVisible = false
+            if (this.tempAdmin.is_sub === true) {
+              this.tempAdmin.user_type = 3
+            } else
+              this.tempAdmin.sub_school = this.tempAdmin.main_school
 
-        let temp = []
-        this.SubschoolOptions.forEach(item => {
-          if (item !== this.listQuery.main_school) {
-            temp.push(item)
+            addAdmin(this.tempAdmin).then(() => {
+              this.getList()
+              this.tempAdmin = {
+                main_school: this.$store.state.user.main_school,
+                register_date: Current(),
+                user_type: 2,
+                is_sub: true
+              }
+            })
+          } else {
+            console.log('error submit!!');
+            return false;
           }
         })
-        this.SubschoolOptions = temp
-        console.log(this.SubschoolOptions)
-      },
-      createAdmin() {
-        this.dialogVisible = false
-        if (this.tempAdmin.user_type === 2) {
-          this.tempAdmin.sub_school = this.tempAdmin.main_school
-        }
-        addAdmin(this.tempAdmin).then(() => {
-          this.getList()
-        })
+
       },
       activeThis(row) {
         row.is_forbidden = 0

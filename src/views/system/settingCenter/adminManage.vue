@@ -95,14 +95,14 @@
       :visible.sync="dialogVisible"
       width="30%"
       :before-close="handleClose">
-      <el-form ref="IPForm" label-width="150px">
-        <el-form-item label="输入管理员登录名">
+      <el-form ref="tempAdmin" :model="tempAdmin" label-width="150px" :rules="rules">
+        <el-form-item label="输入管理员登录名" prop="username">
           <el-input v-model="tempAdmin.username"/>
         </el-form-item>
-        <el-form-item label="输入管理员姓名">
+        <el-form-item label="输入管理员姓名" prop="real_name">
           <el-input v-model="tempAdmin.real_name"/>
         </el-form-item>
-        <el-form-item label="管理员类型">
+        <el-form-item label="管理员类型" prop="user_type">
           <el-select v-model="tempAdmin.user_type" placeholder="请选择">
             <el-option
               v-for="item in userOptions"
@@ -112,22 +112,38 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="输入主校名称" v-if="tempAdmin.user_type>=2">
-          <el-input v-model="tempAdmin.main_school"/>
+        <el-form-item label="输入主校名称" v-if="tempAdmin.user_type>=2" prop="main_school">
+<!--          <el-input v-model="tempAdmin.main_school"/>-->
+          <el-select v-model="tempAdmin.main_school" placeholder="请选择" @change="getAllSub(tempAdmin.main_school)">
+            <el-option
+              v-for="item in main_schools"
+              :key="item"
+              :label="item"
+              :value="item">
+            </el-option>
+          </el-select>
         </el-form-item>
-        <el-form-item label="输入分校名称" v-if="tempAdmin.user_type==3">
-          <el-input v-model="tempAdmin.sub_school" />
+        <el-form-item label="输入分校名称" v-if="tempAdmin.user_type===3" prop="sub_school">
+<!--          <el-input v-model="tempAdmin.sub_school" />-->
+          <el-select v-model="tempAdmin.sub_school" placeholder="请选择">
+            <el-option
+              v-for="item in sub_schools"
+              :key="item"
+              :label="item"
+              :value="item">
+            </el-option>
+          </el-select>
         </el-form-item>
-        <el-form-item label="输入密码">
+        <el-form-item label="输入密码" prop="password">
           <el-input v-model="tempAdmin.password"/>
         </el-form-item>
-        <el-form-item label="重新输入密码">
+        <el-form-item label="重新输入密码" prop="password_confirm">
           <el-input type="password" v-model="tempAdmin.password_confirm"/>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
     <el-button @click="dialogVisible = false">取 消</el-button>
-    <el-button type="primary" @click="createAdmin">确 定</el-button>
+    <el-button type="primary" @click="createAdmin('tempAdmin')">确 定</el-button>
   </span>
     </el-dialog>
 
@@ -147,7 +163,7 @@
 
 <script>
   // import {getAdmins, deleteAdmin, addAdmin, updateAdmin} from '@/api/apis'
-  import {getAdminsSystem, getAdminPwd, createAdminsSystem, updateAdminsSystem} from "@/api/system_apis"
+  import {getAdminsSystem,getMainSchools,getSubSchools, getAdminPwd, createAdminsSystem, updateAdminsSystem} from "@/api/system_apis"
   import Pagination from '@/components/Pagination'
   import {Current} from "@/utils/time"; // secondary package based on el-pagination
 
@@ -156,6 +172,15 @@
     components: {Pagination},
     data() {
       return {
+        rules:{
+          username:[{required: true, message: '请输入', trigger: 'blur'}],
+          real_name:[{required: true, message: '请输入', trigger: 'blur'}],
+          user_type:[{required: true, message: '请输入', trigger: 'blur'}],
+          main_school:[{required: true, message: '请输入', trigger: 'blur'}],
+          sub_school:[{required: true, message: '请输入', trigger: 'blur'}],
+          password:[{required: true, message: '请输入', trigger: 'blur'}],
+          password_confirm:[{required: true, message: '请输入', trigger: 'blur'}],
+        },
         searchPassword: '',
         passwordVisible: false,
         adminQuery: {
@@ -163,8 +188,7 @@
           main_school: this.$store.state.user.main_school,
           sub_school: this.$store.state.user.sub_school
         },
-        SubschoolOptions: new Set(),
-        MainschoolOptions: new Set(),
+
         userOptions: [],
         dialogVisible: false,
         tempAdmin: {
@@ -178,7 +202,8 @@
         },
         listData: [],
         total: 0,
-
+        main_schools:[],
+        sub_schools:[],
       }
     },
     created() {
@@ -188,8 +213,19 @@
       this.userOptions.push({label: '主校管理员', value: 2})
       this.userOptions.push({label: '系统管理员', value: 1})
       this.getList()
+      this.main_schools=this.getAllMain()
     },
     methods: {
+      getAllSub(main_school){
+          getSubSchools({main_school:main_school}).then(response=>{
+            this.sub_schools=response.data
+          })
+      },
+      getAllMain(){
+          getMainSchools().then(response=>{
+            this.main_schools=response.data
+          })
+      },
       getList() {
         getAdminsSystem(this.listQuery).then(response => {
           this.listData = response.data
@@ -214,10 +250,9 @@
       },
       openCreateDialog() {
         this.dialogVisible = true
-        this.MainschoolOptions = [...new Set(this.listData.map(item => item.main_school))]
-        this.SubschoolOptions = [...new Set(this.listData.map(item => item.sub_school))]
+
       },
-      createAdmin() {
+      createAdmin(formName) {
         if (this.tempAdmin.user_type === 2) {
           this.tempAdmin.sub_school = this.tempAdmin.main_school
         } else if (this.tempAdmin.user_type === 1) {
@@ -225,26 +260,36 @@
           this.tempAdmin.sub_school = ''
         }
         let information = ''
-        if (this.tempAdmin.password === this.tempAdmin.password_confirm)
-          createAdminsSystem(this.tempAdmin).then(response => {
-            if (response.data !== 1)
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            if (this.tempAdmin.password === this.tempAdmin.password_confirm)
+              createAdminsSystem(this.tempAdmin).then(response => {
+                if (response.data !== 1)
+                  this.$notify({
+                    title: '错误',
+                    message: response.data,
+                    type: 'error',
+                    duration: 2000
+                  })
+                this.tempAdmin= {
+                  register_date: Current()
+                },
+                this.getList()
+                this.dialogVisible = false
+              })
+            else {
               this.$notify({
-                title: '错误',
-                message: response.data,
-                type: 'error',
+                title: '警告',
+                message: '两次输入密码不一致',
+                type: 'warning',
                 duration: 2000
               })
-            this.getList()
-            this.dialogVisible = false
-          })
-        else {
-          this.$notify({
-            title: '警告',
-            message: '两次输入密码不一致',
-            type: 'warning',
-            duration: 2000
-          })
-        }
+            }
+          } else {
+            console.log('error submit!!');
+            return false;
+          }
+        });
       },
       activeThis(row) {
         row.is_forbidden = 0
