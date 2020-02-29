@@ -228,8 +228,8 @@
           inputValue: data.vid ? data.vid : ''
         }).then(({value}) => {
           data.vid = value
-          this.type = true
-          this.finished = false
+          data.type = true
+          data.finished = false
           this.$message({
             type: 'success',
             message: '设置成功!'
