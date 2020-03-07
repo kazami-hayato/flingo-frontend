@@ -55,10 +55,23 @@
           prop="course_name">
         </el-table-column>
         <el-table-column
+          label="状态"
+          align="center"
+        >
+          <template slot-scope="{row}">
+            <el-tag type="success" v-if="row.is_shift===1">已经上架</el-tag>
+            <el-tag type="info" v-else>未上架</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column
           label="试卷详情"
           align="center">
           <template slot-scope="{row}">
-            <el-button class="el-icon-view" type="success" size="mini" @click="viewTest(row)">&nbsp查看</el-button>
+            <el-button class="el-icon-view" type="info" size="mini" @click="viewTest(row)"
+                       v-if="row.exam_content===null||row.exam_content===''">&nbsp查看
+            </el-button>
+            <el-button class="el-icon-view" type="success" size="mini" @click="viewTest(row)" v-else>&nbsp查看</el-button>
+
           </template>
         </el-table-column>
         <el-table-column
@@ -69,18 +82,24 @@
             <el-button
               class="el-icon-edit"
               size="mini"
-              type="success"
-              v-if="row.match_course_id===null"
-              @click="setCourse(row)">&nbsp设置试卷
+              type="danger"
+              v-if="row.is_shift===1"
+              disabled
+              @click="editTest(row)">&nbsp设置试卷
             </el-button>
-
             <el-button
               class="el-icon-edit"
               size="mini"
               type="success"
               v-else
-              disabled
-              @click="editTest(row)">&nbsp设置试卷
+              @click="setCourse(row)">&nbsp设置试卷
+            </el-button>
+            <el-button
+              class="el-icon-upload"
+              size="mini"
+              type="warning"
+              v-if="row.is_shift===null||row.is_shift!==1||row.exam_content===null||row.exam_content===''"
+              @click="updateContent(row)">&nbsp更新试卷
             </el-button>
           </template>
         </el-table-column>
@@ -93,6 +112,7 @@
         :visible.sync="testVisible"
         width="40%"
       >
+
         <el-form :model="tempExam" label-width="140px" :label-position="'right'">
           <el-form-item label="试卷名" required>
             <el-input v-model="tempExam.exam_title" style="width: 200px"/>
@@ -107,9 +127,6 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="所属课程号" required>
-            <el-input v-model="tempExam.match_course_id" style="width: 200px"/>
-          </el-form-item>
           <el-form-item label="试卷内容" required>
             <el-upload
               action="/apis/v1/system/excel2json"
@@ -119,8 +136,11 @@
               <el-button size="small" type="primary">点击上传</el-button>
               <div slot="tip" class="el-upload__tip">只能上传excel文件,xls/xlsx格式</div>
             </el-upload>
+            <el-button type="success" size="mini" class="el-icon-download" @click="downloadTestTemp">下载模板</el-button>
+
           </el-form-item>
         </el-form>
+
         <el-footer>
           <el-row type="flex" class="row-bg" justify="end">
             <el-button @click="testVisible = false">取 消</el-button>
@@ -168,13 +188,50 @@
         </el-footer>
       </el-dialog>
 
+      <el-dialog
+        title="更新试卷内容面板"
+        :visible.sync="updateTestVisible"
+        width="30%"
+      >
+        <el-container>
+          <el-header>
+            <el-button type="success" size="mini" class="el-icon-download" @click="downloadTestTemp">下载模板</el-button>
+          </el-header>
+          <el-main>
+            <el-upload
+              class="upload-demo"
+              drag
+              action="/apis/v1/system/excel2json"
+              :name="'File'"
+              :on-success="handleUpdateSuccess"
+              :file-list="fileList">
+              <i class="el-icon-upload"/>
+              <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+            </el-upload>
+          </el-main>
+          <el-footer>
+            <el-row type="flex" class="row-bg" justify="end">
+              <el-button @click="updateTestVisible = false">取 消</el-button>
+              <el-button type="primary" @click="handleUpdateContent">确 定</el-button>
+            </el-row>
+          </el-footer>
+        </el-container>
+      </el-dialog>
+
     </el-main>
   </el-container>
 </template>
 
 <script>
   import {parseTime} from '@/utils/index.js'
-  import {createExam, deleteExam, modifyExam, getExams, getSystemCoursesByQuery} from '@/api/system_apis'
+  import {
+    createExam,
+    deleteExam,
+    modifyExam,
+    getExams,
+    getSystemCoursesByQuery,
+    getAllCoursesInfo
+  } from '@/api/system_apis'
   import Pagination from '@/components/Pagination' // secondary package based on el-pagination
   import {mapGetters} from 'vuex'
   import StuCourseDetail from "../../admin/student/component/StuCourseDetail";
@@ -184,6 +241,8 @@
     components: {StuCourseDetail, Pagination},
     data() {
       return {
+        chosenExam:undefined,
+        updateTestVisible: false,
         test_type: [
           '',
           '测验一',
@@ -221,9 +280,31 @@
       this.getList()
     },
     methods: {
+      handleUpdateContent() {
+        this.updateTestVisible=false
+      },
+      handleUpdateSuccess(response, file) {
+        this.chosenExam.exam_content = response.data
+        console.log(this.chosenExam)
+        modifyExam(this.chosenExam).then(response=>{
+          this.updateTestVisible=false
+          this.getList()
+          this.$notify({
+            type:'success',
+            message:'更新完成，请查看数据'
+          })
+        })
+      },
       openCreateTest() {
         this.testVisible = true
         this.tempExam = {}
+      },
+      updateContent(row) {
+        this.updateTestVisible = true
+        this.chosenExam=row
+      },
+      downloadTestTemp() {
+        window.open('/cdn/exam_template.xlsx')
       },
       editTest(row) {
 
@@ -249,28 +330,28 @@
       handleCreateTest() {
         if (this.tempExam.exam_type == null)
           this.$message({
-            message:'试卷类型不为空',
-            type:'error',
-            duration:1000
+            message: '试卷类型不为空',
+            type: 'error',
+            duration: 1000
           })
         else
-        createExam(this.tempExam).then(response => {
-          if (response.data === 1)
-            this.$notify({
-              title: '成功',
-              message: '添加成功',
-              type: 'success'
-            });
-          else
-            this.$notify({
-              title: '失败',
-              message: '已存在',
-              type: 'error'
-            });
-          this.getList()
-          this.testVisible = false
-          this.fileList = []
-        })
+          createExam(this.tempExam).then(response => {
+            if (response.data === 1)
+              this.$notify({
+                title: '成功',
+                message: '添加成功',
+                type: 'success'
+              });
+            else
+              this.$notify({
+                title: '失败',
+                message: '已存在',
+                type: 'error'
+              });
+            this.getList()
+            this.testVisible = false
+            this.fileList = []
+          })
       },
       handleUpload(response, file) {
 
@@ -294,14 +375,14 @@
         })
       },
       handleDelete() {
-        this.$confirm('此操作将删除未匹配课程测试, 是否继续?', '提示', {
+        this.$confirm('此操作将删除未上架课程试卷，已上架无法删除, 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning',
           center: true
         }).then(() => {
           this.multipleSelection.forEach(item => {
-            if (item.match_course_id === null)
+            if (item.is_shift !== 1)
               deleteExam(item).then(() => {
                 this.getList()
                 this.$message({

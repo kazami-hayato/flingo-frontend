@@ -64,6 +64,12 @@
           <span>{{ row.cross_price}}</span>
         </template>
       </el-table-column>
+      <el-table-column label="学校名称（主/分）" width="150px" align="center">
+        <template slot-scope="{row}">
+          <span v-if="row.main_school===row.sub_school">{{ row.main_school}}(主)</span>
+          <span v-else>{{ row.sub_school}}(分)</span>
+        </template>
+      </el-table-column>
       <el-table-column label="选课数目" width="150px" align="center">
         <template slot-scope="{row}">
           <span>{{ row.sales}}</span>

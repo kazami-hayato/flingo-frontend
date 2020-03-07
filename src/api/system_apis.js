@@ -9,6 +9,7 @@ export function getSystemCoursesByQuery(data) {
   })
 }
 
+
 //包括目录树更新
 export function modifySystemCourseById(data) {
   return request({
