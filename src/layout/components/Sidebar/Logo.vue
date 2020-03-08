@@ -36,9 +36,9 @@
       init() {
         if (this.$store.state.user.main_school != '') {
           if (this.$store.state.user.main_school != this.$store.state.user.sub_school)
-            this.title = this.$store.state.user.sub_school
+            this.title = this.$store.state.user.username
           else
-            this.title = this.$store.state.user.main_school
+            this.title = this.$store.state.user.username
         } else {
           this.title = '系统管理员'
         }

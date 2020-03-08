@@ -52,7 +52,10 @@
         <el-table-column
           label="所属课程"
           align="center"
-          prop="course_name">
+        >
+          <template slot-scope="{row}">
+            <span>({{row.match_course_id}}){{row.course_name}}</span>
+          </template>
         </el-table-column>
         <el-table-column
           label="状态"
