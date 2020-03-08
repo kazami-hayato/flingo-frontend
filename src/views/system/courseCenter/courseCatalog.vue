@@ -51,6 +51,7 @@
         </span>
       </span>
           </el-tree>
+          <span>总课程数：{{totalCourse}}</span>
           <el-button @click="updateCatalog" type="primary" style="float: right;margin-bottom: 20px;">保存目录</el-button>
         </el-card>
       </el-col>
@@ -81,7 +82,8 @@
         write_token: "7cae507f-22d6-4720-af10-7d618e6a3634",
         videoUpload: null,
         ptime: 0,
-        loading: 0
+        loading: 0,
+        totalCourse:0
       }
     },
     created() {
@@ -99,7 +101,28 @@
         }
       });
     },
+    watch:{
+      CatalogData:{
+        handler(val,oldVal){
+          this.totalCourse = 0
+          this.getSum(val)
+        },
+        deep:true
+      }
+    },
     methods: {
+      // 获取总课程数
+      getSum(arr){
+        debugger
+        for (let i = 0; i < arr.length; i++) {
+          if (arr[i].vid) {
+            this.totalCourse ++
+          }
+          if (arr[i].hasOwnProperty('children')) {
+            this.getSum(arr[i]['children'])
+          }
+        }
+      },
       // 获取当前目录树
       getCatalog() {
         getCatalogTreeById({course_id: this.course_id}).then(response => {
@@ -227,14 +250,16 @@
           cancelButtonText: '取消',
           inputValue: data.vid ? data.vid : ''
         }).then(({value}) => {
-          data.vid = value
-          data.type = true
-          data.finished = false
-          this.$message({
-            type: 'success',
-            message: '设置成功!'
-          });
-          console.log(this.data)
+          if(value.trim() !== ''){
+            data.vid = value
+            data.type = true
+            data.finished = false
+            this.$message({
+              type: 'success',
+              message: '设置成功!'
+            });
+            console.log(this.data)
+          }
         }).catch(() => {
           this.$message({
             type: 'info',
