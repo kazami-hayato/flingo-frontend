@@ -120,6 +120,9 @@
           <el-form-item label="试卷名" required>
             <el-input v-model="tempExam.exam_title" style="width: 200px"/>
           </el-form-item>
+          <el-form-item label="匹配课程号" required>
+            <el-input v-model="tempExam.match_course_id" style="width: 200px"/>
+          </el-form-item>
           <el-form-item label="试卷类型" required>
             <el-select v-model="tempExam.exam_type" placeholder="请选择">
               <el-option
