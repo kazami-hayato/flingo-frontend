@@ -700,17 +700,18 @@ export function saveExamination(data) {
 // }
 // 观看日志
 export const getViewLog = params => {
-  let year = new Date().getFullYear().toString()
-  let mon =  new Date().getMonth()+1
-  if(mon<=9)mon = "0"+mon.toString()
-  else mon = mon.toString()
-  let month = year + mon
+  console.log(params)
+
+  let month = params.dateTime
   let ptime = new Date().getTime()
   let numPerPage = params.numPerPage
   let pageNum =  params.pageNum
   let sessionId = params.sessionId
+  // let start = '2020-02-01'
+  // let end = '2020-02-28'
   let vid = params.vid
-  let sign = sha1("month="+month+"&numPerPage="+numPerPage+"&pageNum="+pageNum+"&ptime="+ptime+"&sessionId="+sessionId+"&vid="+vid+"00X97pOUEx")
+  //let sign = sha1(`end=${end}&month=${month}&numPerPage=${numPerPage}&pageNum=${pageNum}&ptime=${ptime}&sessionId=${sessionId}&start=${start}&vid=${vid}00X97pOUEx`)
+  let sign = sha1(`month=${month}&numPerPage=${numPerPage}&pageNum=${pageNum}&ptime=${ptime}&sessionId=${sessionId}&vid=${vid}00X97pOUEx`)
   // sign的计算顺序要按字典顺序
   sign = sign.toUpperCase()
   return polyvInstance.get(`/v2/viewlog/d6001adfae/monthly/${month}?&month=${month}&ptime=${ptime}&numPerPage=${numPerPage}&pageNum=${pageNum}&sessionId=${sessionId}&sign=${sign}&vid=${vid}`)
