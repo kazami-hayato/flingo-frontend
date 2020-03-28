@@ -1,5 +1,6 @@
 import request from '@/utils/request'
-
+import {polyvInstance} from '@/utils/httpInstance'
+import sha1 from 'js-sha1'
 /*
 * 登录相关
 * */
@@ -697,3 +698,21 @@ export function saveExamination(data) {
 //     params: data
 //   })
 // }
+// 观看日志
+export const getViewLog = params => {
+  let year = new Date().getFullYear().toString()
+  let mon =  new Date().getMonth()+1
+  if(mon<=9)mon = "0"+mon.toString()
+  else mon = mon.toString()
+  let month = year + mon
+  let ptime = new Date().getTime()
+  let numPerPage = params.numPerPage
+  let pageNum =  params.pageNum
+  let sessionId = params.sessionId
+  let vid = params.vid
+  let sign = sha1("month="+month+"&numPerPage="+numPerPage+"&pageNum="+pageNum+"&ptime="+ptime+"&sessionId="+sessionId+"&vid="+vid+"00X97pOUEx")
+  // sign的计算顺序要按字典顺序
+  sign = sign.toUpperCase()
+  return polyvInstance.get(`/v2/viewlog/d6001adfae/monthly/${month}?&month=${month}&ptime=${ptime}&numPerPage=${numPerPage}&pageNum=${pageNum}&sessionId=${sessionId}&sign=${sign}&vid=${vid}`)
+    .then(res => {return res.data})
+}
