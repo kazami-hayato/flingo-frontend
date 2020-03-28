@@ -113,7 +113,6 @@
     methods: {
       // 获取总课程数
       getSum(arr){
-        debugger
         for (let i = 0; i < arr.length; i++) {
           if (arr[i].vid) {
             this.totalCourse ++
