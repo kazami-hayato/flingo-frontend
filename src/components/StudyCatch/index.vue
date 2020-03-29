@@ -22,7 +22,6 @@
               <el-card shadow="never">
                 <img class="catch-img" :src="'/cdn/'+item" style="width: 200px;height: 160px">
                 <div class="catch-detail">
-<!--                  <p>抓拍时间：{{item}}</p>-->
                 </div>
               </el-card>
             </el-col>
@@ -46,10 +45,8 @@
 
       <el-tab-pane label="观看日志" name="watch_log">
         <el-main>
-          <el-select v-model="videoSelect" placeholder="请选择" @change="handleChange()">
-            <el-alert  title="(显示最近1一个月内最近观看日志100条)"
-                       type="info"
-                       show-icon></el-alert>
+          查询视频
+          <el-select v-model="videoSelect" placeholder="请选择" @change="handleChange()" style="margin-right: 20px">
             <el-option
               v-for="(item,index) in videoWatchLog"
               :key="item.videoName"
@@ -58,21 +55,48 @@
             >
             </el-option>
           </el-select>
-
-          <el-timeline>
-            <el-timeline-item
-              v-for="(log, index) in videoSelectLog"
-              :key="log.playId"
-              :timestamp="log.currentDay">
+          查询日期
+          <el-date-picker
+            v-model="dateTime"
+            type="month"
+            placeholder="选择月"
+            value-format="yyyyMM"
+            style="margin-right: 20px"
+          >
+          </el-date-picker>
+          每页显示数
+          <el-input-number v-model="numPerPage" controls-position="right"  :min="1" style="margin-right: 20px" label="每页显示数"></el-input-number>
+          第
+          <el-input-number v-model="pageNum" controls-position="right"  :min="1" label="翻页"></el-input-number>
+          页
+          <el-button @click="handleSearch" style="margin-left: 20px" type="primary"  :loading="searching">
+            查询
+          </el-button>
+          <div v-loading="searching">
+            <el-card class="box-card"  v-for="(log, index) in videoSelectLog" :key="log.playId" style="margin-top: 10px;width:80%">
               <p>观看地址：{{log.country+log.province+log.city}}</p>
               <p>观看IP：{{log.ipAddress}}</p>
               <p>观看时长：{{Math.floor(log.playDuration/60)}}分钟</p>
               <p>开始时间：{{log.currentDay+'.'+log.currentHour}}时</p>
               <p>观看平台：{{log.browser}}</p>
               <p>观看介质：{{log.operatingSystem}}</p>
-<!--              {{activity.content}}-->
-            </el-timeline-item>
-          </el-timeline>
+            </el-card>
+<!--            <el-timeline v-loading="searching">-->
+<!--              <el-timeline-item-->
+<!--                v-for="(log, index) in videoSelectLog"-->
+<!--                :key="log.playId"-->
+<!--                :timestamp="log.currentDay">-->
+<!--                <p>观看地址：{{log.country+log.province+log.city}}</p>-->
+<!--                <p>观看IP：{{log.ipAddress}}</p>-->
+<!--                <p>观看时长：{{Math.floor(log.playDuration/60)}}分钟</p>-->
+<!--                <p>开始时间：{{log.currentDay+'.'+log.currentHour}}时</p>-->
+<!--                <p>观看平台：{{log.browser}}</p>-->
+<!--                <p>观看介质：{{log.operatingSystem}}</p>-->
+<!--                &lt;!&ndash;              {{activity.content}}&ndash;&gt;-->
+<!--              </el-timeline-item>-->
+<!--            </el-timeline>-->
+
+          </div>
         </el-main>
       </el-tab-pane>
     </el-tabs>
@@ -93,6 +117,12 @@
     created() {
       this.getList()
       this.getCatalog()
+      let year = new Date().getFullYear().toString()
+      let mon =  new Date().getMonth()+1
+      if(mon<=9)mon = "0"+mon.toString()
+      else mon = mon.toString()
+      this.dateTime = year+mon
+      // let month = year + mon
       // console.log('ss',this.vidList)
       //this.videoSelectLog = this.videoWatchLog[0]['logs']
     },
@@ -116,6 +146,7 @@
         ],
         videoSelect:'',
         videoSelectLog:[],
+        searching:true,
         // catch_imgs: [
         //   {
         //     img_source: 'https://www.hbuvt.com/cdn/images.jpeg',
@@ -126,7 +157,10 @@
         //   }
         // ],
         tab_position: 'left',
-        activeName: 'study_catch'
+        activeName: 'study_catch',
+        dateTime:new Date(),
+        numPerPage:10,
+        pageNum:1,
       }
     },
     computed:{
@@ -142,8 +176,6 @@
         getStudyCatch(this.listQuery).then(response => {
           this.catch_imgs.study = response.data.study.split('#').slice(1)
           this.catch_imgs.phase = response.data.phase.split('#').slice(1)
-          // console.log(study)
-          // console.log(phase)
         })
       },
       handleClick() {
@@ -158,13 +190,17 @@
         let params = {
           vid:vid,
           sessionId:this.listQuery.exam_id,
-          numPerPage:100,
-          pageNum:1
+          numPerPage:this.numPerPage,
+          pageNum:this.pageNum,
+          dateTime:this.dateTime
         }
         let _this = this
         getViewLog(params).then(res => {
-
          if(res.data.length>0){
+           this.videoSelectLog = this.videoSelectLog.concat(res.data)
+           this.videoSelectLog.sort((a,b)=>{
+             return b.createdTime - a.createdTime
+           })
            this.videoWatchLog[0]['logs'] =  this.videoWatchLog[0]['logs'].concat(res.data)
            this.videoWatchLog[0]['logs'].sort((a,b)=>{
              return b.createdTime - a.createdTime
@@ -196,11 +232,17 @@
        * @returns {Promise<void>}
        */
       async getAllVideoLog(){
+        this.videoSelectLog = []
+        this.searching = true
         for (let i = 0; i < this.vidList.length; i++) {
           await this.getWatchLog(this.vidList[i]['vid'],this.vidList[i]['videoname'])
         }
+        setTimeout(()=>{
+          this.searching = false
+        },500)
         console.log(this.videoWatchLog)
-        this.videoSelectLog = this.videoWatchLog[0]['logs']
+        // this.videoWatchLog[0]['logs'] = this.videoSelectLog
+        // this.videoSelectLog = this.videoWatchLog[0]['logs']
         // console.log(this.videoSelectLog)
       },
       /**
@@ -227,6 +269,16 @@
       handleChange(){
         this.videoSelectLog = this.videoWatchLog[this.videoSelect]['logs']
         console.log(this.videoWatchLog)
+      },
+      handleDateChange(){
+        console.log(this.dateTime)
+      },
+      handleSearch(){
+        this.videoWatchLog = [{
+          'videoName':'全部记录',
+          'logs':[]
+        }]
+        this.getAllVideoLog()
       }
     }
   }
