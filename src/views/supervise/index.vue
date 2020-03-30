@@ -17,6 +17,11 @@
                      @click="filterStudent">过滤
           </el-button>
         </el-col>
+        <el-col>
+          <el-button style="margin-left: 10px;" type="success" icon="el-icon-download"
+                     @click="downloadSupervise">下载督学数据
+          </el-button>
+        </el-col>
         <el-col :span="4" align="right">
           <el-input v-model="start_span" placeholder="标黄"/>
         </el-col>
@@ -144,7 +149,9 @@
 <script>
   import {getSupervise} from '@/api/system_apis'
   import {Current, DatetoString} from '@/utils/time'
-  import Pagination from '@/components/Pagination' // secondary package based on el-pagination
+  import Pagination from '@/components/Pagination'
+  import axios from "axios";
+  import {saveAs} from "file-saver"; // secondary package based on el-pagination
   export default {
     name: "index",
     components: {Pagination},
@@ -196,6 +203,21 @@
             this.tend_span = se
           }
         }
+      },
+      downloadSupervise(){
+        if (this.main_school !== '') this.listQuery.main_school = this.main_school
+        if (this.sub_school !== '') this.listQuery.sub_school = this.sub_school
+        const filename='督学数据.xls'
+        axios({
+          url: '/apis/v1/static/down_supervise',
+          method: 'get',
+          params: this.listQuery,
+          responseType: 'blob'     //接收类型设置，否者返回字符型
+        })
+          .then(res => {
+            console.log(res)//定义文件名等相关信息
+            saveAs(res.data,filename)
+          })
       },
       filterStudent() {
 
