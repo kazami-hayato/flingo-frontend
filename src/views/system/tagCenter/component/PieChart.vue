@@ -47,7 +47,7 @@
                 this.chart = echarts.init(this.$el, 'macarons')
                 this.chart.setOption({
                     title: {
-                      text: '总时长:' + this.study.total_time+'('+this.study.course_hours+')',
+                      text: '总课程数:' + this.study.total_time,
                         x: 'center'
                     },
                     tooltip: {

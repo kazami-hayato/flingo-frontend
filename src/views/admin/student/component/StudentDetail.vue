@@ -43,6 +43,15 @@
             </template>
           </el-table-column>
           <el-table-column
+            label="学习情况"
+            align="center"
+            min-width="250">
+            <template slot-scope="{row}">
+              <div>总课时数：{{row.course_hours}}</div>
+              <div>已学：{{row.course_hours*row.watch_time/row.total_time}}</div>
+            </template>
+          </el-table-column>
+          <el-table-column
             align="center"
             label="阶段测评一"
             min-width="100">
@@ -130,7 +139,7 @@
       testClick(row, exam_type) {
         this.$router.push({
           name: 'Examination',
-          params: {exam_id: row.exam_id, course_id: row.course_id,exam_type:exam_type}
+          params: {exam_id: row.exam_id, course_id: row.course_id, exam_type: exam_type}
         })
       },
       openCatch(row) {
@@ -166,6 +175,7 @@
     color: red;
     border: transparent;
   }
+
   .img-circle {
     border-radius: 50%;
     float: left;
