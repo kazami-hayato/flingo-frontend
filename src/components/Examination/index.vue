@@ -212,17 +212,25 @@
       getExamination() {
         getExamById({examination_id: this.examId}).then(response => {
           console.log(response)
-          let questions = JSON.parse(response.data.exam_content)
-          this.examination = Object.assign({},
-            {
-              questions: questions,
-              examTitle: response.data.exam_title,
-              totalQuestions: questions.length,
-              totalMinutes: 90,
-              totalScore: 100
-            }
-          )
-          this.setTiming()
+          if(response.data.exam_content===null){
+            this.$notify({
+              type:'error',
+              message:'试卷内容为空',
+              title:'试卷错误'
+            })
+          }else {
+            let questions = JSON.parse(response.data.exam_content)
+            this.examination = Object.assign({},
+              {
+                questions: questions,
+                examTitle: response.data.exam_title,
+                totalQuestions: questions.length,
+                totalMinutes: 90,
+                totalScore: 100
+              }
+            )
+            this.setTiming()
+          }
           // this.questions = res.data.questions
           // this.examTitle = res.data.examTitle
           // this.totalMinutes = res.data.totalMinutes,
