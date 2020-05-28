@@ -113,7 +113,6 @@
     methods: {
       // 获取总课程数
       getSum(arr){
-        debugger
         for (let i = 0; i < arr.length; i++) {
           if (arr[i].vid) {
             this.totalCourse ++
@@ -155,7 +154,13 @@
       updateCatalog() {
         console.log(this.CatalogData);
         this.course.catalogtree = JSON.stringify({"catalogtree": this.CatalogData})
-        if (this.course.is_shift !== 1) {
+        if(this.course.is_shift===1)
+        this.$confirm('此操作将更新上架课程?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning',
+          center: true
+        }).then(() => {
           modifySystemCourseById(this.course).then(res => {
             console.log(res)
             this.$notify({
@@ -169,19 +174,21 @@
               message: '保存出错'
             });
           })
-        }
-        else {
-          console.log(this.CatalogData);
-          this.course.catalogtree = JSON.stringify({"catalogtree": this.CatalogData})
+        })
+        else{
           modifySystemCourseById(this.course).then(res => {
-              console.log(res)
-              this.$notify({
-                title: '失败',
-                message: '课程已经入库，无法更改',
-                type: 'error'
-              });
-            }
-          )
+            console.log(res)
+            this.$notify({
+              title: '成功',
+              message: '更新成功',
+              type: 'success'
+            });
+          }).catch(error => {
+            this.$notify.error({
+              title: '错误',
+              message: '保存出错'
+            });
+          })
         }
       },
       // 添加新的子目录

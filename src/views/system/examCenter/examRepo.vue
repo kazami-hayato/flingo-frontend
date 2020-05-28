@@ -46,7 +46,7 @@
           label="创建时间"
           align="center">
           <template slot-scope="{row}">
-            <span>{{ row.createtime | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
+            <span>{{ row.create_time | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
           </template>
         </el-table-column>
         <el-table-column
@@ -101,7 +101,6 @@
               class="el-icon-upload"
               size="mini"
               type="warning"
-              v-if="row.is_shift===null||row.is_shift!==1||row.exam_content===null||row.exam_content===''"
               @click="updateContent(row)">&nbsp更新试卷
             </el-button>
           </template>
@@ -138,6 +137,7 @@
               action="/apis/v1/system/excel2json"
               :name="'File'"
               :on-success="handleQuizUpload"
+              :headers="headers"
               :file-list="fileList">
               <el-button size="small" type="primary">点击上传</el-button>
               <div slot="tip" class="el-upload__tip">只能上传excel文件,xls/xlsx格式</div>
@@ -209,6 +209,7 @@
               drag
               action="/apis/v1/system/excel2json"
               :name="'File'"
+              :headers="headers"
               :on-success="handleUpdateSuccess"
               :file-list="fileList">
               <i class="el-icon-upload"/>
@@ -245,6 +246,11 @@
   export default {
     name: "ExamRepo",
     components: {StuCourseDetail, Pagination},
+    computed:{
+      headers(){
+       return{ 'X-Token':this.$store.state.user.token,}
+      }
+    },
     data() {
       return {
         chosenExam:undefined,
@@ -283,6 +289,7 @@
       }
     },
     created() {
+    //  console.log(this.$store.state.user.token)
       this.getList()
     },
     methods: {
@@ -342,7 +349,7 @@
           })
         else
           createExam(this.tempExam).then(response => {
-            if (response.data === 1)
+            if (response.code === 20000)
               this.$notify({
                 title: '成功',
                 message: '添加成功',
@@ -351,7 +358,7 @@
             else
               this.$notify({
                 title: '失败',
-                message: '已存在',
+                message: this.response.message,
                 type: 'error'
               });
             this.getList()
@@ -381,14 +388,13 @@
         })
       },
       handleDelete() {
-        this.$confirm('此操作将删除未上架课程试卷，已上架无法删除, 是否继续?', '提示', {
+        this.$confirm('此操作将删除课程试卷并无法恢复，是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning',
           center: true
         }).then(() => {
           this.multipleSelection.forEach(item => {
-            if (item.is_shift !== 1)
               deleteExam(item).then(() => {
                 this.getList()
                 this.$message({
@@ -397,7 +403,6 @@
                 });
               })
           })
-
 
         }).catch(() => {
           this.$message({
