@@ -279,17 +279,10 @@
             if(this.tempSchool.is_main)
               this.tempSchool.sub_school=this.tempSchool.main_school
             createSchool(this.tempSchool).then(response => {
-              if (response.data === 1)
                 this.$notify({
                   title: '成功',
                   message: '添加成功',
                   type: 'success'
-                });
-              else
-                this.$notify({
-                  title: '失败',
-                  message: '已存在',
-                  type: 'error'
                 });
               this.getList()
               this.tempSchool = {}
