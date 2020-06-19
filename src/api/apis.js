@@ -80,7 +80,7 @@ export function getSchool() {
     url: '/apis/v1/school/',
     method: 'get',
   })
-  const response = {
+/*  const response = {
     code: int,
     data: {
       logo: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
@@ -94,7 +94,7 @@ export function getSchool() {
       description: '鄂州大学描述',
       address: ''
     }
-  }
+  }*/
 }
 
 export function modifySchool(data) {
