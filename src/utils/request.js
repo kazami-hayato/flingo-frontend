@@ -68,7 +68,7 @@ service.interceptors.response.use(
         })
       } else if (res.code === 400) {
         this.$message({
-          message: res.data,
+          message: res.message,
           type: 'error',
           duration: 2000
         })

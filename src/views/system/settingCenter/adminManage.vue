@@ -9,6 +9,8 @@
           </el-button>
         </el-col>
         <el-col align="right">
+          <el-tag style="margin-right: 1rem">在线用户:{{onlineNum}}</el-tag>
+
           <el-button type="success" @click="passwordVisible=true">
             查询管理员密码
           </el-button>
@@ -163,7 +165,8 @@
 
 <script>
   // import {getAdmins, deleteAdmin, addAdmin, updateAdmin} from '@/api/apis'
-  import {getAdminsSystem,getMainSchools,getSubSchools, getAdminPwd, createAdminsSystem, updateAdminsSystem} from "@/api/system_apis"
+  import {getAdminsSystem,getMainSchools,getSubSchools,getOnlineAdmin,
+    getAdminPwd, createAdminsSystem, updateAdminsSystem} from "@/api/system_apis"
   import Pagination from '@/components/Pagination'
   import {Current} from "@/utils/time"; // secondary package based on el-pagination
 
@@ -172,6 +175,7 @@
     components: {Pagination},
     data() {
       return {
+        onlineNum:0,
         rules:{
           username:[{required: true, message: '请输入', trigger: 'blur'}],
           real_name:[{required: true, message: '请输入', trigger: 'blur'}],
@@ -208,12 +212,17 @@
     },
     created() {
       let user_type = this.$store.state.user.user_type
+      getOnlineAdmin().then(response=>{
+        this.onlineNum=response.data;
+      })
       console.log(user_type)
       this.userOptions.push({label: '分校管理员', value: 3})
       this.userOptions.push({label: '主校管理员', value: 2})
       this.userOptions.push({label: '系统管理员', value: 1})
       this.getList()
       this.main_schools=this.getAllMain()
+
+
     },
     methods: {
       getAllSub(main_school){
