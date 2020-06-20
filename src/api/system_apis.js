@@ -225,6 +225,18 @@ export function getOnlineAdmin() {
   })
 }
 
+/**
+ * 获取在线人员名单
+ * @returns
+ */
+export function getOnlineAdminNames() {
+  return request({
+    url: '/apis/v1/auth/activeNames',
+    method: 'get',
+  })
+}
+
+
 export function getStudentsSystem(data) {
   return request({
     url: '/apis/v1/system/students',
