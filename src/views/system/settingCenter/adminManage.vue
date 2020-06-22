@@ -9,7 +9,11 @@
           </el-button>
         </el-col>
         <el-col align="right">
-          <el-button style="margin-right: 1rem" @click="showCurrentUserName">在线用户:{{online.onlineNum}}</el-button>
+          <el-button style="margin-right: 1rem" round type="warning"
+                     @click="openOnlineDraw" icon="el-icon-user-solid">
+
+            在线用户:{{onlineNum}}
+          </el-button>
 
           <el-button type="success" @click="passwordVisible=true">
             查询管理员密码
@@ -115,7 +119,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="输入主校名称" v-if="tempAdmin.user_type>=2" prop="main_school">
-<!--          <el-input v-model="tempAdmin.main_school"/>-->
+          <!--          <el-input v-model="tempAdmin.main_school"/>-->
           <el-select v-model="tempAdmin.main_school" placeholder="请选择" @change="getAllSub(tempAdmin.main_school)">
             <el-option
               v-for="item in main_schools"
@@ -126,7 +130,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="输入分校名称" v-if="tempAdmin.user_type===3" prop="sub_school">
-<!--          <el-input v-model="tempAdmin.sub_school" />-->
+          <!--          <el-input v-model="tempAdmin.sub_school" />-->
           <el-select v-model="tempAdmin.sub_school" placeholder="请选择">
             <el-option
               v-for="item in sub_schools"
@@ -160,6 +164,61 @@
         <span>密码是：{{searchPassword}}</span>
       </div>
     </el-dialog>
+
+    <!--管理员在线名单抽屉显示-->
+    <el-drawer
+      :with-header="false"
+      :visible.sync="onlineListVisible"
+      size="70%"
+      direction="rtl">
+      <div style="padding: 1rem">
+        <el-table
+          :data="onlineList"
+          style="width: 100%"
+          max-height="100%">
+          <el-table-column
+            fixed
+            prop="username"
+            label="用户名"
+            width="250">
+          </el-table-column>
+          <el-table-column
+            fixed
+            prop="ip"
+            label="登录IP"
+            width="100">
+          </el-table-column>
+          <el-table-column
+            fixed
+            prop="loginAddress"
+            label="登录区域"
+            width="250">
+          </el-table-column>
+          <el-table-column
+            fixed
+            prop="loginTime"
+            label="登录时间"
+            width="180">
+          </el-table-column>
+          <el-table-column
+            fixed="right"
+            label="操作"
+            width="100">
+            <template slot-scope="scope">
+              <el-button
+                @click.native.prevent="logoutActive(scope.$index)"
+                type="primary"
+                size="small">
+                移除
+              </el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+        <pagination v-show="onlineNum>0" :total="onlineNum"
+                    :page.sync="onlineQuery.page" :limit.sync="onlineQuery.limit"
+                    @pagination="getOnlineTable"/>
+      </div>
+    </el-drawer>
   </div>
 </template>
 
@@ -167,7 +226,7 @@
   // import {getAdmins, deleteAdmin, addAdmin, updateAdmin} from '@/api/apis'
   import {
     getAdminsSystem, getMainSchools, getSubSchools, getOnlineAdmin,
-    getAdminPwd, createAdminsSystem, updateAdminsSystem, getOnlineAdminNames
+    getAdminPwd, createAdminsSystem, updateAdminsSystem, getOnlineAdminNums
   } from "@/api/system_apis"
   import Pagination from '@/components/Pagination'
   import {Current} from "@/utils/time"; // secondary package based on el-pagination
@@ -177,19 +236,21 @@
     components: {Pagination},
     data() {
       return {
-        onlineNum:0,
-        online:{
-          onlineNum:0,
-          onlineSysName:'',
+        onlineListVisible: false,
+        onlineList: [],
+        onlineQuery: {
+          limit: 10,
+          page: 1,
         },
-        rules:{
-          username:[{required: true, message: '请输入', trigger: 'blur'}],
-          real_name:[{required: true, message: '请输入', trigger: 'blur'}],
-          user_type:[{required: true, message: '请输入', trigger: 'blur'}],
-          main_school:[{required: true, message: '请输入', trigger: 'blur'}],
-          sub_school:[{required: true, message: '请输入', trigger: 'blur'}],
-          password:[{required: true, message: '请输入', trigger: 'blur'}],
-          password_confirm:[{required: true, message: '请输入', trigger: 'blur'}],
+        onlineNum: 0,
+        rules: {
+          username: [{required: true, message: '请输入', trigger: 'blur'}],
+          real_name: [{required: true, message: '请输入', trigger: 'blur'}],
+          user_type: [{required: true, message: '请输入', trigger: 'blur'}],
+          main_school: [{required: true, message: '请输入', trigger: 'blur'}],
+          sub_school: [{required: true, message: '请输入', trigger: 'blur'}],
+          password: [{required: true, message: '请输入', trigger: 'blur'}],
+          password_confirm: [{required: true, message: '请输入', trigger: 'blur'}],
         },
         searchPassword: '',
         passwordVisible: false,
@@ -212,49 +273,47 @@
         },
         listData: [],
         total: 0,
-        main_schools:[],
-        sub_schools:[],
+        main_schools: [],
+        sub_schools: [],
       }
     },
     created() {
       let user_type = this.$store.state.user.user_type
-      getOnlineAdmin().then(response=>{
-        this.online.onlineNum=response.data;
-      })
-      getOnlineAdminNames().then(response=>{
-        this.online.onlineSysName=response.data;
+
+      getOnlineAdminNums().then(response => {
+        this.onlineNum = response.data;
       })
       console.log(user_type)
       this.userOptions.push({label: '分校管理员', value: 3})
       this.userOptions.push({label: '主校管理员', value: 2})
       this.userOptions.push({label: '系统管理员', value: 1})
       this.getList()
-      this.main_schools=this.getAllMain()
-
+      this.main_schools = this.getAllMain()
 
     },
     methods: {
-      /**
-       * 现实在线人员
-       */
-      showCurrentUserName(){
-        let a = "name:";
-        for(let i=0; i<this.online.onlineSysName.length; i++){
-          a+=this.online.onlineSysName[i]+"   ";
-        }
-        this.$alert(a, '在线人员', {
-          confirmButtonText: '确定',
-        });
+      openOnlineDraw(){
+        this.onlineListVisible=true
+        this.getOnlineTable()
       },
-      getAllSub(main_school){
-          getSubSchools({main_school:main_school}).then(response=>{
-            this.sub_schools=response.data
+      logoutActive(index) {
+        //系统管理员强制下线
+        rows.splice(index, 1);
+      },
+      getOnlineTable(){
+          getOnlineAdmin(this.onlineQuery).then(response=>{
+            this.onlineList=response.data
           })
       },
-      getAllMain(){
-          getMainSchools().then(response=>{
-            this.main_schools=response.data
-          })
+      getAllSub(main_school) {
+        getSubSchools({main_school: main_school}).then(response => {
+          this.sub_schools = response.data
+        })
+      },
+      getAllMain() {
+        getMainSchools().then(response => {
+          this.main_schools = response.data
+        })
       },
       getList() {
         getAdminsSystem(this.listQuery).then(response => {
@@ -301,10 +360,10 @@
                     type: 'error',
                     duration: 2000
                   })
-                this.tempAdmin= {
+                this.tempAdmin = {
                   register_date: Current()
                 },
-                this.getList()
+                  this.getList()
                 this.dialogVisible = false
               })
             else {

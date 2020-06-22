@@ -218,10 +218,11 @@ export function updateAdminsSystem(data) {
   })
 }
 
-export function getOnlineAdmin() {
+export function getOnlineAdmin(data) {
   return request({
-    url: '/apis/v1/auth/active',
+    url: '/apis/v1/auth/activeUsers',
     method: 'get',
+    params:data
   })
 }
 
@@ -229,9 +230,9 @@ export function getOnlineAdmin() {
  * 获取在线人员名单
  * @returns
  */
-export function getOnlineAdminNames() {
+export function getOnlineAdminNums() {
   return request({
-    url: '/apis/v1/auth/activeNames',
+    url: '/apis/v1/auth/activeNums',
     method: 'get',
   })
 }

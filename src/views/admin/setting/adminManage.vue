@@ -6,13 +6,13 @@
 
         <el-col>
           <el-button style="margin-left: 10px;" type="primary" icon="el-icon-edit"
-                     @click="openCreateDialog">新增管理员
+                     @click="openCreateDialog" >新增管理员
           </el-button>
           <!--          <el-button style="margin-left: 10px;" type="primary" icon="el-icon-edit"-->
           <!--                     @click="dialogVisible = true">批量导入-->
           <!--          </el-button>-->
           <el-button style="margin-left: 10px;" type="danger" icon="el-icon-remove"
-                     @click="deleteChosen">删除管理员
+                     @click="deleteChosen" >删除管理员
           </el-button>
         </el-col>
       </el-row>
