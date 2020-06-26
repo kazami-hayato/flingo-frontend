@@ -7,6 +7,14 @@
       </aside>
       <el-row type="flex" class="row-bg" justify="space-between">
         <el-col :span="4">
+          <el-button style="margin-left: 10px;" type="primary" icon="el-icon-view"
+                   @click="openOnlineStudentTable">显示在线学生
+          </el-button>
+        </el-col>
+      </el-row>
+      <br>
+      <el-row type="flex" class="row-bg" justify="space-between">
+        <el-col :span="4">
           <el-input v-model="start_date" placeholder="起始天数"/>
         </el-col>
         <el-col :span="4">
@@ -137,8 +145,64 @@
           <el-tag v-else type="success">{{row.timespan}}</el-tag>
         </template>
       </el-table-column>
-
     </el-table>
+
+
+    <el-drawer
+      :visible.sync="showOnlineTable"
+      size="80%">
+      <el-table
+        :data="studentOnlineData">
+      <el-table-column
+        type="index"
+        label="序号"
+        width="120">
+      </el-table-column>
+      <el-table-column
+        prop="student_id"
+        label="学号"
+        width="120">
+      </el-table-column>
+      <el-table-column
+        prop="real_name"
+        label="姓名"
+        width="120">
+      </el-table-column>
+      <el-table-column
+        prop="id_card"
+        label="身份证"
+        width="250">
+      </el-table-column>
+      <el-table-column
+        prop="phone"
+        label="手机号"
+        min-width="150">
+      </el-table-column>
+      <el-table-column
+        prop="qq_num"
+        label="QQ号"
+        min-width="150">
+      </el-table-column>
+      <el-table-column
+        prop="wechat_num"
+        label="微信号"
+        min-width="150">
+      </el-table-column>
+      <el-table-column
+        prop="main_school"
+        label="用户学校"
+        width="150">
+      </el-table-column>
+      <el-table-column
+        prop="recent_login"
+        label="登录时间"
+        width="200">
+      </el-table-column>
+    </el-table>
+
+
+    </el-drawer>
+
     <pagination v-show="total>0" :total="total" :page.sync="listQuery.page"
                 :limit.sync="listQuery.limit"
                 @pagination="getList"/>
@@ -147,7 +211,7 @@
 </template>
 
 <script>
-  import {getSupervise} from '@/api/system_apis'
+  import {getOnlineAdmin, getStudentOnline, getSupervise} from '@/api/system_apis'
   import {Current, DatetoString} from '@/utils/time'
   import Pagination from '@/components/Pagination'
   import axios from "axios";
@@ -175,13 +239,31 @@
           // operator:
         },
         listData: [],
-        total: 0
+        total: 0,
+        studentOnlineData:[],
+        showOnlineTable:false
       }
     },
     created() {
       this.getList()
     },
     methods: {
+      /***
+       * 打开在线学生列表
+       */
+      openOnlineStudentTable(){
+        this.showOnlineTable=true,
+          this.getOnlineTable()
+      },
+      /***
+       * 获取在线人员列表
+       */
+      getOnlineTable(){
+        getStudentOnline(this.listQuery).then(response=>{
+          this.studentOnlineData=response.data
+        })
+
+      },
       setSpan() {
         if (this.start_span === null || this.end_span === null)
           this.$message({

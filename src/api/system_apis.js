@@ -230,10 +230,17 @@ export function getOnlineAdmin(data) {
  * 获取在线人员名单
  * @returns
  */
-export function getOnlineAdminNums() {
+export function getOnlineAdminNums(data) {
   return request({
     url: '/apis/v1/auth/activeNums',
     method: 'get',
+  })
+}
+export function getStudentOnline(data) {
+  return request({
+    url: '/apis/v1/student/online',
+    method: 'get',
+    params:data
   })
 }
 
