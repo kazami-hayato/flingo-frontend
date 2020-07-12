@@ -68,8 +68,8 @@
       </el-table-column>
       <el-table-column label="课程状态" width="150px" align="center">
         <template slot-scope="{row}">
-          <el-tag v-if="row.is_main===1" type="success">已上架</el-tag>
-          <el-tag v-if="row.is_main===0" type="info">未上架</el-tag>
+          <el-tag v-if="row.is_Subscribe===1" type="success">已上架</el-tag>
+          <el-tag v-if="row.is_Subscribe===0" type="info">未上架</el-tag>
         </template>
       </el-table-column>
 
@@ -78,11 +78,11 @@
           <el-button size="medium" type="primary" @click="lookDetail(row)">
             查看目录
           </el-button>
-          <el-button v-if="row.is_main!==1" type="success" size="medium" @click="shiftTheCourse(row)">
+          <el-button v-if="row.is_Subscribe!==1" type="success" size="medium" @click="shiftTheCourse(row)">
             上架课程
           </el-button>
 
-          <el-button v-if="row.is_main!==0" size="medium" type="danger" @click="unshiftTheCourse(row)">
+          <el-button v-if="row.is_Subscribe!==0" size="medium" type="danger" @click="unshiftTheCourse(row)">
             下架课程
           </el-button>
         </template>

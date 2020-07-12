@@ -278,7 +278,7 @@
       ,
       handleExport() {
         const filename = this.reportQuery.main_school + '_' + this.reportQuery.sub_school + '_'
-          + this.reportQuery.tag + '_学生成绩表.xls'
+          + '总' + '_学生成绩表.xls'
         request({
           url: '/apis/v1/static/down_current',
           method: 'get',
