@@ -214,6 +214,7 @@
   import StudentDetail from "./component/StudentDetail";
   import axios from "axios";
   import {saveAs} from "file-saver";
+  import request from "@/utils/requestFile";
 
   export default {
     name: 'all',
@@ -498,7 +499,7 @@
       handleExport() {
         const filename=this.reportQuery.main_school+'_'+this.reportQuery.sub_school+'_'
           +this.reportQuery.tag+'_学生成绩表.xls'
-        axios({
+/*        axios({
           url: '/apis/v1/static/down_current',
           method: 'get',
           params: this.reportQuery,
@@ -507,7 +508,16 @@
           .then(res => {
             console.log(res)//定义文件名等相关信息
             saveAs(res.data,filename)
-          })
+          })*/
+        request({
+          url: '/apis/v1/static/down_current',
+          method: 'get',
+          params: this.reportQuery,
+          responseType: 'blob'     //接收类型设置，否者返回字符型
+        }).then(res=>{
+          console.log(res.data)//定义文件名等相关信息
+          saveAs(res.data,filename)
+        })
       },
       formatJson(filterVal, jsonData) {
         return jsonData.map(v => filterVal.map(j => {

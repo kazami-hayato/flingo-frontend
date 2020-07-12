@@ -10,7 +10,7 @@ const serviceFile = axios.create({
   timeout: 20000 // request timeout
 })
 
-// request interceptor
+// request interceptora
 serviceFile.interceptors.request.use(
   config => {
     // do something before request is sent
