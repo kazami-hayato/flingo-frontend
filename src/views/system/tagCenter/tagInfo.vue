@@ -133,6 +133,7 @@
   import StudentDetail from "./component/StudentDetail";
   import {saveAs} from 'file-saver'
   import axios from 'axios'
+  import request from "@/utils/requestFile";
 
   export default {
     name: 'TagInfo',
@@ -143,6 +144,7 @@
         reportQuery: {
           main_school: '',
           sub_school: '',
+          user_type : this.$store.state.user.user_type
         },
         tableKey: 0,
         //学生表
@@ -277,16 +279,16 @@
       handleExport() {
         const filename = this.reportQuery.main_school + '_' + this.reportQuery.sub_school + '_'
           + this.reportQuery.tag + '_学生成绩表.xls'
-        axios({
+        request({
           url: '/apis/v1/static/down_current',
           method: 'get',
           params: this.reportQuery,
           responseType: 'blob'     //接收类型设置，否者返回字符型
+        }).then(res=>{
+          console.log(res.data)//定义文件名等相关信息
+          saveAs(res.data,filename)
         })
-          .then(res => {
-            console.log(res)//定义文件名等相关信息
-            saveAs(res.data, filename)
-          })
+
       }
     },
   }

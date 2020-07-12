@@ -260,7 +260,7 @@
           responseType: 'blob'     //接收类型设置，否者返回字符型
         }).then(res=>{
           console.log(res.data)//定义文件名等相关信息
-          saveAs(res.data.data,filename)
+          saveAs(res.data,filename)
         })
 
 /*        axios({
