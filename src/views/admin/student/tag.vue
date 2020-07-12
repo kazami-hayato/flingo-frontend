@@ -108,6 +108,7 @@
               :on-success="handleUpload"
               :file-list="fileList"
               :limit="1"
+              :headers="headers"
               action="/apis/v1/static/upstu">
               <i class="el-icon-upload"/>
               <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
@@ -139,6 +140,7 @@
               :on-success="handleUpload"
               :file-list="fileList"
               :limit="1"
+              :headers="headers"
               action="/apis/v1/static/upstucourse">
               <i class="el-icon-upload"/>
               <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
@@ -192,6 +194,7 @@
   import axios from 'axios'
   import {saveAs} from "file-saver";
   import request from "@/utils/requestFile";
+  import { getToken } from '../../../utils/auth'
 
   export default {
     name: "tag",
@@ -215,8 +218,10 @@
         multipleSelection: [],
         tableData: [],
         courseVisible:false,
-        zipVisible:false
-
+        zipVisible:false,
+        headers:{
+          'X-Token':getToken()
+        },
       }
     },
     created() {
