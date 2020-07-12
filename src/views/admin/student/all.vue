@@ -224,6 +224,7 @@
         reportQuery: {
           main_school: this.$store.state.user.main_school,
           sub_school: this.$store.state.user.sub_school,
+          user_type : this.$store.state.user.user_type,
           tag: '',
         },
         //
