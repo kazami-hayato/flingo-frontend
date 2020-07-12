@@ -7,6 +7,13 @@
           <el-button style="margin-left: 10px;" type="primary" icon="el-icon-edit"
                      @click="openCreateDialog">新增管理员
           </el-button>
+
+        </el-col>
+        <el-col>
+          <el-input placeholder="请输入内容" v-model="listQuery.searchText">
+            <el-button slot="append" icon="el-icon-search" @click="searchAdmin"
+                       style="background: #1890FF;color: #fff;border-radius: 0"/>
+          </el-input>
         </el-col>
         <el-col align="right">
           <el-button style="margin-right: 1rem" round type="warning"
@@ -292,18 +299,25 @@
 
     },
     methods: {
-      openOnlineDraw(){
-        this.onlineListVisible=true
+      searchAdmin() {
+        this.listQuery.page = 1
+        getAdminsSystem(this.listQuery).then(response => {
+          this.listData = response.data
+          this.total = response.total
+        })
+      },
+      openOnlineDraw() {
+        this.onlineListVisible = true
         this.getOnlineTable()
       },
       logoutActive(index) {
         //系统管理员强制下线
         rows.splice(index, 1);
       },
-      getOnlineTable(){
-          getOnlineAdmin(this.onlineQuery).then(response=>{
-            this.onlineList=response.data
-          })
+      getOnlineTable() {
+        getOnlineAdmin(this.onlineQuery).then(response => {
+          this.onlineList = response.data
+        })
       },
       getAllSub(main_school) {
         getSubSchools({main_school: main_school}).then(response => {

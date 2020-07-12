@@ -645,7 +645,7 @@ export function getTags(data) {
 
 export function getStudentsByTag(data) {
   return request({
-    url: '/apis/v1/students/getStuByTag',
+    url: '/apis/v1/students/history/getStuByTag',
     method: 'get',
     params: data
   })
