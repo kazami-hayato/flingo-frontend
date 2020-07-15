@@ -128,6 +128,7 @@
           searchType: '1',
           page: 1,
           limit: 20,
+          user_type:this.$store.state.user.user_type
         },
         total: 0,
         chosenList: [],
@@ -158,7 +159,7 @@
       searchCourses() {
         if (this.listQuery.searchText === '') this.getList()
         else
-          getMainCourseBySearch(this.listQuery).then(response => {
+          getCourses(this.listQuery).then(response => {
             this.list = response.data
             this.total = response.total
           })
