@@ -79,7 +79,7 @@
       </el-table-column>
       <el-table-column label="注册日期" prop="register_date" width="150px" align="center">
         <template slot-scope="{row}">
-          <span>{{ row.stu.register_date }}</span>
+          <span>{{ row.stu.create_time }}</span>
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center" minWidth="200" class-name="small-padding fixed-width">

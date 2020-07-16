@@ -435,6 +435,18 @@ export function getStudentCaptures(data) {
   }
 }
 
+/**
+ * 获取督学数据
+ * @param data
+ * @returns {AxiosPromise}
+ */
+export function getAdminSupervise(data) {
+  return request({
+    url: '/apis/v1/admins/supervise/students',
+    method: 'get',
+    params: data
+  })
+}
 //网校课程相关 获取该校仓库所有课程
 //课程分页 get ?limit=?page=?searchText=?sub_school=?
 export function getCourses(data) {

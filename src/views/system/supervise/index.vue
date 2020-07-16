@@ -213,7 +213,7 @@
 <script>
   import {getOnlineAdmin, getStudentOnline, getSupervise} from '@/api/system_apis'
   import {Current, DatetoString} from '@/utils/time'
-  import Pagination from '@/components/Pagination'
+  import Pagination from '@/components/Pagination/index'
   import axios from "axios";
   import {saveAs} from "file-saver"; // secondary package based on el-pagination
   export default {

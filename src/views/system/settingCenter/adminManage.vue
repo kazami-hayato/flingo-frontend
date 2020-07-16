@@ -74,10 +74,12 @@
         min-width="120">
       </el-table-column>
       <el-table-column
-        prop="register_date"
         label="注册日期"
         align="center"
         show-overflow-tooltip>
+        <template slot-scope="{row}">
+          <span>{{ row.create_time | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
+        </template>
       </el-table-column>
       <el-table-column
         label="状态"

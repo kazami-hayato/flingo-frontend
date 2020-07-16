@@ -81,16 +81,7 @@ export const constantRoutes = [
       }
     ]
   },
-  {
-    path: '/supervise',
-    component: Layout,
-    children: [{
-      path: 'index',
-      component: () => import('@/views/supervise'),
-      name: 'Supervise',
-      meta: {title: '督学', icon: 'z_zoom'}
-    }]
-  },
+
   {
     path: '/catch',
     component: Layout,
@@ -231,6 +222,17 @@ export const asyncRoutes = [
       },
     ]
   },
+  //督学
+  {
+    path: '/admins/supervise',
+    component: Layout,
+    children: [{
+      path: 'index',
+      component: () => import('@/views/admin/supervise/index'),
+      name: 'Supervise',
+      meta: {title: '网校督学', icon: 'z_zoom',roles: ['main_school','sub_school']}
+    }]
+  },
   //学校课程管理
   {
     path: '/course',
@@ -344,6 +346,16 @@ export const asyncRoutes = [
         meta: {title: '学校管理', icon: 'z_school', roles: ['system']}
       }
     ]
+  },
+  {
+    path: '/supervise',
+    component: Layout,
+    children: [{
+      path: 'index',
+      component: () => import('@/views/system/supervise/index'),
+      name: 'Supervise',
+      meta: {title: '系统督学', icon: 'z_zoom',roles: ['system']}
+    }]
   },
   {
     path: '/courseCenter',
