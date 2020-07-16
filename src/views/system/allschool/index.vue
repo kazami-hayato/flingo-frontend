@@ -6,11 +6,6 @@
         <el-col :span="12">
 
           <el-input placeholder="请输入内容" v-model="listQuery.searchText">
-            <el-select v-model="listQuery.searchType" slot="prepend" placeholder="请选择"
-                       style="width: 130px;background: #1890FF;color: #fff">
-              <el-option label="网校号" value='1'/>
-              <el-option label="网校名" value='2'/>
-            </el-select>
             <el-button slot="append" icon="el-icon-search" @click="getList"
                        style="background: #1890FF;color: #fff;border-radius: 0"/>
           </el-input>
@@ -48,6 +43,7 @@
                   :name="'File'"
                   :file-list="fileList"
                   :limit="1"
+                  :headers="headers"
                   :on-success="handleUpload"
                   action="/apis/v1/static/file">
                   <el-button style="margin-left: 10px;" size="small" type="success">点击上传</el-button>
@@ -190,6 +186,7 @@
     name: "index",
     components: {Pagination},
     data() {
+
       let checkSub = (rule, value, callback) => {
         if (value === this.tempSchool.main_school) {
           callback(new Error('分校名不能等于主校'));
@@ -198,6 +195,9 @@
         }
       };
       return {
+        headers:{
+          'X-Token':this.$store.state.user.token
+        },
         fileList: [],
         dialogVisible: false,
         chosenList: [],

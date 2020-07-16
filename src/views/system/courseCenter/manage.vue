@@ -67,10 +67,10 @@
                     <el-input v-model="row.course_name" style="width: 200px"/>
                   </el-form-item>
                   <el-form-item label="创建时间" required>
-                    <el-input v-model="row.create_time" style="width: 200px"/>
+                    <el-input v-model="row.create_time" style="width: 200px" disabled/>
                   </el-form-item>
                   <el-form-item label="更新时间" required>
-                    <el-input v-model="row.update_time" style="width: 200px"/>
+                    <el-input v-model="row.update_time" style="width: 200px" disabled/>
                   </el-form-item>
                   <el-form-item label="教材名" required>
                     <el-input v-model="row.material_name" style="width: 200px"/>
