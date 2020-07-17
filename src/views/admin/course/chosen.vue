@@ -64,22 +64,11 @@
           <span>{{ row.cross_price}}</span>
         </template>
       </el-table-column>
-      <el-table-column label="学校名称（主/分）" width="150px" align="center">
-        <template slot-scope="{row}">
-          <span v-if="row.main_school===row.sub_school">{{ row.main_school}}(主)</span>
-          <span v-else>{{ row.sub_school}}(分)</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="选课数目" width="150px" align="center">
-        <template slot-scope="{row}">
-          <span>{{ row.sales}}</span>
-        </template>
-      </el-table-column>
 
       <el-table-column label="课程状态" width="150px" align="center" v-if="user_type<=2">
         <template slot-scope="{row}">
-          <el-tag v-if="row.isChosen===1" type="success">分校可见</el-tag>
-          <el-tag v-if="row.isChosen===0" type="info">分校不可见</el-tag>
+          <el-tag v-if="row.is_valid===1" type="success">分校可见</el-tag>
+          <el-tag v-if="row.is_valid===0" type="info">分校不可见</el-tag>
         </template>
       </el-table-column>
 
@@ -91,15 +80,15 @@
           <!--          </el-button>-->
 
           <el-tooltip placement="left" content="使课程对所有分校可见" effect="dark">
-            <el-button v-if="row.isChosen!==1"  size="medium" type="primary" @click="makeValid(row)">
+            <el-button v-if="row.is_valid!==1"  size="medium" type="primary" @click="makeValid(row)">
               可见
             </el-button>
           </el-tooltip>
-          <el-button v-if="row.isChosen!==0" size="medium" type="warning" @click="modifyCourse(row)">
+          <el-button v-if="row.is_valid!==0" size="medium" type="warning" @click="modifyCourse(row)">
             修改课程
           </el-button>
           <el-tooltip placement="top" content="使课程对所有分校不可见" effect="dark">
-            <el-button v-if="row.isChosen!==0" size="medium" type="danger" @click="makeUnvalid(row)">
+            <el-button v-if="row.is_valid!==0" size="medium" type="danger" @click="makeUnvalid(row)">
               不可见
             </el-button>
           </el-tooltip>
@@ -132,7 +121,7 @@
   import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
   export default {
-    name: 'sale',
+    name: 'chosen',
     components: {Pagination},
     data() {
       return {
@@ -157,7 +146,7 @@
     },
     methods: {
       getList() {
-        getMainCourseSale(this.listQuery).then(response => {
+        getShiftCourses(this.listQuery).then(response => {
           this.list = response.data
           this.total = response.total
           // 设置延时以便于优化
@@ -185,7 +174,7 @@
       },
       shiftSelected() {
         this.chosenList.forEach(ele => {
-          ele.isChosen = 1
+          ele.is_valid = 1
           updateShiftCourse(ele).then(() => {
 
           })
@@ -195,7 +184,7 @@
       },
       unshiftSelected() {
         this.chosenList.forEach(ele => {
-          ele.isChosen = 0
+          ele.is_valid = 0
           updateShiftCourse(ele).then(() => {
 
           })
@@ -204,7 +193,7 @@
 
       },
       makeValid(row) {
-        row.isChosen = 1
+        row.is_valid = 1
         updateShiftCourse(row).then(() => {
           this.getList()
         })
@@ -224,7 +213,7 @@
         })
       },
       makeUnvalid(row) {
-        row.isChosen = 0
+        row.is_valid = 0
         updateShiftCourse(row).then(() => {
           setTimeout(() => {
             this.listLoading = false

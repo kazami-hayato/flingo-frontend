@@ -256,6 +256,16 @@ export const asyncRoutes = [
         }
       },
       {
+        path: 'chosen',
+        component: () => import('@/views/admin/course/chosen'),
+        name: 'Chosen',
+        meta: {
+          title: '上架课程管理',
+          // if do not set roles, means: this page does not require permission
+          roles: ['main_school', 'sub_school'] // or you can only set roles in sub nav
+        }
+      },
+      {
         path: 'sale',
         component: () => import('@/views/admin/course/sale'),
         name: 'Sale',
