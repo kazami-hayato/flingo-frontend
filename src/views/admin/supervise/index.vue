@@ -179,6 +179,8 @@
   import {Current, DatetoString} from '@/utils/time'
   import Pagination from '@/components/Pagination'
   import axios from "axios";
+  import request from "@/utils/requestFile"; // secondary package based on el-pagination
+
   import {saveAs} from "file-saver"; // secondary package based on el-pagination
   export default {
     name: "index",
@@ -200,6 +202,7 @@
           end_date: '',
           main_school: this.$store.state.user.main_school,
           sub_school: this.$store.state.user.sub_school,
+          user_type : this.$store.state.user.user_type,
           // operator:
         },
         listData: [],
@@ -251,10 +254,9 @@
         }
       },
       downloadSupervise(){
-        if (this.main_school !== '') this.listQuery.main_school = this.main_school
-        if (this.sub_school !== '') this.listQuery.sub_school = this.sub_school
+        console.log(this.listQuery)
         const filename='督学数据.xls'
-        axios({
+        request({
           url: '/apis/v1/static/down_supervise',
           method: 'get',
           params: this.listQuery,

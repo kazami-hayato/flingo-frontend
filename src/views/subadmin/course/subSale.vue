@@ -87,6 +87,10 @@
     },
     methods: {
       getList() {
+        if(this.listQuery.user_type===1){
+          this.listQuery.main_school=''
+          this.listQuery.sub_school=''
+        }
         getSubCoursesSale(this.listQuery).then(response => {
           this.list = response.data
           this.total = response.total

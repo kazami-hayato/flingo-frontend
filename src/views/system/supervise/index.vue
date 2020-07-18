@@ -214,8 +214,8 @@
   import {getOnlineAdmin, getStudentOnline, getSupervise} from '@/api/system_apis'
   import {Current, DatetoString} from '@/utils/time'
   import Pagination from '@/components/Pagination/index'
-  import axios from "axios";
-  import {saveAs} from "file-saver"; // secondary package based on el-pagination
+  import {saveAs} from "file-saver";
+  import request from "@/utils/requestFile"; // secondary package based on el-pagination
   export default {
     name: "index",
     components: {Pagination},
@@ -234,8 +234,10 @@
           page: 1,
           start_date: '',
           end_date: '',
-          main_school: '',
-          sub_school: ''
+          main_school: this.$store.state.user.main_school,
+          sub_school: this.$store.state.user.sub_school,
+          user_type : this.$store.state.user.user_type,
+
           // operator:
         },
         listData: [],
@@ -287,19 +289,19 @@
         }
       },
       downloadSupervise(){
-        if (this.main_school !== '') this.listQuery.main_school = this.main_school
-        if (this.sub_school !== '') this.listQuery.sub_school = this.sub_school
+        console.log(this.listQuery)
+
         const filename='督学数据.xls'
-        axios({
+        request({
           url: '/apis/v1/static/down_supervise',
           method: 'get',
           params: this.listQuery,
           responseType: 'blob'     //接收类型设置，否者返回字符型
+        }).then(res=>{
+          console.log(res.data)//定义文件名等相关信息
+          saveAs(res.data,filename)
         })
-          .then(res => {
-            console.log(res)//定义文件名等相关信息
-            saveAs(res.data,filename)
-          })
+
       },
       filterStudent() {
 
@@ -329,8 +331,10 @@
         // this.getList()
       },
       getList() {
-        if (this.main_school !== '') this.listQuery.main_school = this.main_school
-        if (this.sub_school !== '') this.listQuery.sub_school = this.sub_school
+        if(this.listQuery.user_type===1){
+          this.listQuery.main_school=''
+          this.listQuery.sub_school=''
+        }
         getSupervise(this.listQuery).then(res => {
           this.listData = []
           res.data.forEach(item => {
