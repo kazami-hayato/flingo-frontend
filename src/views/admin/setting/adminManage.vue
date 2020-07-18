@@ -129,8 +129,7 @@
 </template>
 
 <script>
-  import {getAdmins, deleteAdmin, addAdmin, updateAdmin} from '@/api/apis'
-  import {getSubSchools} from '@/api/system_apis'
+  import {getAdmins, deleteAdmin, addAdmin, updateAdmin,getSubSchools} from '@/api/apis'
   import Pagination from '@/components/Pagination'
   import {Current} from "@/utils/time"; // secondary package based on el-pagination
 

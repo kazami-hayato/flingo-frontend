@@ -247,37 +247,37 @@ export const asyncRoutes = [
     },
     children: [
       {
-        path: 'info',
+        path: 'MainCourseInfo',
         component: () => import('@/views/admin/course/info'),
-        name: 'Info',
+        name: 'MainCourseInfo',
         meta: {
           title: '课程信息',
           roles: ['main_school'] // or you can only set roles in sub nav
         }
       },
       {
-        path: 'chosen',
+        path: 'MainCourseChosen',
         component: () => import('@/views/admin/course/chosen'),
-        name: 'Chosen',
+        name: 'MainCourseChosen',
         meta: {
           title: '上架课程管理',
           // if do not set roles, means: this page does not require permission
-          roles: ['main_school', 'sub_school'] // or you can only set roles in sub nav
+          roles: ['main_school'] // or you can only set roles in sub nav
         }
       },
       {
-        path: 'sale',
+        path: 'MainCourseSale',
         component: () => import('@/views/admin/course/sale'),
-        name: 'Sale',
+        name: 'MainCourseSale',
         meta: {
           title: '课程销量',
           // if do not set roles, means: this page does not require permission
-          roles: ['main_school', 'sub_school'] // or you can only set roles in sub nav
+          roles: ['main_school'] // or you can only set roles in sub nav
         }
       },
       {
         path: 'SubCourseInfo',
-        component: () => import('@/views/admin/course/SubCourseInfo'),
+        component: () => import('@/views/subadmin/course/SubCourseInfo'),
         name: 'SubCourseInfo',
         meta: {
           title: '课程信息',
@@ -285,12 +285,32 @@ export const asyncRoutes = [
         }
       },
       {
-        path: 'courseCatalog/:course_id(\\d+)',
-        component: () => import('@/views/system/courseCenter/courseCatalog'),
-        hidden: true,
-        name: 'SetCatalog',
+        path: 'SubCourseChosen',
+        component: () => import('@/views/subadmin/course/subChosen'),
+        name: 'SubCourseChosen',
         meta: {
-          title: '设置目录',
+          title: '上架课程管理',
+          // if do not set roles, means: this page does not require permission
+          roles: ['sub_school'] // or you can only set roles in sub nav
+        }
+      },
+      {
+        path: 'SubCourseSale',
+        component: () => import('@/views/subadmin/course/subSale'),
+        name: 'SubCourseSale',
+        meta: {
+          title: '课程销量',
+          // if do not set roles, means: this page does not require permission
+          roles: ['sub_school'] // or you can only set roles in sub nav
+        }
+      },
+      {
+        path: 'courseCatalog/:course_id(\\d+)',
+        component: () => import('@/views/common/courseCatalog'),
+        hidden: true,
+        name: 'CatalogDetail',
+        meta: {
+          title: '查看目录',
           roles: ['main_school', 'sub_school']
         }
       }

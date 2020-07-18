@@ -14,9 +14,13 @@
           </el-input>
         </el-col>
         <el-col :span="16" align="right">
+          <el-button class="filter-item" type="success" icon="el-icon-plus"
+                     @click="shiftSelected">
+            选中可见
+          </el-button>
           <el-button class="filter-item" type="danger" icon="el-icon-minus"
                      @click="unshiftSelected">
-            下架已选
+            选中不可见
           </el-button>
         </el-col>
       </el-row>
@@ -25,7 +29,6 @@
     <el-table
       :data="list"
       fit
-      v-loading="listLoading"
       highlight-current-row
       style="width: 100%;"
       @selection-change="handleSelectionChange"
@@ -41,50 +44,54 @@
           <span>{{ row.course_name }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="课程简介" width="200px" align="center">
-        <template slot-scope="{row}">
-          <span>{{ row.course_brief}}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="创建时间" width="140px" align="center">
-        <template slot-scope="{row}">
-          <span>{{ row.create_time | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="教材名称" width="200px" align="center">
-        <template slot-scope="{row}">
-          <span>{{ row.material_name}}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="精讲时间" width="100px" align="center">
+      <el-table-column label="精讲时间" width="150px" align="center">
         <template slot-scope="{row}">
           <span>{{ row.norm_duration}}</span>
         </template>
       </el-table-column>
-      <el-table-column label="精讲课程数" width="100px" align="center">
+      <el-table-column label="精讲课程数" width="150px" align="center">
         <template slot-scope="{row}">
           <span>{{ row.norm_sum}}</span>
         </template>
       </el-table-column>
-      <el-table-column label="课程状态" width="150px" align="center">
+      <el-table-column label="精讲价格（元）" width="150px" align="center">
         <template slot-scope="{row}">
-          <el-tag v-if="row.is_Subscribe===1" type="success">已上架</el-tag>
-          <el-tag v-if="row.is_Subscribe===0" type="info">未上架</el-tag>
+          <span>{{ row.norm_price}}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="串讲价格（元）" width="150px" align="center">
+        <template slot-scope="{row}">
+          <span>{{ row.cross_price}}</span>
         </template>
       </el-table-column>
 
-      <el-table-column label="操作" align="center" minWidth="240px" class-name="small-padding fixed-width">
+      <el-table-column label="课程状态" width="150px" align="center" v-if="user_type<=2">
         <template slot-scope="{row}">
-          <el-button size="medium" type="primary" @click="lookDetail(row)">
-            查看目录
-          </el-button>
-          <el-button v-if="row.is_Subscribe!==1" type="success" size="medium" @click="shiftTheCourse(row)">
-            上架课程
-          </el-button>
+          <el-tag v-if="row.is_valid===1" type="success">分校可见</el-tag>
+          <el-tag v-if="row.is_valid===0" type="info">分校不可见</el-tag>
+        </template>
+      </el-table-column>
 
-          <el-button v-if="row.is_Subscribe!==0" size="medium" type="danger" @click="unshiftTheCourse(row)">
-            下架课程
+      <el-table-column label="操作" align="center" minWidth="200" class-name="small-padding fixed-width"
+                       v-if="user_type<=2">
+        <template slot-scope="{row}">
+          <!--          <el-button type="info" size="medium" @click="makeValid(row)">-->
+          <!--            查看目录-->
+          <!--          </el-button>-->
+
+          <el-tooltip placement="left" content="使课程对所有分校可见" effect="dark">
+            <el-button v-if="row.is_valid!==1"  size="medium" type="primary" @click="makeValid(row)">
+              可见
+            </el-button>
+          </el-tooltip>
+          <el-button v-if="row.is_valid!==0" size="medium" type="warning" @click="modifyCourse(row)">
+            修改课程
           </el-button>
+          <el-tooltip placement="top" content="使课程对所有分校不可见" effect="dark">
+            <el-button v-if="row.is_valid!==0" size="medium" type="danger" @click="makeUnvalid(row)">
+              不可见
+            </el-button>
+          </el-tooltip>
         </template>
       </el-table-column>
     </el-table>
@@ -102,7 +109,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="courseInfoVisible = false">取 消</el-button>
-        <el-button type="primary" @click="postShiftCourse">确 定</el-button>
+        <el-button type="primary" @click="postModify">确 定</el-button>
       </div>
     </el-dialog>
 
@@ -110,29 +117,28 @@
 </template>
 
 <script>
-  import {getCourses,getCoursesMain, getMainCourseBySearch, getShiftCourseById, unshiftCourse, shiftCourse} from '@/api/apis'
-  import Pagination from '@/components/Pagination'
+  import {getShiftCourses,getSubChosenCourses, getMainCourseSale, updateShiftCourse, unshiftCourse, makeValid} from '@/api/apis'
+  import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
   export default {
-    name: 'info',
+    name: 'chosen',
     components: {Pagination},
     data() {
       return {
         courseInfoVisible: false,
         courseInfo: {},
-        listLoading: true,
         listQuery: {
-          main_school: this.$store.state.user.main_school,
-          sub_school: this.$store.state.user.sub_school,
-          searchText: '',
-          searchType: '1',
           page: 1,
           limit: 20,
-          user_type:this.$store.state.user.user_type
+          searchText: '',
+          searchType: '1',
+          main_school: this.$store.state.user.main_school,
+          sub_school: this.$store.state.user.sub_school
         },
-        total: 0,
+        total: 5,
         chosenList: [],
-        list: undefined,
+        list: [],
+        user_type: this.$store.state.user.user_type
       }
     },
     created() {
@@ -140,76 +146,83 @@
     },
     methods: {
       getList() {
-        this.listLoading = true
-        getCoursesMain(this.listQuery).then(response => {
+        getSubChosenCourses(this.listQuery).then(response => {
           this.list = response.data
           this.total = response.total
+          // 设置延时以便于优化
           setTimeout(() => {
             this.listLoading = false
-          }, 1000)
+          }, 1.5 * 100)
         })
       },
       handleSelectionChange(val) {
         let temp = []
         val.forEach(item => {
-          temp.push(item.course_id)
+          temp.push(item)
         });
         this.chosenList = temp
+        console.log(this.chosenList)
       },
       searchCourses() {
-        if (this.listQuery.searchText === '') this.getList()
-        else
-          getCoursesMain(this.listQuery).then(response => {
-            this.list = response.data
-            this.total = response.total
-          })
+        this.getList()
       },
       shiftAll() {
+
       },
       unshiftAll() {
+
       },
       shiftSelected() {
+        this.chosenList.forEach(ele => {
+          ele.is_valid = 1
+          updateShiftCourse(ele).then(() => {
 
-        this.chosenList.forEach(item => {
-          shiftCourse(row).then(() => {
           })
         })
         this.getList()
+
       },
       unshiftSelected() {
-        this.chosenList.forEach(item => {
-          unshiftCourse({course_id: item}).then(() => {
+        this.chosenList.forEach(ele => {
+          ele.is_valid = 0
+          updateShiftCourse(ele).then(() => {
+
           })
         })
         this.getList()
+
       },
-      shiftTheCourse(row) {
+      makeValid(row) {
+        row.is_valid = 1
+        updateShiftCourse(row).then(() => {
+          this.getList()
+        })
+      },
+      modifyCourse(row) {
         this.courseInfoVisible = true
         this.courseInfo = row
       },
-      postShiftCourse() {
-        const theCourse = Object.assign(this.courseInfo, {main_school: this.$store.state.user.main_school})
-        theCourse.is_valid=1;
-        console.log(theCourse)
-        shiftCourse(theCourse).then(() => {
-          this.courseInfoVisible = false
+      postModify() {
+        this.courseInfoVisible = false
+        updateShiftCourse(this.courseInfo).then(() => {
+          setTimeout(() => {
+            this.listLoading = false
+          }, 1.5 * 100)
+          this.getList()
+
+        })
+      },
+      makeUnvalid(row) {
+        row.is_valid = 0
+        updateShiftCourse(row).then(() => {
+          setTimeout(() => {
+            this.listLoading = false
+          }, 1.5 * 100)
           this.getList()
         })
 
-      },
-      unshiftTheCourse(row) {
-        row.main_school = this.listQuery.main_school
-        row.sub_school = this.listQuery.sub_school
-        unshiftCourse(row).then(() => {
-        })
-        this.getList()
-      },
-      lookDetail(row) {
-        this.$router.push({
-          name: 'SetCatalog',
-          params: {course_id: row.course_id}
-        })
       }
+
     }
   }
 </script>

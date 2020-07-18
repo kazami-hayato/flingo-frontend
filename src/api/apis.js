@@ -96,7 +96,13 @@ export function getSchool() {
     }
   }*/
 }
-
+export function getSubSchools(data) {
+  return request({
+    url: '/apis/v1/admins/getSubSchools',
+    method: 'get',
+    params: data
+  })
+}
 export function modifySchool(data) {
   /*  data={
       logo: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
@@ -461,6 +467,37 @@ export function getCourses(data) {
     method: 'get',
     params: data
   })
+}
+//网校课程相关 获取该校仓库所有课程
+//课程分页 get ?limit=?page=?searchText=?sub_school=?
+export function getSubCourses(data) {
+  /*  data = {
+      limit: 20,
+      page: 1,
+      searchText: '课程名|课程id',
+      sub_school: '鄂州大学'
+    }*/
+  return request({
+    url: '/apis/v1/repository/courses/subschool',
+    method: 'get',
+    params: data
+  })
+}
+
+//主校仓库
+  export function getCoursesMain(data) {
+    /*  data = {
+        limit: 20,
+        page: 1,
+        searchText: '课程名|课程id',
+        sub_school: '鄂州大学'
+      }*/
+    return request({
+      url: '/apis/v1/repository/courses/main',
+      method: 'get',
+      params: data
+    })
+  }
   // const response = {
   //   code: 20000,
   //   data: [{
@@ -476,7 +513,6 @@ export function getCourses(data) {
   //   }],
   //   total: 1
   // }
-}
 
 //网校课程相关 获取该校仓库所有课程
 //课程分页 get ?limit=?page=?searchText=?sub_school=?
@@ -489,11 +525,43 @@ export function getMainCourseBySearch(data) {
 }
 
 
+export function getMainChosenCourses(data) {
+  return request({
+    url: '/apis/v1/shift/courses/main',
+    method: 'get',
+    params: data
+  })
+}
+
+export function getSubChosenCourses(data) {
+  return request({
+    url: '/apis/v1/shift/courses/sub',
+    method: 'get',
+    params: data
+  })
+}
+
 //获取该校上架的所有课程
 //课程分页 get ?limit=?page=?searchText=?sub_school=?main_school=
 export function getShiftCourses(data) {
   return request({
     url: '/apis/v1/shift/courses',
+    method: 'get',
+    params: data
+  })
+}
+
+export function getMainCoursesSale(data) {
+  return request({
+    url: '/apis/v1/sales/main',
+    method: 'get',
+    params: data
+  })
+}
+
+export function getSubCoursesSale(data) {
+  return request({
+    url: '/apis/v1/sales/sub',
     method: 'get',
     params: data
   })

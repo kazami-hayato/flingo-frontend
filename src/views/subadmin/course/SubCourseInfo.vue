@@ -110,8 +110,8 @@
 </template>
 
 <script>
-  import {getCourses, getMainCourseBySearch, getvalidCourseById, unvalidCourse, validCourse} from '@/api/apis'
-  import Pagination from '@/components/Pagination'
+  import {getCourses,getSubCourses, getMainCourseBySearch, getvalidCourseById, unvalidCourse, validCourse} from '@/api/apis'
+  import Pagination from '@/components/Pagination/index'
 
   export default {
     name: 'SubCourseInfo',
@@ -140,7 +140,7 @@
     methods: {
       getList() {
         this.listLoading = true
-        getCourses(this.listQuery).then(response => {
+        getSubCourses(this.listQuery).then(response => {
           this.list = response.data
           this.total = response.total
           setTimeout(() => {
@@ -158,7 +158,7 @@
       searchCourses() {
         if (this.listQuery.searchText === '') this.getList()
         else
-          getMainCourseBySearch(this.listQuery).then(response => {
+          getSubCourses(this.listQuery).then(response => {
             this.list = response.data
             this.total = response.total
           })

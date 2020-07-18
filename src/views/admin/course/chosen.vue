@@ -117,7 +117,7 @@
 </template>
 
 <script>
-  import {getShiftCourses, getMainCourseSale, updateShiftCourse, unshiftCourse, makeValid} from '@/api/apis'
+  import {getShiftCourses,getMainChosenCourses, getMainCourseSale, updateShiftCourse, unshiftCourse, makeValid} from '@/api/apis'
   import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
   export default {
@@ -146,7 +146,7 @@
     },
     methods: {
       getList() {
-        getShiftCourses(this.listQuery).then(response => {
+        getMainChosenCourses(this.listQuery).then(response => {
           this.list = response.data
           this.total = response.total
           // 设置延时以便于优化

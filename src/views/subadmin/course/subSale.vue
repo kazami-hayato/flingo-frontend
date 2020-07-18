@@ -51,11 +51,10 @@
 </template>
 
 <script>
-  import {getMainCoursesSale} from '@/api/apis'
+  import {getSubCoursesSale} from '@/api/apis'
   import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
   export default {
-    name: 'SalesManage',
     components: {Pagination},
     computed:{
       sumSelected:function () {
@@ -88,7 +87,7 @@
     },
     methods: {
       getList() {
-        getMainCoursesSale(this.listQuery).then(response => {
+        getSubCoursesSale(this.listQuery).then(response => {
           this.list = response.data
           this.total = response.total
           // 设置延时以便于优化
