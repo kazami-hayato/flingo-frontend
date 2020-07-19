@@ -414,9 +414,9 @@ export function setStudentCourse(data) {
       status: 0 | 1
     }*/
   return request({
-    url: '/apis/v1/students/' + data.exam_id + '/courses/' + data.course_id,
+    url: '/apis/v1/students/chooseCourse',
     method: 'post',
-    data:data,
+    params:data,
   })
 
 }

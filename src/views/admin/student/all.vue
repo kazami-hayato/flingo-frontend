@@ -30,17 +30,17 @@
                 :value="item">
               </el-option>
             </el-select>
-            <el-button  class="filter-item" type="primary" @click="handleFilter">
+            <el-button class="filter-item" type="primary" @click="handleFilter">
               过滤
             </el-button>
           </el-row>
         </el-col>
         <el-col :span="8">
           <el-row type="flex" justify="end">
-<!--            <el-button class="filter-item" type="warning" icon="el-icon-download"-->
-<!--                       @click="handleExport">-->
-<!--              导出学生信息-->
-<!--            </el-button>-->
+            <!--            <el-button class="filter-item" type="warning" icon="el-icon-download"-->
+            <!--                       @click="handleExport">-->
+            <!--              导出学生信息-->
+            <!--            </el-button>-->
             <el-button class="filter-item" type="warning" icon="el-icon-download"
                        @click="handleExport">
               导出成绩
@@ -213,6 +213,7 @@
   // import XLSX from 'xlsx'
   import StudentDetail from "./component/StudentDetail";
   import axios from "axios";
+  import {getSubSchools} from "@/api/apis"
   import {saveAs} from "file-saver";
   import request from "@/utils/requestFile";
 
@@ -224,7 +225,7 @@
         reportQuery: {
           main_school: this.$store.state.user.main_school,
           sub_school: this.$store.state.user.sub_school,
-          user_type : this.$store.state.user.user_type,
+          user_type: this.$store.state.user.user_type,
           tag: '',
         },
         //
@@ -243,7 +244,7 @@
           limit: 20,
           main_school: this.$store.state.user.main_school,
           sub_school: this.$store.state.user.sub_school,
-          searchType:'1',
+          searchType: '1',
           searchText: ''
         },
         course_total: 1,
@@ -339,7 +340,15 @@
       },
       //请求数据
       getList() {
-        this.listLoading = true
+          this.listLoading = true
+
+          this.MainschoolOptions = [this.$store.state.user.main_school];
+          getSubSchools({'main_school':this.$store.state.user.main_school})
+            .then(response=>{
+            this.SubschoolOptions=response.data
+          })
+
+          // this.SubschoolOptions = [...new Set(this.list.map(item => item.stu.sub_school))];
 
         if (this.listQuery.searchText === '') {
           getStudentsBySchool(this.listQuery).then(response => {
@@ -348,10 +357,7 @@
             setTimeout(() => {
               this.listLoading = false
             }, 1.5 * 100)
-            if (this.total > 1) {
-              this.MainschoolOptions = [...new Set(this.list.map(item => item.stu.main_school))];
-              this.SubschoolOptions = [...new Set(this.list.map(item => item.stu.sub_school))];
-            }
+
           })
         } else {
           getStudentsBySearch(this.listQuery).then(response => {
@@ -472,51 +478,53 @@
       getCourses() {
         getShiftCourses(this.courseQuery).then(response => {
           this.courseInfo = response.data
-          this.course_total=response.total
+          this.course_total = response.total
         })
       },
       postSubscribe() {
         console.log(this.multipleSelection)
         this.multipleSelection.forEach(stuEId => {
           this.courseSelection.forEach(cid => {
-            let temp = {'exam_id': stuEId, 'course_id': cid, status: 1}
+            let temp = {
+              'exam_id': stuEId, 'course_id': cid,
+            }
             setStudentCourse(temp).then(response => {
-              console.log(temp)
+              this.$notify({
+                title: '成功',
+                message: response.message,
+                type: 'success',
+                duration: 2000
+              })
             })
           })
 
         })
-        this.$notify({
-          title: '成功',
-          message: '选课成功',
-          type: 'success',
-          duration: 2000
-        })
+
 
         this.subscribeFormVisible = false
         this.getList()
       },
       handleExport() {
-        const filename=this.reportQuery.main_school+'_'+this.reportQuery.sub_school+'_'
-          +this.reportQuery.tag+'_学生成绩表.xls'
-/*        axios({
-          url: '/apis/v1/static/down_current',
-          method: 'get',
-          params: this.reportQuery,
-          responseType: 'blob'     //接收类型设置，否者返回字符型
-        })
-          .then(res => {
-            console.log(res)//定义文件名等相关信息
-            saveAs(res.data,filename)
-          })*/
+        const filename = this.reportQuery.main_school + '_' + this.reportQuery.sub_school + '_'
+          + this.reportQuery.tag + '_学生成绩表.xls'
+        /*        axios({
+                  url: '/apis/v1/static/down_current',
+                  method: 'get',
+                  params: this.reportQuery,
+                  responseType: 'blob'     //接收类型设置，否者返回字符型
+                })
+                  .then(res => {
+                    console.log(res)//定义文件名等相关信息
+                    saveAs(res.data,filename)
+                  })*/
         request({
           url: '/apis/v1/static/down_current',
           method: 'get',
           params: this.reportQuery,
           responseType: 'blob'     //接收类型设置，否者返回字符型
-        }).then(res=>{
+        }).then(res => {
           console.log(res.data)//定义文件名等相关信息
-          saveAs(res.data,filename)
+          saveAs(res.data, filename)
         })
       },
       formatJson(filterVal, jsonData) {
