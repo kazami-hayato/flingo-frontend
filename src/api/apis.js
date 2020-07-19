@@ -396,7 +396,7 @@ export function updateStudent(data) {
       phone: 12548547584,
     }*/
   return request({
-    url: '/apis/v1/students/' + data.exam_id,
+    url: '/apis/v1/students/',
     method: 'put',
     data: data
   })
@@ -545,7 +545,7 @@ export function getSubChosenCourses(data) {
 //课程分页 get ?limit=?page=?searchText=?sub_school=?main_school=
 export function getShiftCourses(data) {
   return request({
-    url: '/apis/v1/shift/courses',
+    url: '/apis/v1/shift/courses/repo',
     method: 'get',
     params: data
   })
@@ -612,8 +612,9 @@ export function validCourse(data) {
 
 export function unvalidCourse(data) {
   return request({
-    url: '/apis/v1/valid/courses/' + data.course_id,
-    method: 'delete',
+    url: '/apis/v1/courses/unshiftSub',
+    method: 'post',
+    data:data
   })
 }
 

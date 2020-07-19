@@ -68,8 +68,8 @@
                             radius: '60%',
                             center: ['50%', '50%'],
                             data: [
-                                {value: this.study.watch_time, name: '已学'},
-                                {value: this.study.total_time - this.study.watch_time, name: '未学'},
+                                {value: this.study.watch_sum, name: '已学'},
+                                {value: this.study.total_sum, name: '未学'},
                             ],
                             itemStyle: {
                                 emphasis: {

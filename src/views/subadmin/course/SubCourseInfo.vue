@@ -197,7 +197,14 @@
 
       },
       unvalidTheCourse(row) {
-        unvalidCourse(row).then(() => {
+        row.main_school=this.$store.state.user.main_school
+        row.sub_school=this.$store.state.user.sub_school
+        unvalidCourse(row).then(response => {
+          this.$notify({
+            type:"success",
+            message:response.message,
+            duration:1000
+          })
         })
         this.getList()
       },

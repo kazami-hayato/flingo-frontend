@@ -251,7 +251,6 @@
           main_school: this.$store.state.user.main_school,
           sub_school: this.$store.state.user.sub_school,
           page: 1,
-          searchText: '',
           limit: 10,
         },
         //选中

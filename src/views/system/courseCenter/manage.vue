@@ -6,11 +6,11 @@
         <el-col :span="4">
 
           <el-input placeholder="请输入内容" v-model="courseQuery.searchText">
-<!--            <el-select v-model="courseQuery.searchType" slot="prepend" placeholder="请选择"-->
-<!--                       style="width: 130px;background: #1890FF;color: #fff">-->
-<!--              <el-option label="课程号" value='1'/>-->
-<!--              <el-option label="课程名" value='2'/>-->
-<!--            </el-select>-->
+            <!--            <el-select v-model="courseQuery.searchType" slot="prepend" placeholder="请选择"-->
+            <!--                       style="width: 130px;background: #1890FF;color: #fff">-->
+            <!--              <el-option label="课程号" value='1'/>-->
+            <!--              <el-option label="课程名" value='2'/>-->
+            <!--            </el-select>-->
             <el-button slot="append" icon="el-icon-search" @click="handleSearch"
                        style="background: #1890FF;color: #fff;border-radius: 0"/>
           </el-input>
@@ -51,6 +51,7 @@
                   :name="'File'"
                   :file-list="fileList"
                   :limit="1"
+                  :headers="headers"
                   :on-success="handleUpload"
                   action="/apis/v1/static/file">
                   <el-button style="margin-left: 10px;" size="small" type="success">点击上传</el-button>
@@ -195,6 +196,9 @@
     components: {Pagination},
     data() {
       return {
+        headers: {
+          'X-Token': this.$store.state.user.token
+        },
         rules: {
           course_id: [{required: true, message: '请输入课程号', trigger: 'blur'}],
           course_name: [{required: true, message: '请输入课程名', trigger: 'blur'}],
@@ -289,18 +293,18 @@
             })
           })
       },
-      deleteChosen(){
-        this.chosenList.forEach(course=>{
-          if(course.is_shift===1){
+      deleteChosen() {
+        this.chosenList.forEach(course => {
+          if (course.is_shift === 1) {
             this.$notify({
-              type:'error',
-              message:course.course_id+' 课程已上架无法删除'
+              type: 'error',
+              message: course.course_id + ' 课程已上架无法删除'
             })
-          }else
-            deleteSystemCourse(course).then(()=>{
+          } else
+            deleteSystemCourse(course).then(() => {
               this.$notify({
-                type:'success',
-                message:'删除课程:'+course.course_id
+                type: 'success',
+                message: '删除课程:' + course.course_id
               })
               this.getList()
             })

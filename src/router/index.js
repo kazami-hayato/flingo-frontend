@@ -284,16 +284,16 @@ export const asyncRoutes = [
           roles: ['sub_school'] // or you can only set roles in sub nav
         }
       },
-      {
-        path: 'SubCourseChosen',
-        component: () => import('@/views/subadmin/course/subChosen'),
-        name: 'SubCourseChosen',
-        meta: {
-          title: '上架课程管理',
-          // if do not set roles, means: this page does not require permission
-          roles: ['sub_school'] // or you can only set roles in sub nav
-        }
-      },
+      // {
+      //   path: 'SubCourseChosen',
+      //   component: () => import('@/views/subadmin/course/subChosen'),
+      //   name: 'SubCourseChosen',
+      //   meta: {
+      //     title: '上架课程管理',
+      //     // if do not set roles, means: this page does not require permission
+      //     roles: ['sub_school'] // or you can only set roles in sub nav
+      //   }
+      // },
       {
         path: 'SubCourseSale',
         component: () => import('@/views/subadmin/course/subSale'),

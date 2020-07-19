@@ -47,8 +47,8 @@
             align="center"
             min-width="250">
             <template slot-scope="{row}">
-              <div>总课时数：{{row.course_hours}}</div>
-              <div>已学：{{row.course_hours*row.watch_time/row.total_time}}</div>
+              <div>总课时数：{{row.total_time}}</div>
+              <div>已学：{{row.watch_time}}</div>
             </template>
           </el-table-column>
           <el-table-column

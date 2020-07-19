@@ -172,7 +172,7 @@ export function createExam(data) {
 
 export function modifyExam(data) {
   return request({
-    url: '/apis/v1/system/exams',
+    url: '/apis/v1/system/exams/content',
     method: 'put',
     data: data
   })

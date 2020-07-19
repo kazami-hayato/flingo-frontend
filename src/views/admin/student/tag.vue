@@ -235,6 +235,12 @@
         window.open('/cdn/stu_template.xls')
       },
       handleUpload(response, file) {
+        this.$notify({
+          title: '上传成功',
+          message: response.message,
+          type: 'success',
+          duration: 3000
+        })
 
       },
       handleImportStu(row) {
