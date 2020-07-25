@@ -208,7 +208,7 @@ export const asyncRoutes = [
         name: 'All',
         meta: {
           title: '所有学员',
-          roles: ['main_school', 'sub_school'] // or you can only set roles in sub nav
+          roles: ['main_school'] // or you can only set roles in sub nav
         }
       },
       {
@@ -217,9 +217,27 @@ export const asyncRoutes = [
         name: 'tag',
         meta: {
           title: '查看考期',
-          roles: ['main_school', 'sub_school'] // or you can only set roles in sub nav
+          roles: ['main_school'] // or you can only set roles in sub nav
         }
       },
+      {
+        path: 'allSubStudents',
+        component: () => import('@/views/subadmin/student/all'),
+        name: 'All',
+        meta: {
+          title: '所有学员',
+          roles: ['sub_school'] // or you can only set roles in sub nav
+        }
+      },
+      {
+        path: 'tagSubStudents',
+        component: () => import('@/views/subadmin/student/tag'),
+        name: 'tag',
+        meta: {
+          title: '查看考期',
+          roles: ['sub_school'] // or you can only set roles in sub nav
+        }
+      }
     ]
   },
   //督学
