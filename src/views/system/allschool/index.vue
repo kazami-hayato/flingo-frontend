@@ -56,8 +56,8 @@
                   <el-form-item label="学校Id" required>
                     <el-input v-model="row.school_id" style="width: 200px" disabled/>
                   </el-form-item>
-                  <el-form-item label="网校名称">
-                    <el-input v-model="row.title"/>
+                  <el-form-item label="网校名称" >
+                    <el-input v-model="row.title" disabled/>
                   </el-form-item>
                   <el-form-item label="H5域名">
                     <el-input v-model="row.h5_domain"/>
@@ -161,8 +161,18 @@
         <el-form-item label="是否是主校" prop="is_main">
           <el-switch v-model="tempSchool.is_main"></el-switch>
         </el-form-item>
-        <el-form-item label="输入主校名" prop="main_school">
+        <el-form-item label="输入主校名" prop="main_school" v-if="tempSchool.is_main">
           <el-input v-model="tempSchool.main_school"/>
+        </el-form-item>
+        <el-form-item label="选择主校名"  v-if="!tempSchool.is_main">
+          <el-select v-model="tempSchool.main_school" placeholder="请选择">
+            <el-option
+              v-for="item in main_schools"
+              :key="item"
+              :label="item"
+              :value="item">
+            </el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="输入分校名" prop="sub_school" v-if="!tempSchool.is_main">
           <el-input v-model="tempSchool.sub_school"/>
@@ -179,7 +189,7 @@
 
 <script>
   import {Current} from '@/utils/time'
-  import {getSchools, modifySchools, createSchool, deleteSchools} from '@/api/system_apis'
+  import {getSchools, modifySchools, createSchool, deleteSchools, getMainSchools} from '@/api/system_apis'
   import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
   export default {
@@ -195,6 +205,7 @@
         }
       };
       return {
+        main_schools: [],
         headers:{
           'X-Token':this.$store.state.user.token
         },
@@ -236,8 +247,15 @@
     },
     created() {
       this.getList()
+      this.getAllMain()
+
     },
     methods: {
+      getAllMain() {
+        getMainSchools().then(response => {
+          this.main_schools = response.data
+        })
+      },
       handleUpload(response, File) {
         this.$refs.form.model.logo = '/cdn/' + response.data
       },

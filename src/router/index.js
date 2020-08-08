@@ -88,7 +88,7 @@ export const constantRoutes = [
     // hidden:true,
     children: [
       {
-        path: ':exam_id(\\d+)/:course_id(\\d+)',
+        path: ':exam_id/:course_id',
         component: () => import('@/views/catch'),
         name: 'StudyCatch',
         hidden: true,
@@ -102,7 +102,7 @@ export const constantRoutes = [
     // hidden:true,
     children: [
       {
-        path: ':exam_id(\\d+)/:course_id(\\d+)/:exam_type(\\d+)',
+        path: ':exam_id/:course_id/:exam_type',
         component: () => import('@/views/examination'),
         name: 'Examination',
         hidden: true,
@@ -166,7 +166,7 @@ export const asyncRoutes = [
         }
       },
       {
-        path: 'notice/:id(\\d+)',
+        path: 'notice/:id',
         component: () => import('@/views/admin/school/edit'),
         name: 'edit',
         hidden: true,
@@ -248,7 +248,7 @@ export const asyncRoutes = [
       path: 'index',
       component: () => import('@/views/admin/supervise/index'),
       name: 'Supervise',
-      meta: {title: '网校督学', icon: 'z_zoom',roles: ['main_school','sub_school']}
+      meta: {title: '网校督学', icon: 'z_zoom', roles: ['main_school', 'sub_school']}
     }]
   },
   //学校课程管理
@@ -323,7 +323,7 @@ export const asyncRoutes = [
         }
       },
       {
-        path: 'courseCatalog/:course_id(\\d+)',
+        path: 'courseCatalog/:course_id',
         component: () => import('@/views/common/courseCatalog'),
         hidden: true,
         name: 'CatalogDetail',
@@ -402,7 +402,7 @@ export const asyncRoutes = [
       path: 'index',
       component: () => import('@/views/system/supervise/index'),
       name: 'Supervise',
-      meta: {title: '系统督学', icon: 'z_zoom',roles: ['system']}
+      meta: {title: '系统督学', icon: 'z_zoom', roles: ['system']}
     }]
   },
   {
@@ -436,7 +436,7 @@ export const asyncRoutes = [
         }
       },
       {
-        path: 'courseCatalog/:course_id(\\d+)',
+        path: 'courseCatalog/:course_id',
         component: () => import('@/views/system/courseCenter/courseCatalog'),
         hidden: true,
         name: 'SetCatalog',
@@ -469,7 +469,7 @@ export const asyncRoutes = [
           roles: ['system'] // or you can only set roles in sub nav
         }
       }, {
-        path: 'examRepo/:examination_id(\\d+)',
+        path: 'examRepo/:examination_id',
         component: () => import('@/views/system/examCenter/examInfo'),
         hidden: true,
         name: 'ExamInfo',

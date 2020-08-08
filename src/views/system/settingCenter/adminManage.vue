@@ -297,7 +297,7 @@
       this.userOptions.push({label: '主校管理员', value: 2})
       this.userOptions.push({label: '系统管理员', value: 1})
       this.getList()
-      this.main_schools = this.getAllMain()
+      this.getAllMain()
 
     },
     methods: {
@@ -372,7 +372,7 @@
                 if (response.data !== 1)
                   this.$notify({
                     title: '错误',
-                    message: response.data,
+                    message: response.message,
                     type: 'error',
                     duration: 2000
                   })

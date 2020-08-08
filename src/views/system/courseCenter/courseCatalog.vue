@@ -10,46 +10,49 @@
             node-key="id"
             default-expand-all
             :expand-on-click-node="false"
-            style="margin-top: 20px;font-size: large"
+            style="margin-top: 1rem;margin-bottom: 1rem;font-size: large"
           >
          <span class="custom-tree-node" slot-scope="{ node, data }">
-        <span>{{ node.label }}</span>
-        <span>
-          <el-button
-            type="text"
-            size="large"
-            @click="() => append(data)">
-            添加子目录
-          </el-button>
-          <el-button
-            type="text"
-            size="large"
-            @click="() => edit(node, data)">
-            编辑目录名
-          </el-button>
-          <el-button
-            type="text"
-            size="large"
-            @click="() => remove(node, data)">
-            删除该目录
-          </el-button>
-          <el-button type="text" size="large" @click="addVid(node,data)">
-          设置Vid
-          </el-button>
-            <span v-show="!data.isTitle" style="position: relative;padding-left: 2px;">
-              <el-upload type="file" style="display: inline-block;"
-                         :on-change="addFile"
-                         action="" :auto-upload="false" accept="video/mp4"
-                         :multiple="false" :limit=1
-              >
-                <el-button type="text">选择视频</el-button>
-              </el-upload>
-              <el-button type="text" @click="uploadFile(data)">视频上传 </el-button>
-              <span style="font-size: 14px;padding-left: 5px;" v-if="!data.type">{{loading===0?'':loading}}</span>
-              <span style="font-size: 14px;padding-left: 5px;" v-else>完成</span>
+            <span class="node-title">
+              <el-icon class="el-icon-video-play" v-if="'vid' in dictData[data.id]"></el-icon>
+              {{dictData[data.id].label}}
+            </span>
+            <span style="margin-left: 2rem">
+              <el-button
+                type="text"
+                size="large"
+                @click="() => append(data)">
+                添加子目录
+              </el-button>
+              <el-button
+                type="text"
+                size="large"
+                @click="() => edit(node, data)">
+                编辑目录名
+              </el-button>
+              <el-button
+                type="text"
+                size="large"
+                @click="() => remove(node, data)">
+                删除该目录
+              </el-button>
+              <el-button type="text" size="large" @click="addVid(node,data)">
+              设置Vid
+              </el-button>
+                <span v-show="!data.isTitle" style="position: relative;padding-left: 2px;">
+                  <el-upload type="file" style="display: inline-block;"
+                             :on-change="addFile"
+                             action="" :auto-upload="false" accept="video/mp4"
+                             :multiple="false" :limit=1
+                  >
+                    <el-button type="text">选择视频</el-button>
+                  </el-upload>
+                  <el-button type="text" @click="uploadFile(data)">视频上传 </el-button>
+                  <span style="font-size: 14px;padding-left: 5px;" v-if="!data.type">{{loading===0?'':loading}}</span>
+                  <span style="font-size: 14px;padding-left: 5px;" v-else>完成</span>
+                </span>
             </span>
         </span>
-      </span>
           </el-tree>
           <span>总课程数：{{totalCourse}}</span>
           <el-button @click="updateCatalog" type="primary" style="float: right;margin-bottom: 20px;">保存目录</el-button>
@@ -65,11 +68,13 @@
   import {getCatalogTreeById, modifySystemCourseById} from '@/api/system_apis'
   import PlvVideoUpload from '@polyv/vod-upload-js-sdk'
   import md5 from 'js-md5'
-
+  // import Vue from 'vue'
   export default {
     data() {
       return {
+        test: '',
         CatalogData: [],
+        dictData: {},
         fileList: [], // 上传文件列表
         maxSize: 500, // 上传文件限制大小，单位mb
         percentage: 0, // 上传进度
@@ -83,7 +88,7 @@
         videoUpload: null,
         ptime: 0,
         loading: 0,
-        totalCourse:0
+        totalCourse: 0
       }
     },
     created() {
@@ -101,21 +106,21 @@
         }
       });
     },
-    watch:{
-      CatalogData:{
-        handler(val,oldVal){
+    watch: {
+      CatalogData: {
+        handler(val, oldVal) {
           this.totalCourse = 0
           this.getSum(val)
         },
-        deep:true
-      }
+        deep: true
+      },
     },
     methods: {
       // 获取总课程数
-      getSum(arr){
+      getSum(arr) {
         for (let i = 0; i < arr.length; i++) {
           if (arr[i].vid) {
-            this.totalCourse ++
+            this.totalCourse++
           }
           if (arr[i].hasOwnProperty('children')) {
             this.getSum(arr[i]['children'])
@@ -126,56 +131,64 @@
       getCatalog() {
         getCatalogTreeById({course_id: this.course_id}).then(response => {
           this.course = response.data
-          this.data = JSON.parse(this.course.catalogtree).catalogtree
-          this.getPlayList(this.data)
+          this.CatalogData = JSON.parse(this.course.catalogtree).catalogtree
+          this.dictData=JSON.parse(this.course.catalogdict).catalogdict
+           console.log(this.CatalogData,this.dictData)
+          // this.getPlayList(this.data)
           // console.log(this.current_id)
-          if (response.data.catalogtree !== null) {
-            console.log(JSON.parse(this.course.catalogtree))
-            this.CatalogData = JSON.parse(this.course.catalogtree).catalogtree
-            this.getPlayList(this.CatalogData)
-          }
-        }).catch(error => {
-          console.log(error)
+          // if (response.data.catalogtree !== null
+          //   && response.data.catalogtree !== '') {
+          //   console.log(JSON.parse(this.course.catalogtree))
+          //   this.CatalogData = JSON.parse(this.course.catalogtree).catalogtree
+          //   this.getPlayList(this.CatalogData)
+          // }
+        }).catch(() => {
+          this.$notify({
+            type: "warning",
+            message: "当前目录树为空",
+            duration: 2000
+          })
         })
       },
       /**
        *  深度遍历获取id
        * */
-      getPlayList(catalog) {
-        for (let i = 0; i < catalog.length; i++) {
-          if (catalog[i].id > this.current_id) {
-            this.current_id = catalog[i].id
-          } else if (catalog[i].hasOwnProperty('children')) {
-            this.getPlayList(catalog[i]['children'])
-          }
-        }
-      },
+      // getPlayList(catalog) {
+      //   for (let i = 0; i < catalog.length; i++) {
+      //     if (catalog[i].id > this.current_id) {
+      //       this.current_id = catalog[i].id
+      //     } else if (catalog[i].hasOwnProperty('children')) {
+      //       this.getPlayList(catalog[i]['children'])
+      //     }
+      //   }
+      // },
       // 更新目录树
       updateCatalog() {
         console.log(this.CatalogData);
         this.course.catalogtree = JSON.stringify({"catalogtree": this.CatalogData})
-        if(this.course.is_shift===1)
-        this.$confirm('此操作将更新上架课程?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning',
-          center: true
-        }).then(() => {
-          modifySystemCourseById(this.course).then(res => {
-            console.log(res)
-            this.$notify({
-              title: '成功',
-              message: '更新成功',
-              type: 'success'
-            });
-          }).catch(error => {
-            this.$notify.error({
-              title: '错误',
-              message: '保存出错'
-            });
+        this.course.catalogdict=JSON.stringify({"catalogdict":this.dictData})
+        if (this.course.is_shift === 1)
+          this.$confirm('此操作将更新上架课程?', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning',
+            center: true
+          }).then(() => {
+            modifySystemCourseById(this.course).then(res => {
+              console.log(res)
+              this.$notify({
+                title: '成功',
+                message: '更新成功',
+                type: 'success'
+              });
+            }).catch(error => {
+              this.$notify.error({
+                title: '错误',
+                message: '保存出错'
+              });
+            })
           })
-        })
-        else{
+        else {
           modifySystemCourseById(this.course).then(res => {
             console.log(res)
             this.$notify({
@@ -193,12 +206,22 @@
       },
       // 添加新的子目录
       append(data) {
-        const newChild = {id: ++this.current_id, label: '新目录', type: false}
-        if (!data.children) {
-          this.$set(data, 'children', [])
-        }
-        data.children.push(newChild)
-        console.log(this.CatalogData)
+        this.$prompt('输入节名', '设置', {
+          confirmButtonText: '确认',
+          cancelButtonText: '取消',
+        }).then(({value}) => {
+          let labelKey = md5(value + new Date().getTime().toString())
+          this.dictData[labelKey] = {label: value, type: false, isChapter: false}
+          const newChild = {id: labelKey, children: []};
+          if (!data.children) {
+            this.$set(data, 'children', [])
+          }
+          data.children.push(newChild)
+          this.$message({
+            type: 'success',
+            message: '设置成功！ '
+          });
+        })
       },
       //删除目录
       remove(node, data) {
@@ -211,6 +234,7 @@
           const children = parent.data.children || parent.data
           const index = children.findIndex(d => d.id === data.id)
           children.splice(index, 1)
+          delete this.dictData[data.id]
           this.$message({
             type: 'success',
             message: '删除成功!'
@@ -225,18 +249,30 @@
           confirmButtonText: '确认',
           cancelButtonText: '取消',
         }).then(({value}) => {
-          data.label = value;
+          this.$message({
+            type: 'success',
+            message: '设置成功！ '
+          });
+          // this.$forceUpdate()
+
+        })
+      },
+      // 添加大目录
+      appendMain() {
+        this.$prompt('输入大章节名', '设置', {
+          confirmButtonText: '确认',
+          cancelButtonText: '取消',
+        }).then(({value}) => {
+          let labelKey = md5(value + new Date().getTime().toString())
+          this.dictData[labelKey] = {label: value, type: false, isChapter: true}
+          const newChild = {id: labelKey, children: []};
+          this.CatalogData.push(newChild)
           this.$message({
             type: 'success',
             message: '设置成功！ '
           });
         })
-      },
-      // 添加大目录
-      appendMain() {
-        const newChild = {id: ++this.current_id, label: '新目录', children: [], isTitle: true};
-        console.log(this.CatalogData)
-        this.CatalogData.push(newChild)
+
       },
       // 添加文件
       addFile(file, filelist) {
@@ -251,21 +287,20 @@
       },
       //设置vid
       addVid(node, data) {
-        console.log(node, data)
+        console.log(data)
         this.$prompt('请输入该课程对应的Vid', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
-          inputValue: data.vid ? data.vid : ''
+          inputValue: this.dictData[data.id].vid? this.dictData[data.id].vid : ''
         }).then(({value}) => {
-          if(value.trim() !== ''){
-            data.vid = value
-            data.type = true
-            data.finished = false
+          if (value.trim() !== '') {
+            this.dictData[data.id].vid=value
+            this.dictData[data.id].type=true
+            console.log(this.dictData)
             this.$message({
               type: 'success',
               message: '设置成功!'
             });
-            console.log(this.data)
           }
         }).catch(() => {
           this.$message({
@@ -313,10 +348,12 @@
               console.log("文件上传停止: " + uploadInfo.fileData.title);
             },
             FileSucceed: function (uploadInfo) { // 文件上传成功回调
-              console.log(uploadInfo);
-              data.vid = uploadInfo.fileData.vid
-              data.type = true
-              data.finished = false
+              // console.log(uploadInfo);
+              // data.vid = uploadInfo.fileData.vid
+              // data.type = true
+              // data.finished = false
+              this.dictData[data.id].vid= uploadInfo.fileData.vid
+              this.dictData[data.id].type= true
               _this.loading = 0
             },
             FileFailed: function (uploadInfo) { // 文件上传失败回调
@@ -356,5 +393,35 @@
 <style lang="scss" scoped>
   .catalog-page {
     padding: 20px;
+  }
+
+
+  .custom-tree-node {
+    margin: 0;
+    padding: 0 0.8em;
+    line-height: 2em;
+    font-weight: 700;
+    position: relative;
+    cursor: pointer;
+
+  }
+
+  .custom-tree-node:before {
+    content: "";
+    display: block;
+    width: 10px;
+    height: 0;
+    border-top: 1px solid;
+    margin-top: -1px;
+    position: absolute;
+    top: 1em;
+    left: 0;
+  }
+
+  .custom-tree-node:last-child:before {
+    background: transparent;
+    height: auto;
+    top: 1em;
+    bottom: 0;
   }
 </style>

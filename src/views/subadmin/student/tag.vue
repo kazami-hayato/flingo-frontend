@@ -109,7 +109,7 @@
               :file-list="fileList"
               :limit="1"
               :headers="headers"
-              action="/apis/v1/static/upstu">
+              action="/apis/v1/static/uploadStu">
               <i class="el-icon-upload"/>
               <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
             </el-upload>
