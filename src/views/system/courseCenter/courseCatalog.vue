@@ -88,7 +88,7 @@
         videoUpload: null,
         ptime: 0,
         loading: 0,
-        totalCourse: 0
+        totalCourse: undefined
       }
     },
     created() {
@@ -107,33 +107,34 @@
       });
     },
     watch: {
-      CatalogData: {
-        handler(val, oldVal) {
-          this.totalCourse = 0
-          this.getSum(val)
-        },
-        deep: true
-      },
+      // CatalogData: {
+      //   handler(val, oldVal) {
+      //     this.totalCourse = 0
+      //     // this.getSum(val)
+      //   },
+      //   deep: true
+      // },
     },
     methods: {
       // 获取总课程数
-      getSum(arr) {
-        for (let i = 0; i < arr.length; i++) {
-          if (arr[i].vid) {
-            this.totalCourse++
-          }
-          if (arr[i].hasOwnProperty('children')) {
-            this.getSum(arr[i]['children'])
-          }
-        }
-      },
+      // getSum(arr) {
+      //   for (let i = 0; i < arr.length; i++) {
+      //     if (arr[i].vid) {
+      //       this.totalCourse++
+      //     }
+      //     if (arr[i].hasOwnProperty('children')) {
+      //       this.getSum(arr[i]['children'])
+      //     }
+      //   }
+      // },
       // 获取当前目录树
       getCatalog() {
         getCatalogTreeById({course_id: this.course_id}).then(response => {
           this.course = response.data
           this.CatalogData = JSON.parse(this.course.new_catalog_tree).catalogtree
           this.dictData = JSON.parse(this.course.catalogdict).catalogdict
-          console.log(this.CatalogData, this.dictData)
+          this.totalCourse=this.course.norm_sum
+          console.log(this.totalCourse)
           // this.getPlayList(this.data)
           // console.log(this.current_id)
           // if (response.data.catalogtree !== null
@@ -167,6 +168,13 @@
         console.log(this.CatalogData);
         this.course.new_catalog_tree = JSON.stringify({"catalogtree": this.CatalogData})
         this.course.catalogdict = JSON.stringify({"catalogdict": this.dictData})
+        let count_valid=0
+        for(let key in this.dictData){
+          if(this.dictData[key].type===true)
+            count_valid++
+        }
+        console.log(count_valid)
+        this.course.norm_sum=count_valid
         if (this.course.is_shift === 1)
           this.$confirm('此操作将更新上架课程?', '提示', {
             confirmButtonText: '确定',
@@ -181,6 +189,7 @@
                 message: '更新成功',
                 type: 'success'
               });
+              this.getCatalog()
             }).catch(error => {
               this.$notify.error({
                 title: '错误',
@@ -196,6 +205,7 @@
               message: '更新成功',
               type: 'success'
             });
+            this.getCatalog()
           }).catch(error => {
             this.$notify.error({
               title: '错误',
