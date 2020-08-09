@@ -132,8 +132,8 @@
         getCatalogTreeById({course_id: this.course_id}).then(response => {
           this.course = response.data
           this.CatalogData = JSON.parse(this.course.catalogtree).catalogtree
-          this.dictData=JSON.parse(this.course.catalogdict).catalogdict
-           console.log(this.CatalogData,this.dictData)
+          this.dictData = JSON.parse(this.course.catalogdict).catalogdict
+          console.log(this.CatalogData, this.dictData)
           // this.getPlayList(this.data)
           // console.log(this.current_id)
           // if (response.data.catalogtree !== null
@@ -166,7 +166,7 @@
       updateCatalog() {
         console.log(this.CatalogData);
         this.course.catalogtree = JSON.stringify({"catalogtree": this.CatalogData})
-        this.course.catalogdict=JSON.stringify({"catalogdict":this.dictData})
+        this.course.catalogdict = JSON.stringify({"catalogdict": this.dictData})
         if (this.course.is_shift === 1)
           this.$confirm('此操作将更新上架课程?', '提示', {
             confirmButtonText: '确定',
@@ -249,11 +249,11 @@
           confirmButtonText: '确认',
           cancelButtonText: '取消',
         }).then(({value}) => {
+          this.dictData[data.id].label=value
           this.$message({
             type: 'success',
             message: '设置成功！ '
           });
-          // this.$forceUpdate()
 
         })
       },
@@ -291,11 +291,11 @@
         this.$prompt('请输入该课程对应的Vid', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
-          inputValue: this.dictData[data.id].vid? this.dictData[data.id].vid : ''
+          inputValue: this.dictData[data.id].vid ? this.dictData[data.id].vid : ''
         }).then(({value}) => {
           if (value.trim() !== '') {
-            this.dictData[data.id].vid=value
-            this.dictData[data.id].type=true
+            this.dictData[data.id].vid = value
+            this.dictData[data.id].type = true
             console.log(this.dictData)
             this.$message({
               type: 'success',
@@ -352,8 +352,8 @@
               // data.vid = uploadInfo.fileData.vid
               // data.type = true
               // data.finished = false
-              this.dictData[data.id].vid= uploadInfo.fileData.vid
-              this.dictData[data.id].type= true
+              this.dictData[data.id].vid = uploadInfo.fileData.vid
+              this.dictData[data.id].type = true
               _this.loading = 0
             },
             FileFailed: function (uploadInfo) { // 文件上传失败回调
