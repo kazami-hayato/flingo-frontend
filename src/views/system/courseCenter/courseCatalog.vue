@@ -131,7 +131,7 @@
       getCatalog() {
         getCatalogTreeById({course_id: this.course_id}).then(response => {
           this.course = response.data
-          this.CatalogData = JSON.parse(this.course.catalogtree).catalogtree
+          this.CatalogData = JSON.parse(this.course.new_catalog_tree).catalogtree
           this.dictData = JSON.parse(this.course.catalogdict).catalogdict
           console.log(this.CatalogData, this.dictData)
           // this.getPlayList(this.data)
@@ -165,7 +165,7 @@
       // 更新目录树
       updateCatalog() {
         console.log(this.CatalogData);
-        this.course.catalogtree = JSON.stringify({"catalogtree": this.CatalogData})
+        this.course.new_catalog_tree = JSON.stringify({"catalogtree": this.CatalogData})
         this.course.catalogdict = JSON.stringify({"catalogdict": this.dictData})
         if (this.course.is_shift === 1)
           this.$confirm('此操作将更新上架课程?', '提示', {
