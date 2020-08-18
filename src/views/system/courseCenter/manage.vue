@@ -268,7 +268,7 @@
       shiftSelected() {
         let illegalCourses = []
         this.chosenList.forEach(course => {
-          if (course.catalogtree === null || course.course_name === null ||
+          if (course.new_catalog_tree === null || course.course_name === null ||
             course.norm_sum === null || course.que_sum === null || course.norm_duration === null)
             illegalCourses.push(course.course_name)
         })
