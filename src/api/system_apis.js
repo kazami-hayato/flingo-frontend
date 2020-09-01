@@ -253,6 +253,14 @@ export function getStudentsSystem(data) {
   })
 }
 
+export function getStudentsAvatar(data) {
+  return request({
+    url: '/apis/v1/system/avatars',
+    method: 'get',
+    params: data
+  })
+}
+
 export function getSupervise(data) {
   return request({
     url: '/apis/v1/system/supervise/students',

@@ -406,6 +406,16 @@ export const asyncRoutes = [
     }]
   },
   {
+    path: '/avatars',
+    component: Layout,
+    children: [{
+      path: 'index',
+      component: () => import('@/views/system/avatarManage'),
+      name: 'Supervise',
+      meta: {title: '照片管理', icon: 'z_gallery', roles: ['system']}
+    }]
+  },
+  {
     path: '/courseCenter',
     component: Layout,
     redirect: '/courseCenter/manage',
