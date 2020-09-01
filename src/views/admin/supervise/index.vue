@@ -7,6 +7,14 @@
       </aside>
       <el-row type="flex" class="row-bg" justify="space-between">
         <el-col :span="4">
+          <el-button style="margin-left: 10px;" type="primary" icon="el-icon-view"
+                   @click="openOnlineStudentTable">显示在线学生
+          </el-button>
+        </el-col>
+      </el-row>
+      <br>
+      <el-row type="flex" class="row-bg" justify="space-between">
+        <el-col :span="4">
           <el-input v-model="start_date" placeholder="起始天数"/>
         </el-col>
         <el-col :span="4">
@@ -35,42 +43,6 @@
         </el-col>
       </el-row>
     </div>
-    <!--    <div class="filter-container">-->
-    <!--      <el-row type="flex">-->
-    <!--        <el-col :span="2">-->
-    <!--          <el-button-->
-    <!--            type="primary"-->
-    <!--            size="medium"-->
-    <!--            class="el-icon-edit"-->
-    <!--            @click="dialogVisible = true">&nbsp新增IP-->
-    <!--          </el-button>-->
-    <!--        </el-col>-->
-    <!--        <el-col :span="2">-->
-    <!--          <el-button-->
-    <!--            class="el-icon-upload"-->
-    <!--            size="medium"-->
-    <!--            type="primary"-->
-    <!--            @click="uploadVisible=true">&nbsp导入IP-->
-    <!--          </el-button>-->
-    <!--        </el-col>-->
-    <!--        <el-col :span="2">-->
-    <!--          <el-button-->
-    <!--            type="success"-->
-    <!--            size="medium"-->
-    <!--            class="el-icon-service"-->
-    <!--            @click="startChosen">&nbsp启动IP-->
-    <!--          </el-button>-->
-    <!--        </el-col>-->
-    <!--        <el-col :span="2">-->
-    <!--          <el-button-->
-    <!--            type="danger"-->
-    <!--            size="medium"-->
-    <!--            class="el-icon-circle-close"-->
-    <!--            @click="deleteChosen">&nbsp停止IP-->
-    <!--          </el-button>-->
-    <!--        </el-col>-->
-    <!--      </el-row>-->
-    <!--    </div>-->
 
     <el-table
       ref="multipleTable"
@@ -137,8 +109,64 @@
           <el-tag v-else type="success">{{row.timespan}}</el-tag>
         </template>
       </el-table-column>
-
     </el-table>
+
+
+    <el-drawer
+      :visible.sync="showOnlineTable"
+      size="80%">
+      <el-table
+        :data="studentOnlineData">
+      <el-table-column
+        type="index"
+        label="序号"
+        width="120">
+      </el-table-column>
+      <el-table-column
+        prop="student_id"
+        label="学号"
+        width="120">
+      </el-table-column>
+      <el-table-column
+        prop="real_name"
+        label="姓名"
+        width="120">
+      </el-table-column>
+      <el-table-column
+        prop="id_card"
+        label="身份证"
+        width="250">
+      </el-table-column>
+      <el-table-column
+        prop="phone"
+        label="手机号"
+        min-width="150">
+      </el-table-column>
+      <el-table-column
+        prop="qq_num"
+        label="QQ号"
+        min-width="150">
+      </el-table-column>
+      <el-table-column
+        prop="wechat_num"
+        label="微信号"
+        min-width="150">
+      </el-table-column>
+      <el-table-column
+        prop="main_school"
+        label="用户学校"
+        width="150">
+      </el-table-column>
+      <el-table-column
+        prop="recent_login"
+        label="登录时间"
+        width="200">
+      </el-table-column>
+    </el-table>
+
+
+    </el-drawer>
+
     <pagination v-show="total>0" :total="total" :page.sync="listQuery.page"
                 :limit.sync="listQuery.limit"
                 @pagination="getList"/>
@@ -147,10 +175,12 @@
 </template>
 
 <script>
-  import {getSupervise} from '@/api/system_apis'
+  import {getAdminSupervise} from '@/api/apis'
   import {Current, DatetoString} from '@/utils/time'
   import Pagination from '@/components/Pagination'
   import axios from "axios";
+  import request from "@/utils/requestFile"; // secondary package based on el-pagination
+
   import {saveAs} from "file-saver"; // secondary package based on el-pagination
   export default {
     name: "index",
@@ -170,18 +200,37 @@
           page: 1,
           start_date: '',
           end_date: '',
-          main_school: '',
-          sub_school: ''
+          main_school: this.$store.state.user.main_school,
+          sub_school: this.$store.state.user.sub_school,
+          user_type : this.$store.state.user.user_type,
           // operator:
         },
         listData: [],
-        total: 0
+        total: 0,
+        studentOnlineData:[],
+        showOnlineTable:false
       }
     },
     created() {
       this.getList()
     },
     methods: {
+      /***
+       * 打开在线学生列表
+       */
+      openOnlineStudentTable(){
+        this.showOnlineTable=true,
+          this.getOnlineTable()
+      },
+      /***
+       * 获取在线人员列表
+       */
+      getOnlineTable(){
+        getStudentOnline(this.listQuery).then(response=>{
+          this.studentOnlineData=response.data
+        })
+
+      },
       setSpan() {
         if (this.start_span === null || this.end_span === null)
           this.$message({
@@ -205,10 +254,9 @@
         }
       },
       downloadSupervise(){
-        if (this.main_school !== '') this.listQuery.main_school = this.main_school
-        if (this.sub_school !== '') this.listQuery.sub_school = this.sub_school
+        console.log(this.listQuery)
         const filename='督学数据.xls'
-        axios({
+        request({
           url: '/apis/v1/static/down_supervise',
           method: 'get',
           params: this.listQuery,
@@ -249,7 +297,7 @@
       getList() {
         if (this.main_school !== '') this.listQuery.main_school = this.main_school
         if (this.sub_school !== '') this.listQuery.sub_school = this.sub_school
-        getSupervise(this.listQuery).then(res => {
+        getAdminSupervise(this.listQuery).then(res => {
           this.listData = []
           res.data.forEach(item => {
             let recent_timespan = new Date(item.recent_login).getTime()

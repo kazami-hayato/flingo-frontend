@@ -81,23 +81,14 @@ export const constantRoutes = [
       }
     ]
   },
-  {
-    path: '/supervise',
-    component: Layout,
-    children: [{
-      path: 'index',
-      component: () => import('@/views/supervise'),
-      name: 'Supervise',
-      meta: {title: '督学', icon: 'z_zoom'}
-    }]
-  },
+
   {
     path: '/catch',
     component: Layout,
     // hidden:true,
     children: [
       {
-        path: ':exam_id(\\d+)/:course_id(\\d+)',
+        path: ':exam_id/:course_id',
         component: () => import('@/views/catch'),
         name: 'StudyCatch',
         hidden: true,
@@ -111,7 +102,7 @@ export const constantRoutes = [
     // hidden:true,
     children: [
       {
-        path: ':exam_id(\\d+)/:course_id(\\d+)/:exam_type(\\d+)',
+        path: ':exam_id/:course_id/:exam_type',
         component: () => import('@/views/examination'),
         name: 'Examination',
         hidden: true,
@@ -175,7 +166,7 @@ export const asyncRoutes = [
         }
       },
       {
-        path: 'notice/:id(\\d+)',
+        path: 'notice/:id',
         component: () => import('@/views/admin/school/edit'),
         name: 'edit',
         hidden: true,
@@ -217,7 +208,7 @@ export const asyncRoutes = [
         name: 'All',
         meta: {
           title: '所有学员',
-          roles: ['main_school', 'sub_school'] // or you can only set roles in sub nav
+          roles: ['main_school'] // or you can only set roles in sub nav
         }
       },
       {
@@ -226,10 +217,39 @@ export const asyncRoutes = [
         name: 'tag',
         meta: {
           title: '查看考期',
-          roles: ['main_school', 'sub_school'] // or you can only set roles in sub nav
+          roles: ['main_school'] // or you can only set roles in sub nav
         }
       },
+      {
+        path: 'allSubStudents',
+        component: () => import('@/views/subadmin/student/all'),
+        name: 'All',
+        meta: {
+          title: '所有学员',
+          roles: ['sub_school'] // or you can only set roles in sub nav
+        }
+      },
+      {
+        path: 'tagSubStudents',
+        component: () => import('@/views/subadmin/student/tag'),
+        name: 'tag',
+        meta: {
+          title: '查看考期',
+          roles: ['sub_school'] // or you can only set roles in sub nav
+        }
+      }
     ]
+  },
+  //督学
+  {
+    path: '/admins/supervise',
+    component: Layout,
+    children: [{
+      path: 'index',
+      component: () => import('@/views/admin/supervise/index'),
+      name: 'Supervise',
+      meta: {title: '网校督学', icon: 'z_zoom', roles: ['main_school', 'sub_school']}
+    }]
   },
   //学校课程管理
   {
@@ -245,40 +265,70 @@ export const asyncRoutes = [
     },
     children: [
       {
-        path: 'info',
+        path: 'MainCourseInfo',
         component: () => import('@/views/admin/course/info'),
-        name: 'Info',
+        name: 'MainCourseInfo',
         meta: {
           title: '课程信息',
           roles: ['main_school'] // or you can only set roles in sub nav
         }
       },
       {
-        path: 'sale',
+        path: 'MainCourseChosen',
+        component: () => import('@/views/admin/course/chosen'),
+        name: 'MainCourseChosen',
+        meta: {
+          title: '上架课程管理',
+          // if do not set roles, means: this page does not require permission
+          roles: ['main_school'] // or you can only set roles in sub nav
+        }
+      },
+      {
+        path: 'MainCourseSale',
         component: () => import('@/views/admin/course/sale'),
-        name: 'Sale',
+        name: 'MainCourseSale',
         meta: {
           title: '课程销量',
           // if do not set roles, means: this page does not require permission
-          roles: ['main_school', 'sub_school'] // or you can only set roles in sub nav
+          roles: ['main_school'] // or you can only set roles in sub nav
         }
       },
       {
         path: 'SubCourseInfo',
-        component: () => import('@/views/admin/course/SubCourseInfo'),
+        component: () => import('@/views/subadmin/course/SubCourseInfo'),
         name: 'SubCourseInfo',
         meta: {
           title: '课程信息',
           roles: ['sub_school'] // or you can only set roles in sub nav
         }
       },
+      // {
+      //   path: 'SubCourseChosen',
+      //   component: () => import('@/views/subadmin/course/subChosen'),
+      //   name: 'SubCourseChosen',
+      //   meta: {
+      //     title: '上架课程管理',
+      //     // if do not set roles, means: this page does not require permission
+      //     roles: ['sub_school'] // or you can only set roles in sub nav
+      //   }
+      // },
       {
-        path: 'courseCatalog/:course_id(\\d+)',
-        component: () => import('@/views/system/courseCenter/courseCatalog'),
-        hidden: true,
-        name: 'SetCatalog',
+        path: 'SubCourseSale',
+        component: () => import('@/views/subadmin/course/subSale'),
+        name: 'SubCourseSale',
         meta: {
-          title: '设置目录',
+          title: '课程销量',
+          // if do not set roles, means: this page does not require permission
+          roles: ['sub_school'] // or you can only set roles in sub nav
+        }
+      },
+      {
+        path: 'courseCatalog/:course_id',
+        component: () => import('@/views/common/courseCatalog'),
+        hidden: true,
+        name: 'CatalogDetail',
+        meta: {
+          title: '查看目录',
           roles: ['main_school', 'sub_school']
         }
       }
@@ -346,6 +396,16 @@ export const asyncRoutes = [
     ]
   },
   {
+    path: '/supervise',
+    component: Layout,
+    children: [{
+      path: 'index',
+      component: () => import('@/views/system/supervise/index'),
+      name: 'Supervise',
+      meta: {title: '系统督学', icon: 'z_zoom', roles: ['system']}
+    }]
+  },
+  {
     path: '/courseCenter',
     component: Layout,
     redirect: '/courseCenter/manage',
@@ -376,7 +436,7 @@ export const asyncRoutes = [
         }
       },
       {
-        path: 'courseCatalog/:course_id(\\d+)',
+        path: 'courseCatalog/:course_id',
         component: () => import('@/views/system/courseCenter/courseCatalog'),
         hidden: true,
         name: 'SetCatalog',
@@ -409,7 +469,7 @@ export const asyncRoutes = [
           roles: ['system'] // or you can only set roles in sub nav
         }
       }, {
-        path: 'examRepo/:examination_id(\\d+)',
+        path: 'examRepo/:examination_id',
         component: () => import('@/views/system/examCenter/examInfo'),
         hidden: true,
         name: 'ExamInfo',

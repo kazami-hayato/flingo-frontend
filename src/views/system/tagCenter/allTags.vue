@@ -168,7 +168,7 @@
   import {mapGetters} from 'vuex'
   import {FileSaver, saveAs} from 'file-saver'
   import StuCourseDetail from "./component/StuCourseDetail";
-  import axios from 'axios'
+  import request from '@/utils/requestFile'
 
 
   export default {
@@ -179,6 +179,7 @@
         reportQuery: {
           main_school: '',
           sub_school: '',
+          user_type : this.$store.state.user.user_type,
           tag: '',
         },
         editTagVisible: false,
@@ -251,7 +252,18 @@
         this.reportQuery.tag = row.tag_name
         const filename=this.reportQuery.main_school+'_'+this.reportQuery.sub_school+'_'
           +this.reportQuery.tag+'_学生成绩表.xls'
-        axios({
+
+        request({
+          url: '/apis/v1/static/down_history',
+          method: 'get',
+          params: this.reportQuery,
+          responseType: 'blob'     //接收类型设置，否者返回字符型
+        }).then(res=>{
+          console.log(res.data)//定义文件名等相关信息
+          saveAs(res.data,filename)
+        })
+
+/*        axios({
           url: '/apis/v1/static/down_history',
           method: 'get',
           params: this.reportQuery,
@@ -260,7 +272,7 @@
           .then(res => {
             console.log(res)//定义文件名等相关信息
             saveAs(res.data,filename)
-          })
+          })*/
       },
 
       handleSelectionChange(val) {

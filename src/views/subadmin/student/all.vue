@@ -14,7 +14,7 @@
                          style="background: #1890FF;color: #fff;border-radius: 0"/>
             </el-input>
 
-            <el-select v-model="sMainSchool" placeholder="主校选择" clearable style="margin-left: 5px;min-width: 100px">
+      <!--      <el-select v-model="sMainSchool" placeholder="主校选择" clearable style="margin-left: 5px;min-width: 100px">
               <el-option
                 v-for="item in MainschoolOptions"
                 :key="item"
@@ -32,7 +32,7 @@
             </el-select>
             <el-button class="filter-item" type="primary" @click="handleFilter">
               过滤
-            </el-button>
+            </el-button>-->
           </el-row>
         </el-col>
         <el-col :span="8">
@@ -342,11 +342,11 @@
       getList() {
           this.listLoading = true
 
-          this.MainschoolOptions = [this.$store.state.user.main_school];
-          getSubSchools({'main_school':this.$store.state.user.main_school})
-            .then(response=>{
-            this.SubschoolOptions=response.data
-          })
+          // this.MainschoolOptions = [this.$store.state.user.main_school];
+          // getSubSchools({'main_school':this.$store.state.user.main_school})
+          //   .then(response=>{
+          //   this.SubschoolOptions=response.data
+          // })
 
           // this.SubschoolOptions = [...new Set(this.list.map(item => item.stu.sub_school))];
 

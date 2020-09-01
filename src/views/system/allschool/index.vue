@@ -6,11 +6,6 @@
         <el-col :span="12">
 
           <el-input placeholder="请输入内容" v-model="listQuery.searchText">
-            <el-select v-model="listQuery.searchType" slot="prepend" placeholder="请选择"
-                       style="width: 130px;background: #1890FF;color: #fff">
-              <el-option label="网校号" value='1'/>
-              <el-option label="网校名" value='2'/>
-            </el-select>
             <el-button slot="append" icon="el-icon-search" @click="getList"
                        style="background: #1890FF;color: #fff;border-radius: 0"/>
           </el-input>
@@ -48,6 +43,7 @@
                   :name="'File'"
                   :file-list="fileList"
                   :limit="1"
+                  :headers="headers"
                   :on-success="handleUpload"
                   action="/apis/v1/static/file">
                   <el-button style="margin-left: 10px;" size="small" type="success">点击上传</el-button>
@@ -60,8 +56,8 @@
                   <el-form-item label="学校Id" required>
                     <el-input v-model="row.school_id" style="width: 200px" disabled/>
                   </el-form-item>
-                  <el-form-item label="网校名称">
-                    <el-input v-model="row.title"/>
+                  <el-form-item label="网校名称" >
+                    <el-input v-model="row.title" disabled/>
                   </el-form-item>
                   <el-form-item label="H5域名">
                     <el-input v-model="row.h5_domain"/>
@@ -165,8 +161,18 @@
         <el-form-item label="是否是主校" prop="is_main">
           <el-switch v-model="tempSchool.is_main"></el-switch>
         </el-form-item>
-        <el-form-item label="输入主校名" prop="main_school">
+        <el-form-item label="输入主校名" prop="main_school" v-if="tempSchool.is_main">
           <el-input v-model="tempSchool.main_school"/>
+        </el-form-item>
+        <el-form-item label="选择主校名"  v-if="!tempSchool.is_main">
+          <el-select v-model="tempSchool.main_school" placeholder="请选择">
+            <el-option
+              v-for="item in main_schools"
+              :key="item"
+              :label="item"
+              :value="item">
+            </el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="输入分校名" prop="sub_school" v-if="!tempSchool.is_main">
           <el-input v-model="tempSchool.sub_school"/>
@@ -183,13 +189,14 @@
 
 <script>
   import {Current} from '@/utils/time'
-  import {getSchools, modifySchools, createSchool, deleteSchools} from '@/api/system_apis'
+  import {getSchools, modifySchools, createSchool, deleteSchools, getMainSchools} from '@/api/system_apis'
   import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
   export default {
     name: "index",
     components: {Pagination},
     data() {
+
       let checkSub = (rule, value, callback) => {
         if (value === this.tempSchool.main_school) {
           callback(new Error('分校名不能等于主校'));
@@ -198,6 +205,10 @@
         }
       };
       return {
+        main_schools: [],
+        headers:{
+          'X-Token':this.$store.state.user.token
+        },
         fileList: [],
         dialogVisible: false,
         chosenList: [],
@@ -236,8 +247,15 @@
     },
     created() {
       this.getList()
+      this.getAllMain()
+
     },
     methods: {
+      getAllMain() {
+        getMainSchools().then(response => {
+          this.main_schools = response.data
+        })
+      },
       handleUpload(response, File) {
         this.$refs.form.model.logo = '/cdn/' + response.data
       },
@@ -279,17 +297,10 @@
             if(this.tempSchool.is_main)
               this.tempSchool.sub_school=this.tempSchool.main_school
             createSchool(this.tempSchool).then(response => {
-              if (response.data === 1)
                 this.$notify({
                   title: '成功',
                   message: '添加成功',
                   type: 'success'
-                });
-              else
-                this.$notify({
-                  title: '失败',
-                  message: '已存在',
-                  type: 'error'
                 });
               this.getList()
               this.tempSchool = {}

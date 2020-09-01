@@ -7,8 +7,21 @@
           <el-button style="margin-left: 10px;" type="primary" icon="el-icon-edit"
                      @click="openCreateDialog">新增管理员
           </el-button>
+
+        </el-col>
+        <el-col>
+          <el-input placeholder="请输入内容" v-model="listQuery.searchText">
+            <el-button slot="append" icon="el-icon-search" @click="searchAdmin"
+                       style="background: #1890FF;color: #fff;border-radius: 0"/>
+          </el-input>
         </el-col>
         <el-col align="right">
+          <el-button style="margin-right: 1rem" round type="warning"
+                     @click="openOnlineDraw" icon="el-icon-user-solid">
+
+            在线用户:{{onlineNum}}
+          </el-button>
+
           <el-button type="success" @click="passwordVisible=true">
             查询管理员密码
           </el-button>
@@ -61,10 +74,12 @@
         min-width="120">
       </el-table-column>
       <el-table-column
-        prop="register_date"
         label="注册日期"
         align="center"
         show-overflow-tooltip>
+        <template slot-scope="{row}">
+          <span>{{ row.create_time | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
+        </template>
       </el-table-column>
       <el-table-column
         label="状态"
@@ -113,7 +128,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="输入主校名称" v-if="tempAdmin.user_type>=2" prop="main_school">
-<!--          <el-input v-model="tempAdmin.main_school"/>-->
+          <!--          <el-input v-model="tempAdmin.main_school"/>-->
           <el-select v-model="tempAdmin.main_school" placeholder="请选择" @change="getAllSub(tempAdmin.main_school)">
             <el-option
               v-for="item in main_schools"
@@ -124,7 +139,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="输入分校名称" v-if="tempAdmin.user_type===3" prop="sub_school">
-<!--          <el-input v-model="tempAdmin.sub_school" />-->
+          <!--          <el-input v-model="tempAdmin.sub_school" />-->
           <el-select v-model="tempAdmin.sub_school" placeholder="请选择">
             <el-option
               v-for="item in sub_schools"
@@ -158,12 +173,70 @@
         <span>密码是：{{searchPassword}}</span>
       </div>
     </el-dialog>
+
+    <!--管理员在线名单抽屉显示-->
+    <el-drawer
+      :with-header="false"
+      :visible.sync="onlineListVisible"
+      size="70%"
+      direction="rtl">
+      <div style="padding: 1rem">
+        <el-table
+          :data="onlineList"
+          style="width: 100%"
+          max-height="100%">
+          <el-table-column
+            fixed
+            prop="username"
+            label="用户名"
+            width="250">
+          </el-table-column>
+          <el-table-column
+            fixed
+            prop="ip"
+            label="登录IP"
+            width="100">
+          </el-table-column>
+          <el-table-column
+            fixed
+            prop="loginAddress"
+            label="登录区域"
+            width="250">
+          </el-table-column>
+          <el-table-column
+            fixed
+            prop="loginTime"
+            label="登录时间"
+            width="180">
+          </el-table-column>
+          <el-table-column
+            fixed="right"
+            label="操作"
+            width="100">
+            <template slot-scope="scope">
+              <el-button
+                @click.native.prevent="logoutActive(scope.$index)"
+                type="primary"
+                size="small">
+                移除
+              </el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+        <pagination v-show="onlineNum>0" :total="onlineNum"
+                    :page.sync="onlineQuery.page" :limit.sync="onlineQuery.limit"
+                    @pagination="getOnlineTable"/>
+      </div>
+    </el-drawer>
   </div>
 </template>
 
 <script>
   // import {getAdmins, deleteAdmin, addAdmin, updateAdmin} from '@/api/apis'
-  import {getAdminsSystem,getMainSchools,getSubSchools, getAdminPwd, createAdminsSystem, updateAdminsSystem} from "@/api/system_apis"
+  import {
+    getAdminsSystem, getMainSchools, getSubSchools, getOnlineAdmin,
+    getAdminPwd, createAdminsSystem, updateAdminsSystem, getOnlineAdminNums
+  } from "@/api/system_apis"
   import Pagination from '@/components/Pagination'
   import {Current} from "@/utils/time"; // secondary package based on el-pagination
 
@@ -172,14 +245,21 @@
     components: {Pagination},
     data() {
       return {
-        rules:{
-          username:[{required: true, message: '请输入', trigger: 'blur'}],
-          real_name:[{required: true, message: '请输入', trigger: 'blur'}],
-          user_type:[{required: true, message: '请输入', trigger: 'blur'}],
-          main_school:[{required: true, message: '请输入', trigger: 'blur'}],
-          sub_school:[{required: true, message: '请输入', trigger: 'blur'}],
-          password:[{required: true, message: '请输入', trigger: 'blur'}],
-          password_confirm:[{required: true, message: '请输入', trigger: 'blur'}],
+        onlineListVisible: false,
+        onlineList: [],
+        onlineQuery: {
+          limit: 10,
+          page: 1,
+        },
+        onlineNum: 0,
+        rules: {
+          username: [{required: true, message: '请输入', trigger: 'blur'}],
+          real_name: [{required: true, message: '请输入', trigger: 'blur'}],
+          user_type: [{required: true, message: '请输入', trigger: 'blur'}],
+          main_school: [{required: true, message: '请输入', trigger: 'blur'}],
+          sub_school: [{required: true, message: '请输入', trigger: 'blur'}],
+          password: [{required: true, message: '请输入', trigger: 'blur'}],
+          password_confirm: [{required: true, message: '请输入', trigger: 'blur'}],
         },
         searchPassword: '',
         passwordVisible: false,
@@ -202,29 +282,54 @@
         },
         listData: [],
         total: 0,
-        main_schools:[],
-        sub_schools:[],
+        main_schools: [],
+        sub_schools: [],
       }
     },
     created() {
       let user_type = this.$store.state.user.user_type
+
+      getOnlineAdminNums().then(response => {
+        this.onlineNum = response.data;
+      })
       console.log(user_type)
       this.userOptions.push({label: '分校管理员', value: 3})
       this.userOptions.push({label: '主校管理员', value: 2})
       this.userOptions.push({label: '系统管理员', value: 1})
       this.getList()
-      this.main_schools=this.getAllMain()
+      this.getAllMain()
+
     },
     methods: {
-      getAllSub(main_school){
-          getSubSchools({main_school:main_school}).then(response=>{
-            this.sub_schools=response.data
-          })
+      searchAdmin() {
+        this.listQuery.page = 1
+        getAdminsSystem(this.listQuery).then(response => {
+          this.listData = response.data
+          this.total = response.total
+        })
       },
-      getAllMain(){
-          getMainSchools().then(response=>{
-            this.main_schools=response.data
-          })
+      openOnlineDraw() {
+        this.onlineListVisible = true
+        this.getOnlineTable()
+      },
+      logoutActive(index) {
+        //系统管理员强制下线
+        rows.splice(index, 1);
+      },
+      getOnlineTable() {
+        getOnlineAdmin(this.onlineQuery).then(response => {
+          this.onlineList = response.data
+        })
+      },
+      getAllSub(main_school) {
+        getSubSchools({main_school: main_school}).then(response => {
+          this.sub_schools = response.data
+        })
+      },
+      getAllMain() {
+        getMainSchools().then(response => {
+          this.main_schools = response.data
+        })
       },
       getList() {
         getAdminsSystem(this.listQuery).then(response => {
@@ -267,14 +372,14 @@
                 if (response.data !== 1)
                   this.$notify({
                     title: '错误',
-                    message: response.data,
+                    message: response.message,
                     type: 'error',
                     duration: 2000
                   })
-                this.tempAdmin= {
+                this.tempAdmin = {
                   register_date: Current()
                 },
-                this.getList()
+                  this.getList()
                 this.dialogVisible = false
               })
             else {

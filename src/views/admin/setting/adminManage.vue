@@ -6,13 +6,13 @@
 
         <el-col>
           <el-button style="margin-left: 10px;" type="primary" icon="el-icon-edit"
-                     @click="openCreateDialog">新增管理员
+                     @click="openCreateDialog" >新增管理员
           </el-button>
           <!--          <el-button style="margin-left: 10px;" type="primary" icon="el-icon-edit"-->
           <!--                     @click="dialogVisible = true">批量导入-->
           <!--          </el-button>-->
           <el-button style="margin-left: 10px;" type="danger" icon="el-icon-remove"
-                     @click="deleteChosen">删除管理员
+                     @click="deleteChosen" >删除管理员
           </el-button>
         </el-col>
       </el-row>
@@ -129,8 +129,7 @@
 </template>
 
 <script>
-  import {getAdmins, deleteAdmin, addAdmin, updateAdmin} from '@/api/apis'
-  import {getSubSchools} from '@/api/system_apis'
+  import {getAdmins, deleteAdmin, addAdmin, updateAdmin,getSubSchools} from '@/api/apis'
   import Pagination from '@/components/Pagination'
   import {Current} from "@/utils/time"; // secondary package based on el-pagination
 

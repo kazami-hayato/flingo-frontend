@@ -1,5 +1,6 @@
 <template>
   <div class="info-container" style="padding: 20px">
+    <div style="padding: 2rem">
     <el-row :gutter="24">
       <el-col :xs="{span: 16}" :sm="{span: 16}" :md="{span: 16}" :lg="{span: 12}" :xl="{span: 12}">
         <el-form ref="form" :model="form" label-width="80px">
@@ -23,8 +24,20 @@
               <div slot="tip" class="el-upload__tip">只能上传jpg/png/svg/ico文件，且不超过500kb</div>
             </el-upload>
           </el-form-item>
-          <el-form-item label="网校名称">
-            <el-input v-model="form.title"/>
+          <el-form-item label="网校名称" >
+            <el-input v-model="form.title">
+              <template slot="append">
+                <div v-if="form.main_school===form.sub_school" style="color: #0a76a4">
+                 主校</div>
+                <div v-else>分校</div>
+              </template>
+              </el-input>
+          </el-form-item>
+          <el-form-item label="主校名称" >
+            <el-input v-model="form.main_school" disabled/>
+          </el-form-item>
+          <el-form-item label="分校名称" v-if="form.main_school!==form.sub_school">
+            <el-input v-model="form.sub_school" disabled/>
           </el-form-item>
           <el-form-item label="H5域名">
             <el-input v-model="form.h5_domain"/>
@@ -56,7 +69,11 @@
           </el-form-item>
         </el-form>
       </el-col>
+      <el-col>
+        <div class="stamp">{{form.title}}</div>
+      </el-col>
     </el-row>
+    </div>
   </div>
 </template>
 
@@ -120,6 +137,26 @@
   }
 </script>
 
-<style scoped>
-
+<style scoped lang="scss">
+.stamp{
+  top: 2rem;
+  left: 17rem;
+  position: absolute;
+  transform: rotate(12deg);
+  font-size: 3rem;
+  font-weight: 700;
+  border: 0.25rem solid #555;
+  display: inline-block;
+  padding: 0.25rem 1rem;
+  text-transform: uppercase;
+  border-radius: 1rem;
+  font-family: 'Courier';
+ -webkit-mask-image: url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/8399/grunge.png');
+  -webkit-mask-size: 944px 604px;
+  mix-blend-mode: multiply;
+  color: #D23;
+  border: 0.5rem double #D23;
+  -webkit-mask-position: 2rem 3rem;
+  font-size: 2rem;
+}
 </style>

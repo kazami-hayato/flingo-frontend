@@ -4,14 +4,14 @@ import store from '@/store'
 import {getToken} from '@/utils/auth'
 
 // create an axios instance
-const service = axios.create({
+const serviceFile = axios.create({
   baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
   // withCredentials: true, // send cookies when cross-domain requests
   timeout: 20000 // request timeout
 })
 
-// request interceptor
-service.interceptors.request.use(
+// request interceptora
+serviceFile.interceptors.request.use(
   config => {
     // do something before request is sent
 
@@ -31,7 +31,7 @@ service.interceptors.request.use(
 )
 
 // response interceptor
-service.interceptors.response.use(
+serviceFile.interceptors.response.use(
   /**
    * If you want to get http information such as headers or status
    * Please return  response => response
@@ -42,42 +42,7 @@ service.interceptors.response.use(
    * Here is just an example
    * You can also judge the status by HTTP Status Code
    */
-  response => {
-    const res = response.data
-
-    // if the custom code is not 20000, it is judged as an error.
-    if (res.code !== 20000) {
-      Message({
-        message: res.message || '错误',
-        type: 'error',
-        duration: 5 * 1000
-      })
-      console.log(res.data)
-
-      // 50008: Illegal token; 50012: Other clients logged in; 50014: Token expired;
-      if (res.code === 50008 || res.code === 50012 || res.code === 50014) {
-        // to re-login
-        MessageBox.confirm('已经退出请重新登录', '确定退出', {
-          confirmButtonText: '重新登录',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          store.dispatch('user/resetToken').then(() => {
-            location.reload()
-          })
-        })
-      } else if (res.code === 400) {
-        this.$message({
-          message: res.message,
-          type: 'error',
-          duration: 2000
-        })
-      }
-      return Promise.reject(new Error(res.data || 'Error'))
-    } else {
-      return res
-    }
-  },
+  response=>response,
   error => {
     console.log('err' + error) // for debug
     Message({
@@ -89,4 +54,4 @@ service.interceptors.response.use(
   }
 )
 
-export default service
+export default serviceFile

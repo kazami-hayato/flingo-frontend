@@ -34,9 +34,10 @@ export function createSystemCourse(data) {
     data: data
   })
 }
+
 export function deleteSystemCourse(data) {
   return request({
-    url: '/apis/v1/system/courses/'+data.course_id,
+    url: '/apis/v1/system/courses/' + data.course_id,
     method: 'delete',
   })
 }
@@ -96,11 +97,12 @@ export function getMainSchools() {
     method: 'get',
   })
 }
+
 export function getSubSchools(data) {
   return request({
     url: '/apis/v1/system/sub_schools',
     method: 'get',
-    params:data
+    params: data
   })
 }
 
@@ -139,9 +141,9 @@ export function getExams(data) {
 }
 
 export function getOriginExam(data) {
-  const _data={
-    course_id:'22',
-    exam_type:2
+  const _data = {
+    course_id: '22',
+    exam_type: 2
   }
   return request({
     url: '/apis/v1/frontend/origin_exam',
@@ -170,7 +172,7 @@ export function createExam(data) {
 
 export function modifyExam(data) {
   return request({
-    url: '/apis/v1/system/exams',
+    url: '/apis/v1/system/exams/content',
     method: 'put',
     data: data
   })
@@ -184,10 +186,11 @@ export function deleteExam(data) {
   })
 
 }
+
 export function getAdminPwd(data) {
   return request({
-    url:'/apis/v1/system/admins/password',
-    params:data
+    url: '/apis/v1/system/admins/password',
+    params: data
   })
 }
 
@@ -214,6 +217,33 @@ export function updateAdminsSystem(data) {
     data: data
   })
 }
+
+export function getOnlineAdmin(data) {
+  return request({
+    url: '/apis/v1/auth/activeUsers',
+    method: 'get',
+    params:data
+  })
+}
+
+/**
+ * 获取在线人员名单
+ * @returns
+ */
+export function getOnlineAdminNums(data) {
+  return request({
+    url: '/apis/v1/auth/activeNums',
+    method: 'get',
+  })
+}
+export function getStudentOnline(data) {
+  return request({
+    url: '/apis/v1/student/online',
+    method: 'get',
+    params:data
+  })
+}
+
 
 export function getStudentsSystem(data) {
   return request({

@@ -68,8 +68,8 @@
       </el-table-column>
       <el-table-column label="课程状态" width="150px" align="center">
         <template slot-scope="{row}">
-          <el-tag v-if="row.is_sub===1" type="success">已上架</el-tag>
-          <el-tag v-if="row.is_sub===0" type="info">未上架</el-tag>
+          <el-tag v-if="row.is_Subscribe===1" type="success">已上架</el-tag>
+          <el-tag v-if="row.is_Subscribe===0" type="info">未上架</el-tag>
         </template>
       </el-table-column>
 
@@ -78,11 +78,11 @@
           <el-button size="medium" type="info" @click="lookDetail(row)">
             查看详情
           </el-button>
-          <el-button v-if="row.is_sub!==1" type="primary" size="medium" @click="validTheCourse(row)">
+          <el-button v-if="row.is_Subscribe!==1" type="primary" size="medium" @click="validTheCourse(row)">
             上架课程
           </el-button>
 
-          <el-button v-if="row.is_sub!==0" size="medium" type="danger" @click="unvalidTheCourse(row)">
+          <el-button v-if="row.is_Subscribe!==0" size="medium" type="danger" @click="unvalidTheCourse(row)">
             下架课程
           </el-button>
         </template>
@@ -110,8 +110,8 @@
 </template>
 
 <script>
-  import {getCourses, getMainCourseBySearch, getvalidCourseById, unvalidCourse, validCourse} from '@/api/apis'
-  import Pagination from '@/components/Pagination'
+  import {getCourses,getSubCourses, getMainCourseBySearch, getvalidCourseById, unvalidCourse, validCourse} from '@/api/apis'
+  import Pagination from '@/components/Pagination/index'
 
   export default {
     name: 'SubCourseInfo',
@@ -140,7 +140,7 @@
     methods: {
       getList() {
         this.listLoading = true
-        getCourses(this.listQuery).then(response => {
+        getSubCourses(this.listQuery).then(response => {
           this.list = response.data
           this.total = response.total
           setTimeout(() => {
@@ -158,7 +158,7 @@
       searchCourses() {
         if (this.listQuery.searchText === '') this.getList()
         else
-          getMainCourseBySearch(this.listQuery).then(response => {
+          getSubCourses(this.listQuery).then(response => {
             this.list = response.data
             this.total = response.total
           })
@@ -197,7 +197,14 @@
 
       },
       unvalidTheCourse(row) {
-        unvalidCourse(row).then(() => {
+        row.main_school=this.$store.state.user.main_school
+        row.sub_school=this.$store.state.user.sub_school
+        unvalidCourse(row).then(response => {
+          this.$notify({
+            type:"success",
+            message:response.message,
+            duration:1000
+          })
         })
         this.getList()
       },

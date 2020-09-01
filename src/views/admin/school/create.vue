@@ -44,7 +44,7 @@
         notice: {
           main_school: this.$store.state.user.main_school,
           sub_school: this.$store.state.user.sub_school,
-          notice_type: '',
+          notice_type: '新闻',
           notice_author: this.$store.state.user.username,
           notice_title: '',
           notice_content: '',

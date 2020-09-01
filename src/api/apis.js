@@ -80,7 +80,7 @@ export function getSchool() {
     url: '/apis/v1/school/',
     method: 'get',
   })
-  const response = {
+/*  const response = {
     code: int,
     data: {
       logo: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
@@ -94,9 +94,15 @@ export function getSchool() {
       description: '鄂州大学描述',
       address: ''
     }
-  }
+  }*/
 }
-
+export function getSubSchools(data) {
+  return request({
+    url: '/apis/v1/admins/getSubSchools',
+    method: 'get',
+    params: data
+  })
+}
 export function modifySchool(data) {
   /*  data={
       logo: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
@@ -390,7 +396,7 @@ export function updateStudent(data) {
       phone: 12548547584,
     }*/
   return request({
-    url: '/apis/v1/students/' + data.exam_id,
+    url: '/apis/v1/students/',
     method: 'put',
     data: data
   })
@@ -408,9 +414,9 @@ export function setStudentCourse(data) {
       status: 0 | 1
     }*/
   return request({
-    url: '/apis/v1/students/' + data.exam_id + '/courses/' + data.course_id,
+    url: '/apis/v1/students/chooseCourse',
     method: 'post',
-    data:data,
+    params:data,
   })
 
 }
@@ -435,6 +441,18 @@ export function getStudentCaptures(data) {
   }
 }
 
+/**
+ * 获取督学数据
+ * @param data
+ * @returns {AxiosPromise}
+ */
+export function getAdminSupervise(data) {
+  return request({
+    url: '/apis/v1/admins/supervise/students',
+    method: 'get',
+    params: data
+  })
+}
 //网校课程相关 获取该校仓库所有课程
 //课程分页 get ?limit=?page=?searchText=?sub_school=?
 export function getCourses(data) {
@@ -449,6 +467,37 @@ export function getCourses(data) {
     method: 'get',
     params: data
   })
+}
+//网校课程相关 获取该校仓库所有课程
+//课程分页 get ?limit=?page=?searchText=?sub_school=?
+export function getSubCourses(data) {
+  /*  data = {
+      limit: 20,
+      page: 1,
+      searchText: '课程名|课程id',
+      sub_school: '鄂州大学'
+    }*/
+  return request({
+    url: '/apis/v1/repository/courses/subschool',
+    method: 'get',
+    params: data
+  })
+}
+
+//主校仓库
+  export function getCoursesMain(data) {
+    /*  data = {
+        limit: 20,
+        page: 1,
+        searchText: '课程名|课程id',
+        sub_school: '鄂州大学'
+      }*/
+    return request({
+      url: '/apis/v1/repository/courses/main',
+      method: 'get',
+      params: data
+    })
+  }
   // const response = {
   //   code: 20000,
   //   data: [{
@@ -464,7 +513,6 @@ export function getCourses(data) {
   //   }],
   //   total: 1
   // }
-}
 
 //网校课程相关 获取该校仓库所有课程
 //课程分页 get ?limit=?page=?searchText=?sub_school=?
@@ -477,11 +525,43 @@ export function getMainCourseBySearch(data) {
 }
 
 
+export function getMainChosenCourses(data) {
+  return request({
+    url: '/apis/v1/shift/courses/main',
+    method: 'get',
+    params: data
+  })
+}
+
+export function getSubChosenCourses(data) {
+  return request({
+    url: '/apis/v1/shift/courses/sub',
+    method: 'get',
+    params: data
+  })
+}
+
 //获取该校上架的所有课程
 //课程分页 get ?limit=?page=?searchText=?sub_school=?main_school=
 export function getShiftCourses(data) {
   return request({
-    url: '/apis/v1/shift/courses',
+    url: '/apis/v1/shift/courses/repo',
+    method: 'get',
+    params: data
+  })
+}
+
+export function getMainCoursesSale(data) {
+  return request({
+    url: '/apis/v1/sales/main',
+    method: 'get',
+    params: data
+  })
+}
+
+export function getSubCoursesSale(data) {
+  return request({
+    url: '/apis/v1/sales/sub',
     method: 'get',
     params: data
   })
@@ -532,8 +612,9 @@ export function validCourse(data) {
 
 export function unvalidCourse(data) {
   return request({
-    url: '/apis/v1/valid/courses/' + data.course_id,
-    method: 'delete',
+    url: '/apis/v1/courses/unshiftSub',
+    method: 'post',
+    data:data
   })
 }
 
@@ -645,7 +726,7 @@ export function getTags(data) {
 
 export function getStudentsByTag(data) {
   return request({
-    url: '/apis/v1/students/getStuByTag',
+    url: '/apis/v1/students/history/getStuByTag',
     method: 'get',
     params: data
   })
