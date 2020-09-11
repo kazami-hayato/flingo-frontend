@@ -9,7 +9,7 @@
     <div class="avatar-content">
       <el-table
         v-loading="listLoading"
-        :data="listData"
+        :data="list"
         fit
         highlight-current-row
         style="width: 100%;"
@@ -47,7 +47,7 @@
         <el-table-column label="操作" align="center" minWidth="200" class-name="small-padding fixed-width">
           <template slot-scope="{row}">
             <el-button type="primary" size="mini" @click="handleUpdate(row)">
-              修改
+              修改照片
             </el-button>
           </template>
         </el-table-column>
@@ -55,18 +55,61 @@
       <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit"
                   @pagination="getList"/>
     </div>
+    <div>
+      <el-dialog
+        title="上传照片"
+        :visible.sync="photoVisible"
+        width="30%"
+      >
+        <el-container>
+          <el-header>
+            <p>请上传 学号：{{tempExam_id.exam_id}} 的照片</p>
+          </el-header>
+          <el-main>
+            <el-upload
+              class="upload-demo"
+              drag
+              :name="'File'"
+              :on-success="handleUpload"
+              :file-list="fileList"
+              :limit="1"
+              :data="tempExam_id"
+              :headers="headers"
+              action="/apis/v1/system/avatars/generateAvatarStr"
+              :on-preview="handlePreview"
+              :on-remove="handleRemove"
+              list-type="picture">
+              <i class="el-icon-upload"/>
+              <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+              <div slot="tip" class="el-upload__tip">只能上传jpeg文件，且不超过500kb</div>
+            </el-upload>
+          </el-main>
+          <el-footer >
+            <el-row type="flex" class="row-bg" justify="end">
+              <el-button @click="photoVisible = false">取 消</el-button>
+              <el-button type="primary" @click="photoVisible = false">确 定</el-button>
+            </el-row>
+          </el-footer>
+        </el-container>
+      </el-dialog>
+
+    </div>
   </div>
 </template>
 
 <script>
 import Pagination from "@/components/Pagination/index";
 import {getStudentsAvatar} from "@/api/system_apis";
+import { getToken } from '@/utils/auth'
 
 export default {
   name: 'index',
   components: { Pagination},
   data() {
     return {
+      tempExam_id:{exam_id:''},
+      photoVisible:false,
+      fileList:[],
       //缓冲状态
       listLoading: false,
       listQuery: {
@@ -74,6 +117,7 @@ export default {
         limit: 20,
         searchText: '',
       },
+      list:[],
       total: 0,
       listData: [
         'https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg',
@@ -83,7 +127,10 @@ export default {
         'https://fuss10.elemecdn.com/d/e6/c4d93a3805b3ce3f323f7974e6f78jpeg.jpeg',
         'https://fuss10.elemecdn.com/3/28/bbf893f792f03a54408b3b7a7ebf0jpeg.jpeg',
         'https://fuss10.elemecdn.com/2/11/6535bcfb26e4c79b48ddde44f4b6fjpeg.jpeg'
-      ]
+      ],
+      headers:{
+        'X-Token':getToken()
+      },
     }
   },
   created() {
@@ -97,6 +144,7 @@ export default {
       this.listLoading = true
       getStudentsAvatar(this.listQuery).then(response => {
         this.list = response.data
+
         this.total = response.total
         setTimeout(() => {
           this.listLoading = false
@@ -106,11 +154,32 @@ export default {
     },
     handleUpdate(row){
       console.log(row)
-    }
+      this.photoVisible=true;
+      this.tempExam_id.exam_id=row.exam_id
+
+    },
+    handleRemove(file, fileList) {
+      console.log(file, fileList);
+    },
+    handlePreview(file) {
+      console.log(file);
+    },
+    handleUpload(response, file) {
+      this.$notify({
+        title: '上传结果',
+        message: response.message,
+        type: 'success',
+        duration: 3000
+      })
+
+    },
   },
+
   props: {},
 };
 </script>
+
+
 <style lang="scss" scoped>
 .avatar-container {
   .header {

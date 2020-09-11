@@ -163,6 +163,7 @@
           <el-main>
             <el-upload
               class="upload-demo"
+              :headers = "headers"
               drag
               :name="'File'"
               :on-success="handleUpload"
