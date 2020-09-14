@@ -177,7 +177,7 @@ export const asyncRoutes = [
         }
       },
       {
-        path: 'notice/create',
+        path: 'notice_create',
         component: () => import('@/views/admin/school/create'),
         name: 'create',
         hidden: true,
