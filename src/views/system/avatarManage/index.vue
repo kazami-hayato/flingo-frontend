@@ -14,9 +14,9 @@
         highlight-current-row
         style="width: 100%;"
       >
-        <el-table-column label="照片" align="center">
-          <template slot-scope="{row}">
-            <img :src="row.avatar" class="avatar-img">
+        <el-table-column label="照片" align="center" >
+          <template slot-scope="{row}"  >
+            <img :src="getUsingAvatar(row)" class="avatar-img"  @click="showAvatarList(row)">
           </template>
         </el-table-column>
         <el-table-column label="学号" align="center">
@@ -46,7 +46,7 @@
         </el-table-column>
         <el-table-column label="操作" align="center" minWidth="200" class-name="small-padding fixed-width">
           <template slot-scope="{row}">
-            <el-button type="primary" size="mini" @click="handleUpdate(row)">
+            <el-button type="primary"  @click="handleUpdate(row)" >
               修改照片
             </el-button>
           </template>
@@ -86,13 +86,28 @@
           </el-main>
           <el-footer >
             <el-row type="flex" class="row-bg" justify="end">
-              <el-button @click="photoVisible = false">取 消</el-button>
+              <el-button @click="closePhotoVisible">取 消</el-button>
               <el-button type="primary" @click="photoVisible = false">确 定</el-button>
             </el-row>
           </el-footer>
         </el-container>
       </el-dialog>
-
+    </div>
+    <div>
+      <el-dialog
+        title="历史头像"
+        :visible.sync="avatarsVisible"
+        width="700px"
+        >
+        <div class="demo-image__lazy">
+          <el-image v-for="url in listData" :key="url" :src="url" lazy style="width: 200px;height: 200px;margin: 10px"></el-image>
+        </div>
+<!--              <el-col :span="4" v-for="item in listData"  :key="item">-->
+<!--                <el-card shadow="never">-->
+<!--                  <img  :src="item" style="width: 200px;height: 160px">-->
+<!--                </el-card>-->
+<!--              </el-col>-->
+      </el-dialog>
     </div>
   </div>
 </template>
@@ -109,6 +124,7 @@ export default {
     return {
       tempExam_id:{exam_id:''},
       photoVisible:false,
+      avatarsVisible:false,
       fileList:[],
       //缓冲状态
       listLoading: false,
@@ -135,8 +151,30 @@ export default {
   },
   created() {
     this.getList()
+
   },
   methods: {
+    closePhotoVisible(){
+        this.photoVisible=false
+
+    },
+    showAvatarList(row){
+      let avatarList=row.avatar.split("#")
+      this.listData=[]
+      avatarList.forEach(item=>{
+        this.listData.push("https://www.hbuvt.com/cdn/"+item)
+      })
+      this.listData[0]="https://www.hbuvt.com/cdn/photos/"+avatarList[0]+".jpeg"
+      this.avatarsVisible=true
+    },
+    getUsingAvatar(row){
+      if(row.avatar===null){
+        return "https://www.hbuvt.com/cdn/photos/"+row.exam_id+".jpeg"
+      }
+      else{
+        return "https://www.hbuvt.com/cdn/"+row.avatar.split("#").slice(-1)
+      }
+    },
     handleSearch() {
       this.getList()
     },
