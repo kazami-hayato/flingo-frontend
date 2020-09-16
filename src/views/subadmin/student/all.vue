@@ -66,7 +66,7 @@
     >
       <el-table-column type="expand">
         <template slot-scope="{row}">
-          <StudentDetail style="width: 100%;max-height: 2000px" :student-info="row"/>
+          <StudentDetail style="width: 100%;max-height: 3000px" :student-info="row"/>
         </template>
       </el-table-column>
       <el-table-column width="55" type="selection" align="center">
