@@ -162,17 +162,19 @@ export default {
       let avatarList=row.avatar.split("#")
       this.listData=[]
       avatarList.forEach(item=>{
-        this.listData.push("https://www.hbuvt.com/cdn/"+item)
+        this.listData.push("/cdn/"+item)
       })
-      this.listData[0]="https://www.hbuvt.com/cdn/photos/"+avatarList[0]+".jpeg"
+      this.listData[0]="/cdn/photos/"+avatarList[0]+".jpeg"
       this.avatarsVisible=true
     },
     getUsingAvatar(row){
       if(row.avatar===null){
-        return "https://www.hbuvt.com/cdn/photos/"+row.exam_id+".jpeg"
+        // return "https://www.hbuvt.com/cdn/photos/"+row.exam_id+".jpeg"
+        return "/cdn/photos/"+row.exam_id+".jpeg"
       }
       else{
-        return "https://www.hbuvt.com/cdn/"+row.avatar.split("#").slice(-1)
+        // return "https://www.hbuvt.com/cdn/"+row.avatar.split("#").slice(-1)
+        return "/cdn/"+row.avatar.split("#").slice(-1)
       }
     },
     handleSearch() {
