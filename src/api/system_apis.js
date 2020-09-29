@@ -170,6 +170,8 @@ export function createExam(data) {
 
 }
 
+
+
 export function modifyExam(data) {
   return request({
     url: '/apis/v1/system/exams/content',
@@ -332,4 +334,21 @@ export function getHistoryReport(data) {
     params: data,
     returnType: 'arraybuffer'
   })
+}
+
+export function createSingleTrain(data) {
+  return request({
+    url: '/apis/v1/frontend/training/singleTrain',
+    method: 'post',
+    data: data
+  })
+
+}
+export function createMultipleTrain(data) {
+  return request({
+    url: '/apis/v1/frontend/training/multipleTrain',
+    method: 'post',
+    data: data
+  })
+
 }

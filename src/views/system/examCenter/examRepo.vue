@@ -10,6 +10,8 @@
           </el-input>
         </el-col>
         <el-col :span="16" align="right">
+          <el-button type="success" class="el-icon-plus" size="medium" @click="openCreateTrain">&nbsp新建练习题</el-button>
+
           <el-button type="warning" class="el-icon-plus" size="medium" @click="openCreateTest">&nbsp新建试卷</el-button>
 
           <el-button type="danger" class="el-icon-minus" size="medium" @click="handleDelete">&nbsp删除选中</el-button>
@@ -225,6 +227,51 @@
         </el-container>
       </el-dialog>
 
+      <el-dialog
+        title="新建训练题"
+        :visible.sync="trainVisible"
+        width="40%"
+      >
+
+        <el-form :model="tempTrain" label-width="140px" :label-position="'right'">
+          <el-form-item label="试卷名" required>
+            <el-input v-model="tempTrain.exam_title" style="width: 200px"/>
+          </el-form-item>
+          <el-form-item label="匹配课程号" required>
+            <el-input v-model="tempTrain.match_course_id" style="width: 200px"/>
+          </el-form-item>
+          <el-form-item label="题目类型" required>
+            <el-select v-model="tempTrainType.trainType" placeholder="请选择">
+              <el-option
+                v-for="item in [1,2]"
+                :key="item"
+                :label="train_type[item]"
+                :value="item">
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="试题内容" required>
+            <el-upload
+              action="/apis/v1/frontend/training/trainingExcel2json"
+              :name="'File'"
+              :data="tempTrainType"
+              :on-success="handleQuizUploadTrain"
+              :headers="headers"
+              :file-list="trainFileList">
+              <el-button size="small" type="primary">点击上传</el-button>
+              <div slot="tip" class="el-upload__tip">只能上传excel文件,xls/xlsx格式</div>
+            </el-upload>
+          </el-form-item>
+        </el-form>
+
+        <el-footer>
+          <el-row type="flex" class="row-bg" justify="end">
+            <el-button @click="trainVisible = false">取 消</el-button>
+            <el-button type="primary" @click="handleCreateTrain">确 定</el-button>
+          </el-row>
+        </el-footer>
+      </el-dialog>
+
     </el-main>
   </el-container>
 </template>
@@ -237,7 +284,7 @@
     modifyExam,
     getExams,
     getSystemCoursesByQuery,
-    getAllCoursesInfo
+    getAllCoursesInfo, createMultipleTrain, createSingleTrain
   } from '@/api/system_apis'
   import Pagination from '@/components/Pagination' // secondary package based on el-pagination
   import {mapGetters} from 'vuex'
@@ -253,6 +300,14 @@
     },
     data() {
       return {
+        tempTrainType:{trainType:''},
+        trainVisible:false,
+        tempTrain: {},
+        train_type: [
+          '',
+          '单选题',
+          '多选题',
+        ],
         chosenExam:undefined,
         updateTestVisible: false,
         test_type: [
@@ -268,6 +323,7 @@
         tempExam: {},
         dialogVisible: false,
         fileList: [],
+        trainFileList:[],
         total: 0,
         listQuery: {
           searchType: '1',
@@ -296,6 +352,58 @@
       handleUpdateContent() {
         this.updateTestVisible=false
       },
+      handleCreateTrain() {
+        if (this.tempTrainType.trainType == null)
+          this.$message({
+            message: '题目类型不为空',
+            type: 'error',
+            duration: 1000
+          })
+        else{
+          console.log(this.tempTrainType.trainType+'!!!!!!')
+          if(this.tempTrainType.trainType===1){
+            console.log(this.tempTrainType.trainType+'2222')
+            createSingleTrain(this.tempTrain).then(response => {
+              if (response.code === 20000)
+                this.$notify({
+                  title: '成功',
+                  message: '添加成功',
+                  type: 'success'
+                });
+              else
+                this.$notify({
+                  title: '失败',
+                  message: this.response.message,
+                  type: 'error'
+                });
+              this.testVisible = false
+              this.trainFileList = []
+            })
+          }else{
+            if(this.tempTrainType.trainType===2){
+              createMultipleTrain(this.tempTrain).then(response => {
+                if (response.code === 20000)
+                  this.$notify({
+                    title: '成功',
+                    message: '添加成功',
+                    type: 'success'
+                  });
+                else
+                  this.$notify({
+                    title: '失败',
+                    message: this.response.message,
+                    type: 'error'
+                  });
+                this.testVisible = false
+                this.trainFileList = []
+              })
+            }
+
+          }
+
+        }
+
+      },
       handleUpdateSuccess(response, file) {
         this.chosenExam.exam_content = response.data
         console.log(this.chosenExam)
@@ -307,6 +415,15 @@
             message:'更新完成，请查看数据'
           })
         })
+      },
+      /**
+       * @Author kxy >>
+       * @Date 2020/9/29
+       * 添加导入练习题窗口
+       */
+      openCreateTrain(){
+        this.trainVisible = true
+        this.tempTrain = {}
       },
       openCreateTest() {
         this.testVisible = true
@@ -339,6 +456,9 @@
       },
       handleQuizUpload(response, file) {
         this.tempExam.exam_content = response.data
+      },
+      handleQuizUploadTrain(response, file){
+        this.tempTrain.exam_content=response.data
       },
       handleCreateTest() {
         if (this.tempExam.exam_type == null)
